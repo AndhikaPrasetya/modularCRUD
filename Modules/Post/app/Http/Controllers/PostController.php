@@ -4,15 +4,17 @@ namespace Modules\Post\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Modules\Post\Models\Post;
 
 class PostController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Post $post)
     {
-        return view('post::index');
+
+        return view('post::index', compact('post'));
     }
 
     /**
@@ -28,7 +30,16 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'title' => 'required',
+            'content' => 'required',
+        ]);
+
+        Post::create([
+            'title' => $request->title,
+            'content' => $request->content,
+        ]);
+        return redirect()->route('post.index');
     }
 
     /**
