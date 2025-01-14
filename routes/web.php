@@ -17,4 +17,17 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::get('/admin',function(){
+    return '<h1>Hello world</h1>';
+})->middleware(['auth', 'verified','role:admin']);
+
+Route::get('/penulis',function(){
+    return '<h1>Hello penulis</h1>';
+})->middleware(['auth', 'verified','role:penulis']);
+Route::get('/text',function(){
+    return view('layouts.layout');
+})->middleware(['auth', 'verified','role_or_permission:show-text|admin']);
+
+
+
 require __DIR__.'/auth.php';
