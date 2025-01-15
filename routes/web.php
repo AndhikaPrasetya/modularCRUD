@@ -19,7 +19,7 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/dashboard',function(){
     return view('dashboard');
-})->middleware(['auth', 'verified','role:admin'])->name('dashboard');
+})->middleware(['auth', 'verified','role:admin|penulis'])->name('dashboard');
 
 Route::get('/penulis',function(){
     return '<h1>Hello penulis</h1>';

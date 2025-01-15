@@ -119,9 +119,22 @@
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
        
+          @if (auth()->user()->hasRole('admin'))
           
           <li class="nav-item">
-            <a href="/blog" class="nav-link">
+            <a href="#" class="nav-link">
+              <i class="nav-icon far fa-calendar-alt"></i>
+              <p>
+                Konfigurasi
+                <span class="badge badge-info right">2</span>
+              </p>
+            </a>
+          </li>
+          @endif
+          @if (auth()->user()->hasRole('penulis'))
+          
+          <li class="nav-item">
+            <a href="/post" class="nav-link">
               <i class="nav-icon far fa-calendar-alt"></i>
               <p>
                 Posts
@@ -129,6 +142,9 @@
               </p>
             </a>
           </li>
+          @endif
+
+          
        
         </ul>
       </nav>
@@ -168,6 +184,7 @@
 <script>
   $.widget.bridge('uibutton', $.ui.button)
 </script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <!-- Bootstrap 4 -->
 <script src="/template/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- ChartJS -->
@@ -177,5 +194,6 @@
 <script src="/template/plugins/daterangepicker/daterangepicker.js"></script>
 <!-- Summernote -->
 <script src="/template/plugins/summernote/summernote-bs4.min.js"></script>
+@yield('script')
 </body>
 </html>

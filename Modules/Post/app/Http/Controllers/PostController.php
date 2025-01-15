@@ -5,17 +5,23 @@ namespace Modules\Post\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Modules\Post\Models\Post;
+use Yajra\DataTables\Facades\DataTables;
 
 class PostController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(Post $post)
+    public function index()
     {
-
-        return view('post::index', compact('post'));
+        // $model = Post::query();
+        // return DataTables::eloquent($model)
+        // ->toJson();
+        $posts = Post::all();
+        return view('post::index', compact('posts'));
     }
+
+  
 
     /**
      * Show the form for creating a new resource.
@@ -55,7 +61,8 @@ class PostController extends Controller
      */
     public function edit($id)
     {
-        return view('post::edit');
+        $data = Post::find($id);
+        return view('post::edit', compact('data'));
     }
 
     /**
@@ -63,7 +70,18 @@ class PostController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'title' => 'required',
+            'content' => 'required',
+        ]);
+
+        $post =Post::find($id);
+        $post->update([
+            'title' => $request->title,
+            'content' => $request->content,
+            ]);
+
+        return redirect()->route('post.index');
     }
 
     /**
@@ -71,6 +89,7 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Post::destroy($id);
+        return redirect()->route('post.index')->with('success', 'Data berhasil dihapus!');
     }
 }
