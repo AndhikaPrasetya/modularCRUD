@@ -3,6 +3,9 @@
 namespace Modules\Post\Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use Modules\Post\Models\Post;
 
 class PostSeeder extends Seeder
 {
@@ -11,6 +14,8 @@ class PostSeeder extends Seeder
      */
     public function run(): void
     {
-        // $this->call([]);
+        Post::factory()
+        ->count(10)
+        ->create();
     }
 }

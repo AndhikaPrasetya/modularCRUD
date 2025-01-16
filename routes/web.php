@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -19,15 +20,10 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/dashboard',function(){
     return view('dashboard');
-})->middleware(['auth', 'verified','role:admin|penulis'])->name('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/penulis',function(){
-    return '<h1>Hello penulis</h1>';
-})->middleware(['auth', 'verified','role:penulis']);
 
-Route::get('/text',function(){
-    return view('layouts.layout');
-})->middleware(['auth', 'verified','role_or_permission:show-text|admin']);
+
 
 
 

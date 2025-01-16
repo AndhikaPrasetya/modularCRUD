@@ -41,7 +41,7 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        $user->givePermissionTo('show-text');
+
 
         event(new Registered($user));
 

@@ -28,25 +28,6 @@
                                         <th>Action</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    @foreach ($posts as $post)
-                                        <tr>
-                                            <td>{{ $loop->iteration }}</td>
-                                            <td>{{ $post->title }}</td>
-                                            <td>{{ $post->content }}</td>
-                                            <td>
-                                                <a href="{{ route('post.edit', $post->id) }}"
-                                                    class="btn btn-primary">Edit</a>
-                                                <form action="{{ route('post.destroy', $post->id) }}" id="delete-form" method="post"
-                                                    class="d-inline">
-                                                    @csrf
-                                                    @method('delete')
-                                                    <button type="submit" class="btn btn-danger" onclick="confirmDelete()">Delete</button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
                             </table>
                         </div>
                         <!-- /.card-body -->
@@ -61,22 +42,77 @@
     </section>
 @endsection
 @section('script')
-<script>
-    function confirmDelete(){
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result)=>{
-            if(result.isConfirmed){
-                document.getElementById('delete-form').submit();
-            }
+    <script>
+        $(document).ready(function() {
+            $('#table_post').DataTable({
+                processing: true,
+                serverSide: true,
+                searching: true,
+                stateSave: true,
+
+                ajax: {
+                    url: "/post",
+                    type: "GET"
+                },
+                columns: [
+                    { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+                    {
+                        data: 'title',
+                        name: 'title'
+                    },
+                    {
+                        data: 'content',
+                        name: 'content'
+                    },
+                    {
+                        data: 'action',
+                        name: 'action',
+                        orderable: false,
+                        searchable: false
+                    },
+                ]
+            });
         })
-    }
-</script>
-    
+
+        $(document).on('click', '.delete-button', function(e) {
+            e.preventDefault();
+            let id = $(this).data('id');
+            let section = $(this).data('section');
+
+            let url = `/${section}/delete/${id}`;
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: url,
+                        type: 'POST',
+                        data: {
+                            _method: 'DELETE',
+                            _token: $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                title: "Deleted!",
+                                text: "Your file has been deleted.",
+                                icon: "success"
+                            }).then(() => {
+                                location.reload();
+                            });
+                        },
+                        error: function() {
+                            Swal.fire("Error!", "There was a problem deleting the item.",
+                                "error");
+                        }
+                    });
+                }
+            });
+        });
+    </script>
 @endsection
