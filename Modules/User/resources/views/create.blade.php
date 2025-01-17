@@ -8,16 +8,20 @@
         </div>
         <!-- /.card-header -->
         <!-- form start -->
-        <form action="{{route('users.store')}}" method="POST">
+        <form id="createFormUser">
             @csrf
           <div class="card-body">
             <div class="form-group">
               <label for="name">Name</label>
-              <input type="text" class="form-control" name="name" id="name">
+              <input type="text" class="form-control" name="name" id="name" required>
             </div>
             <div class="form-group">
               <label for="email">email</label>
-              <input type="text" class="form-control" name="email" id="email">
+              <input type="text" class="form-control" name="email" id="email" required>
+            </div>
+            <div class="form-group">
+              <label for="password">password</label>
+              <input type="text" class="form-control" name="password" id="password" required>
             </div>
           </div>
           <!-- /.card-body -->
@@ -29,4 +33,23 @@
     </div>
 </div>
     
+@endsection
+@section('script')
+    <script>
+      $('#createFormUser').on('submit', function(e){
+        e.preventDefault();
+        $.ajax({
+          url:'/users/store',
+          type:'POST',
+          data:$(this).serialize(),
+          success:function(data){
+            console.log(data);
+            window.location.href = '/users'; 
+          },
+          error:function(err){
+            console.log(err);
+          }
+        });
+      });
+    </script>
 @endsection

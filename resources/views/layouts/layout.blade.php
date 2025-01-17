@@ -126,10 +126,19 @@
           
           <li class="nav-item">
             <a href="{{route('users.index')}}" class="nav-link">
-              <i class="nav-icon far fa-user-alt"></i>
+              <i class="nav-icon far fa-user"></i>
               <p>
                 Users
-                <span class="badge badge-info right">2</span>
+             
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{route('roles.index')}}" class="nav-link">
+              <i class="nav-icon far fa-user-alt"></i>
+              <p>
+                Roles
+             
               </p>
             </a>
           </li>
@@ -142,7 +151,7 @@
               <i class="nav-icon far fa-calendar-alt"></i>
               <p>
                 Posts
-                <span class="badge badge-info right">2</span>
+             
               </p>
             </a>
           </li>
@@ -153,7 +162,7 @@
               <i class="nav-icon far fa-calendar-alt"></i>
               <p>
                 Guest
-                <span class="badge badge-info right">2</span>
+             
               </p>
             </a>
           </li>

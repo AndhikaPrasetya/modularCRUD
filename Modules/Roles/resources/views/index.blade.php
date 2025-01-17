@@ -14,7 +14,7 @@
                                 <h3 class="card-title align-items-center">Data Post</h3>
                             </div>
                             <div>
-                                <a href="{{ route('users.create') }}" class="btn btn-primary">Create</a>
+                                <a href="{{ route('roles.create') }}" class="btn btn-primary">Create</a>
 
                             </div>
                         </div>
@@ -24,20 +24,20 @@
                                     <tr>
                                         <th>No</th>
                                         <th>Name</th>
-                                        <th>Email</th>
+                                        <th>Guard Name</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($data as $user)
+                                    @foreach ($data as $role)
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
-                                            <td>{{ $user->name }}</td>
-                                            <td>{{ $user->email }}</td>
+                                            <td>{{ $role->name }}</td>
+                                            <td>{{ $role->guard_name }}</td>
                                             <td>
-                                                <a href="{{ route('users.edit', $user->id) }}"
+                                                <a href="{{ route('roles.edit', $role->id) }}"
                                                     class="btn btn-primary">Edit</a>
-                                                <form action="{{ route('users.destroy', $user->id) }}" method="post"
+                                                <form action="{{ route('roles.destroy', $role->id) }}" method="post"
                                                     class="d-inline">
                                                     @csrf
                                                     @method('delete')

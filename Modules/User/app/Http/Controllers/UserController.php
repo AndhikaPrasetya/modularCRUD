@@ -2,9 +2,11 @@
 
 namespace Modules\User\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -30,7 +32,28 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email'],
+            'password' => 'required',
+        ]);
+
+        //check if validation fails
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        $data =  User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+        return response()->json([
+            'success' => true,
+            'message' => 'User created successfully',
+            'data' => $data,
+
+        ], 201);
     }
 
     /**
@@ -46,7 +69,7 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        $data =User::find($id);
+        $data = User::find($id);
         return view('user::edit', compact('data'));
     }
 
@@ -55,7 +78,36 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+            'password' => 'nullable',
+        ]);
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'User not found',
+            ], 404);
+        }
+
+        $data = [
+            'name' => $request->name,
+            'email' => $request->email,
+        ];
+
+        if($request->filled('password')){
+            $data['password'] = bcrypt($request->password);
+        };
+        $user->update($data);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'User updated successfully',
+            'data' => $user,
+
+        ], 201);
     }
 
     /**
