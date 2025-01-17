@@ -51,9 +51,9 @@ class UserController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'User created successfully',
-            'data' => $data,
+            'data' => $data->id,
 
-        ], 201);
+        ], 200);
     }
 
     /**
@@ -80,7 +80,7 @@ class UserController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+            'email' => 'required|string|lowercase|email|max:255|unique:users,email,' . $id,
             'password' => 'nullable',
         ]);
         $user = User::find($id);
@@ -91,23 +91,26 @@ class UserController extends Controller
                 'message' => 'User not found',
             ], 404);
         }
+        
+        $user->name = $request->name;
 
-        $data = [
-            'name' => $request->name,
-            'email' => $request->email,
-        ];
+      // Update password jika diisi
+    if ($request->filled('password')) {
+        $user->password = bcrypt($request->password);
+    }
 
-        if($request->filled('password')){
-            $data['password'] = bcrypt($request->password);
-        };
-        $user->update($data);
+    // Update email jika diisi
+    if ($request->filled('email')) {
+        $user->email = $request->email;
+    }
+        $user->save();
 
         return response()->json([
             'success' => true,
             'message' => 'User updated successfully',
             'data' => $user,
 
-        ], 201);
+        ], 200);
     }
 
     /**
@@ -115,6 +118,21 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $user = User::find($id);
+    
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'User not found',
+            ], 404);
+        }
+    
+        $user->delete();
+    
+        return response()->json([
+            'success' => true,
+            'message' => 'User deleted successfully',
+        ], 200);
     }
-}
+    
+} 

@@ -11,6 +11,7 @@
         <form id="createFormUser">
             @csrf
           <div class="card-body">
+            <input type="hidden">
             <div class="form-group">
               <label for="name">Name</label>
               <input type="text" class="form-control" name="name" id="name" required>
@@ -28,6 +29,9 @@
     
           <div class="card-footer">
             <button type="submit" class="btn btn-primary">Submit</button>
+            <button
+            type="button"onclick="window.location.href='{{ route('users.index') }}'"
+            class="btn btn-warning"><span>Back</span></button>
           </div>
         </form>
     </div>
@@ -44,7 +48,7 @@
           data:$(this).serialize(),
           success:function(data){
             console.log(data);
-            window.location.href = '/users'; 
+            window.location.href = '/users/edit/'+data.data; 
           },
           error:function(err){
             console.log(err);

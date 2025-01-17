@@ -21,6 +21,9 @@
     
           <div class="card-footer">
             <button type="submit" class="btn btn-primary">Submit</button>
+            <button
+            type="button"onclick="window.location.href='{{ route('roles.index') }}'"
+            class="btn btn-warning"><span>Back</span></button>
           </div>
         </form>
     </div>

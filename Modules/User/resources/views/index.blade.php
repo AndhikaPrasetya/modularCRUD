@@ -35,14 +35,11 @@
                                             <td>{{ $user->name }}</td>
                                             <td>{{ $user->email }}</td>
                                             <td>
-                                                <a href="{{ route('users.edit', $user->id) }}"
-                                                    class="btn btn-primary">Edit</a>
-                                                <form action="{{ route('users.destroy', $user->id) }}" method="post"
-                                                    class="d-inline">
-                                                    @csrf
-                                                    @method('delete')
-                                                    <button type="submit" class="btn btn-danger">Delete</button>
-                                                </form>
+                                              
+                                                    <a href="{{ route('users.edit', $user->id) }}" class="btn btn-outline-info btn-sm"> <i class="icon-pencil"></i> <span>Edit</span></a>
+                                                    <button type="button" class="btn btn-outline-danger btn-sm delete-button" data-id="{{$user->id }}" data-section="users">
+                                                    <i class="fa fa-trash-o"></i> Delete</button>
+                                                    
                                             </td>
                                         </tr>
                                     @endforeach

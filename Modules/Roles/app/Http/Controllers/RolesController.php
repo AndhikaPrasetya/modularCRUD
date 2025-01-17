@@ -2,10 +2,11 @@
 
 namespace Modules\Roles\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class RolesController extends Controller
 {
@@ -14,7 +15,7 @@ class RolesController extends Controller
      */
     public function index()
     {
-        $data = Role::all();    
+        $data = Role::all();
         return view('roles::index', compact('data'));
     }
 
@@ -31,15 +32,22 @@ class RolesController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(),  [
             'name' => 'required|unique:roles',
         ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
 
         $data = Role::create([
             'name' => $request->name,
             Auth::guard('web')
         ]);
-        return redirect()->route('roles.edit', $data->id)->with('success', 'Role created successfully');
+        return response()->json([
+            'success' => true,
+            'message' => 'Role created successfully',
+            'data' => $data
+        ], 200);
     }
 
     /**
@@ -64,15 +72,21 @@ class RolesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(),  [
             'name' => 'required|unique:roles',
         ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
 
         $data = Role::find($id);
-        $data->update([
-            'name' => $request->name,
-        ]);
-        return redirect()->route('roles.index')->with('success', 'Role updated successfully');
+        $data->name = $request->name;
+        return response()->json([
+            'success' => true,
+            'message' => 'Role updated successfully',
+            'data' => $data
+        ], 200);
     }
 
     /**
@@ -80,10 +94,12 @@ class RolesController extends Controller
      */
     public function destroy($id)
     {
-        
+
         $data = Role::find($id);
         $data->delete();
-        return redirect()->route('roles.index')->with('success', 'Role deleted successfully');
-
+        return response()->json([
+            'success' => true,
+            'message' => 'Role deleted successfully',
+            ], 200);
     }
 }
