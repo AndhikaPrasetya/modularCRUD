@@ -15,5 +15,10 @@ use Modules\Roles\Http\Controllers\RolesController;
 */
 
 Route::middleware(['auth','verified','role:admin'])->group( function () {
-    Route::resource('roles', RolesController::class)->names('roles');
+    Route::get('/roles', [RolesController::class,'index'])->name('roles.index');
+    Route::get('/roles/create', [RolesController::class,'create'])->name('roles.create');
+    Route::post('/roles/store',[RolesController::class, 'store'])->name('roles.store');
+    Route::get('/roles/edit/{id}', [RolesController::class,'edit'])->name('roles.edit');
+    Route::put('/roles/update/{id}', [RolesController::class,'update'])->name('roles.update');
+    Route::delete('/roles/delete/{id}', [RolesController::class,'destroy'])->name('roles.destroy');
 });

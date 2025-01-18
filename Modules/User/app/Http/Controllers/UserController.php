@@ -7,24 +7,55 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Yajra\DataTables\Facades\DataTables;
 
 class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data = User::all();
-        return view('user::index', compact('data'));
+        $title = "Data Users";
+        $breadcrumb = "Users";
+        if($request->ajax()){
+            $data = User::query();
+            if($search= $request->input('search.value')){
+                $data->where(function($data) use ($search){
+                    $data->where('name','like',"%{$search}%")
+                    ->orWhere('email','like',"%{$search}%");
+                });
+            }
+        
+        return DataTables::eloquent($data)
+        ->addIndexColumn()
+        ->addColumn('name', function($data){
+            return $data->name;
+        })
+        ->addColumn('email', function($data){
+            return $data->email;
+        })
+        ->addColumn('action', function ($data) {
+            return
+                '<div class="text-center">' .
+                '<a href="' . route('users.edit', $data->id) . '" class="btn btn-outline-info btn-sm mr-1"> <i class="icon-pencil"></i> <span>Edit</span></a>' .
+                '<button type="button" class="btn btn-outline-danger btn-sm delete-button" data-id="' . $data->id . '" data-section="users">' .
+                '<i class="fa fa-trash-o"></i> Delete</button>' .
+                '</div>';
+        })
+        ->rawColumns([ 'action'])
+        ->make(true);
+        }
+        return view('user::index', compact('title','breadcrumb'));
     }
-
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        return view('user::create');
+        $title = "Create Data Users";
+        $breadcrumb = "Create Users";
+        return view('user::create', compact('title','breadcrumb'));
     }
 
     /**
@@ -35,12 +66,16 @@ class UserController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email'],
-            'password' => 'required',
+            'password' =>'required|min:8'
         ]);
 
         //check if validation fails
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return response()->json([
+                'status' => false,
+                'message' => 'Validation Failed',
+                'errors' => $validator->errors()
+            ],422);
         }
 
         $data =  User::create([
@@ -69,8 +104,10 @@ class UserController extends Controller
      */
     public function edit($id)
     {
+        $title = "Edit Data Users";
+        $breadcrumb = "Edit Users";
         $data = User::find($id);
-        return view('user::edit', compact('data'));
+        return view('user::edit', compact('data', 'title','breadcrumb'));
     }
 
     /**

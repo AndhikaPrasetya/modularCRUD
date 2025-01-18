@@ -8,53 +8,47 @@
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
-                        <li class="breadcrumb-item active">{{ $breadcrumb }}</li>
+                        <li class="breadcrumb-item"><a href="#">{{ $breadcrumb }}</a></li>
+
                     </ol>
                 </div>
             </div>
         </div><!-- /.container-fluid -->
     </section>
     <section class="content">
+
         <div class="card card-primary">
-            <form id="createFormUser">
+            <form id="createFormPermission">
                 @csrf
                 <div class="card-body">
-                    <input type="hidden">
                     <div class="form-group">
                         <label for="name">Name</label>
-                        <input type="text" class="form-control" name="name" id="name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">email</label>
-                        <input type="text" class="form-control" name="email" id="email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="password">password</label>
-                        <input type="text" class="form-control" name="password" id="password" required>
+                        <input type="text" class="form-control" name="name" id="name">
+                        <span class="text-danger" id="name-error"></span>
                     </div>
                 </div>
                 <!-- /.card-body -->
 
                 <div class="card-footer">
                     <button type="submit" class="btn btn-primary">Submit</button>
-                    <button type="button"onclick="window.location.href='{{ route('users.index') }}'"
+                    <button type="button"onclick="window.location.href='{{ route('permission.index') }}'"
                         class="btn btn-warning"><span>Back</span></button>
                 </div>
             </form>
         </div>
-
     </section>
+
+    </div>
 @endsection
 @section('script')
     <script>
         $(document).ready(() => {
-
             const Toast = Swal.mixin({
                 toast: true,
                 position: 'top-end',
                 showConfirmButton: false,
-                timer: 3000
+                timer: 3000,
+                timerProgressBar: true
             });
 
             const showToast = (icon, message) => {
@@ -63,26 +57,42 @@
                     title: message
                 });
             };
-            $('#createFormUser').on('submit', function(e) {
-                e.preventDefault();
+
+            const handleCreateForm = (formId) => {
+                const form = $(`#${formId}`);
                 $.ajax({
-                    url: '/users/store',
+                    url: '/permission/store',
                     type: 'POST',
-                    data: $(this).serialize(),
-                    success: function(data) {
-                        window.location.href = '/users/edit/' + data.data;
+                    data: form.serialize(),
+                    success: function(response) {
+                        if (response.success) {
+                            showToast('success', response.message)
+                            //move page after 3000
+                            setTimeout(() => {
+                                window.location.href = '/permission/edit/' + response
+                                    .permission_id;
+                            }, 3000);
+                        } else {
+                            showToast('error', response.message)
+                        }
                     },
                     error: (xhr) => {
-                      const message = xhr.responseJSON.message;
                         if (xhr.status === 422) {
-                            showToast('error', message);
-                            console.log(message);
+                            showToast('error', xhr.responseJSON.message);
                         }
-                        showToast('error', message);
+                        showToast('error', xhr);
 
                     }
                 });
-            });
+            };
+        });
+        }
+        $('#createFormPermission').on('submit', function(e) {
+        e.preventDefault();
+        handleCreateForm('createFormPermission');
+        });
+
+
         })
     </script>
 @endsection

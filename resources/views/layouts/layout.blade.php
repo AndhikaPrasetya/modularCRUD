@@ -76,7 +76,7 @@
       <li class="nav-item">
         <form method="POST" action="{{ route('logout') }}" id="logout-form">
             @csrf
-            <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+            <a href="#" class="btn btn-sm " onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                 Logout
             </a>
         </form>
@@ -142,6 +142,15 @@
               </p>
             </a>
           </li>
+          <li class="nav-item">
+            <a href="{{route('permission.index')}}" class="nav-link">
+              <i class="nav-icon far fa-user-alt"></i>
+              <p>
+                Permission
+             
+              </p>
+            </a>
+          </li>
         
           @endif
          
@@ -167,8 +176,7 @@
   </aside>
 
   <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper">
-   
+  <div class="content-wrapper">   
     <!-- Main content -->
     @yield('content')
   </div>
@@ -207,7 +215,7 @@
 <!-- daterangepicker -->
 <script src={{asset('/template/plugins/moment/moment.min.js')}}></script>
 <script src={{asset('/template/plugins/daterangepicker/daterangepicker.js')}}></script>
-<!-- Summernote -->
+<script src={{asset('/template/dist/js/index.js')}}></script>
 <script src={{ asset('/template/plugins/summernote/summernote-bs4.min.js') }}></script>
 <script src={{asset('/template/plugins/datatables/jquery.dataTables.min.js')}}></script>
 <script src={{asset('/template/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js')}}></script>

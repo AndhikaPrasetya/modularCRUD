@@ -20,7 +20,7 @@
     
       <div class="card card-primary">
           <!-- Form Start -->
-          <form id="updateFormRole" data-id="{{ $data->id }}">
+          <form id="updateFormPermission" data-id="{{ $data->id }}">
               @csrf
               @method('PUT')
               <div class="card-body">
@@ -32,7 +32,7 @@
   
               <div class="card-footer">
                   <button type="submit" class="btn btn-primary">Submit</button>
-                  <button type="button" onclick="window.location.href='{{ route('roles.index') }}'" class="btn btn-warning">
+                  <button type="button" onclick="window.location.href='{{ route('permission.index') }}'" class="btn btn-warning">
                       <span>Back</span>
                   </button>
               </div>
@@ -65,7 +65,7 @@
             const id = form.data('id');
 
             $.ajax({
-                url: `/roles/update/${id}`,
+                url: `/permission/update/${id}`,
                 type: 'PUT',
                 data: form.serialize(),
                 success: (response) => {
@@ -83,9 +83,9 @@
             });
         };
 
-        $('#updateFormRole').on('submit', function (e) {
+        $('#updateFormPermission').on('submit', function (e) {
             e.preventDefault();
-            handleFormSubmit('updateFormRole');
+            handleFormSubmit('updateFormPermission');
         });
     });
 </script>

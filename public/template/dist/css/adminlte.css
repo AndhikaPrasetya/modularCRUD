@@ -52415,4 +52415,9 @@ a.text-muted:hover {
 .dark-mode .dark-mode.accent-gray-dark .page-item .page-link:hover, .dark-mode .dark-mode.accent-gray-dark .page-item .page-link:focus {
   color: #3f474e;
 }
+
+.d-flex-custom {
+  display: flex;
+  gap: 1rem; /* Adjust this value as needed */
+}
 /*# sourceMappingURL=adminlte.css.map */

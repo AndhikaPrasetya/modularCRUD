@@ -1,25 +1,25 @@
 <?php
 
-namespace Modules\Roles\Http\Controllers;
+namespace Modules\Permission\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Spatie\Permission\Models\Permission;
 use Yajra\DataTables\Facades\DataTables;
 
-class RolesController extends Controller
+class PermissionController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-        $title = "Data Role";
-        $breadcrumb = "Role";
+        $title = "Data Permission";
+        $breadcrumb = "Permission";
         if($request->ajax()){
-            $data = Role::query();
+            $data = Permission::query();
             if($search= $request->input('search.value')){
                 $data->where(function($data) use ($search){
                     $data->where('name','like',"%{$search}%");
@@ -37,25 +37,24 @@ class RolesController extends Controller
         ->addColumn('action', function ($data) {
             return
                 '<div class="text-center">' .
-                '<a href="' . route('roles.edit', $data->id) . '" class="btn btn-outline-info btn-sm mr-1"> <i class="icon-pencil"></i> <span>Edit</span></a>' .
-                '<button type="button" class="btn btn-outline-danger btn-sm delete-button" data-id="' . $data->id . '" data-section="roles">' .
+                '<a href="' . route('permission.edit', $data->id) . '" class="btn btn-outline-info btn-sm mr-1"> <i class="icon-pencil"></i> <span>Edit</span></a>' .
+                '<button type="button" class="btn btn-outline-danger btn-sm delete-button" data-id="' . $data->id . '" data-section="permission">' .
                 '<i class="fa fa-trash-o"></i> Delete</button>' .
                 '</div>';
         })
         ->rawColumns([ 'action'])
         ->make(true);
         }
-        return view('roles::index', compact('title','breadcrumb'));
+        return view('permission::index', compact('title','breadcrumb'));
     }
-
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        $title = "Create Role";
-        $breadcrumb = "Create Role";
-        return view('roles::create', compact('title','breadcrumb'));
+        $title = "Create Permission";
+        $breadcrumb = "Create Permission";
+        return view('permission::create', compact('title','breadcrumb'));
     }
 
     /**
@@ -70,14 +69,14 @@ class RolesController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-        $data = Role::create([
+        $data = Permission::create([
             'name' => $request->name,
             Auth::guard('web')
         ]);
         return response()->json([
             'success' => true,
-            'message' => 'Role created successfully',
-            'role_id' => $data->id
+            'message' => 'Permission created successfully',
+            'permission_id' => $data->id
         ], 200);
     }
 
@@ -86,7 +85,7 @@ class RolesController extends Controller
      */
     public function show($id)
     {
-        return view('roles::show');
+        return view('permission::show');
     }
 
     /**
@@ -94,10 +93,10 @@ class RolesController extends Controller
      */
     public function edit($id)
     {
-        $data = Role::find($id);
-        $title = "Edit Data Role";
-        $breadcrumb = "Edit Role";
-        return view('roles::edit', compact('data','title','breadcrumb'));
+        $title = "Edit Permission";
+        $breadcrumb = "Edit Permission";
+        $data = Permission::find($id);
+        return view('permission::edit', compact('title','breadcrumb','data'));
     }
 
     /**
@@ -113,12 +112,13 @@ class RolesController extends Controller
         }
 
 
-        $data = Role::find($id);
+        $data = Permission::find($id);
         $data->name = $request->name;
         $data->save();
+        
         return response()->json([
             'success' => true,
-            'message' => 'Role updated successfully',
+            'message' => 'Permission updated successfully',
             'data' => $data
         ], 200);
     }
@@ -128,12 +128,11 @@ class RolesController extends Controller
      */
     public function destroy($id)
     {
-
-        $data = Role::find($id);
+        $data = Permission::find($id);
         $data->delete();
         return response()->json([
             'success' => true,
-            'message' => 'Role deleted successfully',
+            'message' => 'Permission deleted successfully',
             ], 200);
     }
 }

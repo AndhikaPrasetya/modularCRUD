@@ -1,5 +1,6 @@
 {
     "Post": true,
     "User": true,
-    "Roles": true
+    "Roles": true,
+    "Permission": true
 }
