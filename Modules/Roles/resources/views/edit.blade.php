@@ -9,7 +9,9 @@
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="#">{{$breadcrumb}}</a></li>
+                    <li class="breadcrumb-item"><a href="{{url('/')}}">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="{{route('roles.index')}}">Roles</a></li>
+                    <li class="breadcrumb-item">Edit</li>
   
                 </ol>
             </div>

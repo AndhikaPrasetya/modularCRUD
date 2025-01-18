@@ -40,44 +40,15 @@
       <li class="nav-item">
         <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
       </li>
-      <li class="nav-item d-none d-sm-inline-block">
-        <a href="index3.html" class="nav-link">Home</a>
-      </li>
-      <li class="nav-item d-none d-sm-inline-block">
-        <a href="#" class="nav-link">Contact</a>
-      </li>
-      
     </ul>
 
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
-      <!-- Navbar Search -->
-      <li class="nav-item">
-        <a class="nav-link" data-widget="navbar-search" href="#" role="button">
-          <i class="fas fa-search"></i>
-        </a>
-        <div class="navbar-search-block">
-          <form class="form-inline">
-            <div class="input-group input-group-sm">
-              <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
-              <div class="input-group-append">
-                <button class="btn btn-navbar" type="submit">
-                  <i class="fas fa-search"></i>
-                </button>
-                <button class="btn btn-navbar" type="button" data-widget="navbar-search">
-                  <i class="fas fa-times"></i>
-                </button>
-               
-              </div>
-            </div>
-          </form>
-        </div>
-      </li>
 
       <li class="nav-item">
         <form method="POST" action="{{ route('logout') }}" id="logout-form">
             @csrf
-            <a href="#" class="btn btn-sm " onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+            <a href="#" class="btn btn-sm btn-danger" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                 Logout
             </a>
         </form>
@@ -106,52 +77,43 @@
           <a href="#" class="d-block">{{ Auth::user()->name }}</a>
         </div>
       </div>
-
-      <!-- SidebarSearch Form -->
-      <div class="form-inline">
-        <div class="input-group" data-widget="sidebar-search">
-          <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
-          <div class="input-group-append">
-            <button class="btn btn-sidebar">
-              <i class="fas fa-search fa-fw"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-
       <!-- Sidebar Menu -->
       <nav class="mt-2">
+        
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-       
           @if (auth()->user()->hasRole('admin'))
-          
+
           <li class="nav-item">
-            <a href="{{route('users.index')}}" class="nav-link">
-              <i class="nav-icon far fa-user"></i>
-              <p>
-                Users
-             
-              </p>
+            <a href="#" class="nav-link ">
+              <i class="fas fa-users"></i>
+                <p>
+                    Users Management
+                    <i class="right fas fa-angle-left"></i>
+                </p>
             </a>
-          </li>
-          <li class="nav-item">
-            <a href="{{route('roles.index')}}" class="nav-link">
-              <i class="nav-icon far fa-user-alt"></i>
-              <p>
-                Roles
-             
-              </p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="{{route('permission.index')}}" class="nav-link">
-              <i class="nav-icon far fa-user-alt"></i>
-              <p>
-                Permission
-             
-              </p>
-            </a>
-          </li>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a href="{{ route('users.index') }}" class="nav-link">
+                        <i class="nav-icon fas fa-user"></i>
+                        <p>Users</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('roles.index') }}" class="nav-link">
+                        <i class="nav-icon fas fa-shield-alt"></i>
+                        <p>Roles</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('permission.index') }}" class="nav-link">
+                        <i class="nav-icon fas fa-cogs"></i>
+                        <p>Permission</p>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        
+        
         
           @endif
          
@@ -231,6 +193,7 @@
 <script src={{asset('/template/plugins/datatables-buttons/js/buttons.print.min.js')}}></script>
 <script src={{asset('/template/plugins/datatables-buttons/js/buttons.colVis.min.js')}}></script>
 <script src="{{asset('template/plugins/toastr/toastr.min.js')}}"></script>
+<script src="{{asset('/template/dist/js/adminlte.js')}}"></script>
 @yield('script')
 </body>
 </html>
