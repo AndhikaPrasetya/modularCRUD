@@ -63,10 +63,13 @@ class PermissionController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(),  [
-            'name' => 'required|unique:roles',
+            'name' => 'required',
         ]);
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return response()->json([
+            'status'=>true,
+            'message'=>'validation failed',
+            'error'=>$validator->errors()->first('name')], 422);
         }
 
         $data = Permission::create([
@@ -105,10 +108,13 @@ class PermissionController extends Controller
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(),  [
-            'name' => 'required|unique:roles',
+            'name' => 'required',
         ]);
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return response()->json([
+            'status'=>true,
+            'message'=>'validation failed',
+            'error'=>$validator->errors()->first('name')], 422);
         }
 
 

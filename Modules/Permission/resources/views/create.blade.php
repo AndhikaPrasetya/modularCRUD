@@ -20,6 +20,7 @@
   <div class="card card-primary">
       <form id="createFormPermission">
           @csrf
+          
           <div class="card-body">
               <div class="form-group">
                   <label for="name">Name</label>
@@ -44,21 +45,25 @@
 @section('script')
     <script>
        $(document).ready(() => {
-        const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true 
-        });
-
-        const showToast = (icon, message) => {
-            Toast.fire({
-                icon: icon,
-                title: message
-            });
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "timeOut": "1000",
+          
         };
 
+        const showToast = (icon, message) => {
+            if (icon === 'error') {
+                toastr.error(message);
+            } else if (icon === 'success') {
+                toastr.success(message); 
+            } else if (icon === 'info') {
+                toastr.info(message); 
+            } else {
+                toastr.warning(message); 
+            }
+        };
         const handleCreateForm = (formId) =>{
           const form = $(`#${formId}`);
           $.ajax({
@@ -71,7 +76,7 @@
                 //move page after 3000
                  setTimeout(() => {
                        window.location.href = '/permission/edit/' + response.permission_id;
-                 }, 3000);
+                 }, 1000);
               } else {
                   showToast('error',response.message)
               }
@@ -82,6 +87,7 @@
                 showToast('error', xhr.responseJSON.name);
             } else {
                 showToast('error', xhr.responseJSON.message);
+                console.log(xhr.responseJSON.message)
             }
             }
           });

@@ -48,19 +48,22 @@
 @section('script')
     <script>
        $(document).ready(() => {
-        const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true 
-        });
+        toastr.options = {
+            "positionClass": "toast-top-right", // Posisi toast
+            "timeOut": "1000",
+          
+        };
 
         const showToast = (icon, message) => {
-            Toast.fire({
-                icon: icon,
-                title: message
-            });
+            if (icon === 'error') {
+                toastr.error(message); // Toast untuk error
+            } else if (icon === 'success') {
+                toastr.success(message); // Toast untuk sukses
+            } else if (icon === 'info') {
+                toastr.info(message); // Toast untuk info
+            } else {
+                toastr.warning(message); // Toast untuk warning
+            }
         };
 
         const handleCreateForm = (formId) =>{
@@ -75,7 +78,7 @@
                 //move page after 3000
                  setTimeout(() => {
                        window.location.href = '/roles/edit/' + response.role_id;
-                 }, 3000);
+                 }, 1000);
               } else {
                   showToast('error',response.message)
               }
@@ -83,7 +86,7 @@
             error:function(xhr){
                 // console.log(xhr.responseJSON.error);
                 if (xhr.status === 422) {
-                showToast('error', xhr.responseJSON.name);
+                showToast('error', xhr.responseJSON.errors);
             } else {
                 showToast('error', xhr.responseJSON.message);
             }

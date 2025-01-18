@@ -47,42 +47,68 @@
     </section>
 @endsection
 @section('script')
-    <script>
-        $(document).ready(() => {
+<script>
+  $(document).ready(() => {
 
-            const Toast = Swal.mixin({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 3000
-            });
+      // const Toast = Swal.mixin({
+      //     toast: true,
+      //     position: 'top-end',
+      //     showConfirmButton: false,
+      //     timer: 3000
+      // });
 
-            const showToast = (icon, message) => {
-                Toast.fire({
-                    icon: icon,
-                    title: message
-                });
-            };
-            $('#createFormUser').on('submit', function(e) {
-                e.preventDefault();
-                $.ajax({
-                    url: '/users/store',
-                    type: 'POST',
-                    data: $(this).serialize(),
-                    success: function(data) {
-                        window.location.href = '/users/edit/' + data.data;
-                    },
-                    error: (xhr) => {
-                      const message = xhr.responseJSON.message;
-                        if (xhr.status === 422) {
-                            showToast('error', message);
-                            console.log(message);
+      // const showToast = (icon, message) => {
+      //     Toast.fire({
+      //         icon: icon,
+      //         title: message
+      //     });
+      // };
+      toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right", // Posisi toast
+            "timeOut": "2000",
+          
+        };
+
+        const showToast = (icon, message) => {
+            if (icon === 'error') {
+                toastr.error(message); // Toast untuk error
+            } else if (icon === 'success') {
+                toastr.success(message); // Toast untuk sukses
+            } else if (icon === 'info') {
+                toastr.info(message); // Toast untuk info
+            } else {
+                toastr.warning(message); // Toast untuk warning
+            }
+        };
+
+      $('#createFormUser').on('submit', function(e) {
+          e.preventDefault();
+          $.ajax({
+              url: '/users/store',
+              type: 'POST',
+              data: $(this).serialize(),
+              success: function(data) {
+                  window.location.href = '/users/edit/' + data.data;
+              },
+              error: (xhr) => {
+                    if (xhr.status === 422) {
+                        const errors = xhr.responseJSON.errors;
+                        // Iterasi untuk semua error
+                        for (const [field, messages] of Object.entries(errors)) {
+                            messages.forEach(message => {
+                                showToast('error', message);
+                                // console.log(message); 
+                            });
                         }
-                        showToast('error', message);
-
+                    } else {
+                        showToast('error', 'An unexpected error occurred.');
                     }
-                });
-            });
-        })
-    </script>
+                }
+          });
+      });
+  });
+</script>
+
 @endsection

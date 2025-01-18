@@ -66,9 +66,15 @@ class RolesController extends Controller
         $validator = Validator::make($request->all(),  [
             'name' => 'required|unique:roles',
         ]);
+        //check if validation fails
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return response()->json([
+                'status' => false,
+                'message' => 'Validation Failed',
+                'errors' => $validator->errors()->first('name')
+            ],422);
         }
+
 
         $data = Role::create([
             'name' => $request->name,
@@ -109,7 +115,10 @@ class RolesController extends Controller
             'name' => 'required|unique:roles',
         ]);
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return response()->json([
+                'status' => false,
+                'message' => 'Validation Failed',
+                'errors' => $validator->errors()->first('name')], 422);
         }
 
 

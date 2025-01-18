@@ -44,18 +44,24 @@
 @section('script')
 <script>
     $(document).ready(() => {
-        const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 3000
-        });
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right", // Posisi toast
+            "timeOut": "2000",
+          
+        };
 
         const showToast = (icon, message) => {
-            Toast.fire({
-                icon: icon,
-                title: message
-            });
+            if (icon === 'error') {
+                toastr.error(message); // Toast untuk error
+            } else if (icon === 'success') {
+                toastr.success(message); // Toast untuk sukses
+            } else if (icon === 'info') {
+                toastr.info(message); // Toast untuk info
+            } else {
+                toastr.warning(message); // Toast untuk warning
+            }
         };
 
         const handleFormSubmit = (formId) => {
@@ -75,11 +81,14 @@
                         showToast('error', response.message);
                     }
                 },
-                error: (error) => {
-                    console.error('Error:', error);
-
-                    showToast('error', 'Terjadi kesalahan. Silakan coba lagi.');
-                }
+                error:function(xhr){
+                // console.log(xhr.responseJSON.error);
+                if (xhr.status === 422) {
+                showToast('error', xhr.responseJSON.errors);
+            } else {
+                showToast('error', xhr.responseJSON.message);
+            }
+            }
             });
         };
 

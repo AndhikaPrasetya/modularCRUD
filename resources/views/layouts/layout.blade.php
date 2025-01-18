@@ -11,6 +11,7 @@
   <!-- Font Awesome -->
   <link rel="stylesheet" href={{asset('/template/plugins/fontawesome-free/css/all.min.css')}}>
   <!-- Ionicons -->
+  
   <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
   <!-- iCheck -->
   <link rel="stylesheet" href={{asset('/template/plugins/icheck-bootstrap/icheck-bootstrap.min.css')}}>
@@ -21,7 +22,7 @@
   <link rel="stylesheet" href={{asset('/template/dist/css/adminlte.min.css')}}>
   <!-- Daterange picker -->
   <link rel="stylesheet" href={{asset('/template/plugins/daterangepicker/daterangepicker.css')}}>
-  <!-- summernote -->
+  <link rel="stylesheet" href="{{asset('/template/plugins/toastr/toastr.min.css')}}">
   <link rel="stylesheet" href={{asset('/template/plugins/summernote/summernote-bs4.min.css')}}>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -229,6 +230,7 @@
 <script src={{asset('/template/plugins/datatables-buttons/js/buttons.html5.min.js')}}></script>
 <script src={{asset('/template/plugins/datatables-buttons/js/buttons.print.min.js')}}></script>
 <script src={{asset('/template/plugins/datatables-buttons/js/buttons.colVis.min.js')}}></script>
+<script src="{{asset('template/plugins/toastr/toastr.min.js')}}"></script>
 @yield('script')
 </body>
 </html>

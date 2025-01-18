@@ -26,24 +26,15 @@
                         <label for="name">name</label>
                         <input type="text" class="form-control" name="name" id="name"
                             value="{{ $data->name }}">
-                        @if ($errors->has('name'))
-                            <span class="text-danger">{{ $errors->first('name') }}</span>
-                        @endif
                     </div>
                     <div class="form-group">
                         <label for="email">email</label>
                         <input type="text" class="form-control" name="email" id="email"
                             value="{{ $data->email }}">
-                        @if ($errors->has('email'))
-                            <span class="text-danger">{{ $errors->first('email') }}</span>
-                        @endif
                     </div>
                     <div class="form-group">
                         <label for="password">new password</label>
                         <input type="text" class="form-control" name="password" id="password">
-                        @if ($errors->has('password'))
-                            <span class="text-danger">{{ $errors->first('password') }}</span>
-                        @endif
                     </div>
                 </div>
 
@@ -60,19 +51,26 @@
 @section('script')
     <script>
         $(document).ready(() => {
-            const Toast = Swal.mixin({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 3000
-            });
+            toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right", // Posisi toast
+            "timeOut": "2000",
+          
+        };
 
-            const showToast = (icon, message) => {
-                Toast.fire({
-                    icon: icon,
-                    title: message
-                });
-            };
+        const showToast = (icon, message) => {
+            if (icon === 'error') {
+                toastr.error(message); // Toast untuk error
+            } else if (icon === 'success') {
+                toastr.success(message); // Toast untuk sukses
+            } else if (icon === 'info') {
+                toastr.info(message); // Toast untuk info
+            } else {
+                toastr.warning(message); // Toast untuk warning
+            }
+        };
+
 
             const handleFormSubmit = (formId) => {
                 const form = $(`#${formId}`);
@@ -91,10 +89,17 @@
                     },
                     error: (xhr) => {
                         if (xhr.status === 422) {
-                            showToast('error', xhr.responseJSON.message);
+                        const errors = xhr.responseJSON.errors;
+                        // Iterasi untuk semua error
+                        for (const [field, messages] of Object.entries(errors)) {
+                            messages.forEach(message => {
+                                showToast('error', message);
+                                // console.log(message); 
+                            });
                         }
-                        showToast('error', xhr);
-
+                    } else {
+                        showToast('error', 'An unexpected error occurred.');
+                    }
                     }
                 });
             };
