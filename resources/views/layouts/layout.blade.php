@@ -81,7 +81,7 @@
       <nav class="mt-2">
         
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-          @if (auth()->user()->hasRole('admin'))
+          {{-- @if (auth()->user()->hasRole('admin')) --}}
 
           <li class="nav-item">
             <a href="#" class="nav-link ">
@@ -115,9 +115,8 @@
         
         
         
-          @endif
+          {{-- @endif --}}
          
-          @can('show-text')
           <li class="nav-item">
             <a href="/post" class="nav-link">
               <i class="nav-icon far fa-calendar-alt"></i>
@@ -127,7 +126,6 @@
               </p>
             </a>
           </li>
-          @endcan
 
           
        

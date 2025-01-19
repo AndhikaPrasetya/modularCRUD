@@ -7,6 +7,7 @@ use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Spatie\Permission\Models\Permission;
 use Yajra\DataTables\Facades\DataTables;
 
 class RolesController extends Controller
@@ -38,6 +39,7 @@ class RolesController extends Controller
             return
                 '<div class="text-center">' .
                 '<a href="' . route('roles.edit', $data->id) . '" class="btn btn-outline-info btn-sm mr-1"> <i class="icon-pencil"></i> <span>Edit</span></a>' .
+                '<a href="' . route('roles.permission', $data->id) . '" class="btn btn-outline-info btn-sm mr-1"> <i class="icon-pencil"></i> <span>Add/Edit Permission</span></a>' .
                 '<button type="button" class="btn btn-outline-danger btn-sm delete-button" data-id="' . $data->id . '" data-section="roles">' .
                 '<i class="fa fa-trash-o"></i> Delete</button>' .
                 '</div>';
@@ -130,6 +132,14 @@ class RolesController extends Controller
             'message' => 'Role updated successfully',
             'data' => $data
         ], 200);
+    }
+
+    public function addPermission($roleId){
+        $title = "Edit Permission";
+        $breadcrumb = "Edit Permission";
+        $role = Role::find($roleId);
+        $permissions = Permission::get();
+        return view('roles::addPermission', compact('role','permissions','title','breadcrumb'));
     }
 
     /**

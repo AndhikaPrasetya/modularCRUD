@@ -16,6 +16,14 @@
                         <label for="email">email</label>
                         <input type="text" class="form-control" name="email" id="email" required>
                     </div>
+                    <div class="form-group col-3">
+                        <label for="">Roles</label>
+                      <select name="roles[]" class="form-control" size="3" multiple>
+                        @foreach($roles as $role)
+                        <option value="{{$role}}">{{$role}}</option>
+                        @endforeach
+                      </select>
+                    </div>
                     <div class="form-group">
                         <label for="password">password</label>
                         <input type="text" class="form-control" name="password" id="password" required>

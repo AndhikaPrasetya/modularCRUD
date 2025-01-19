@@ -34,6 +34,14 @@
                             value="{{ $data->email }}">
                     </div>
                     <div class="form-group">
+                        <label for="">Roles</label>
+                      <select name="roles[]" class="form-control" multiple>
+                        @foreach($roles as $role)
+                        <option value="{{$role}}" {{in_array($role, $userRole)?'selected':''}}>{{$role}}</option>
+                        @endforeach
+                      </select>
+                    </div>
+                    <div class="form-group">
                         <label for="password">new password</label>
                         <input type="text" class="form-control" name="password" id="password">
                     </div>

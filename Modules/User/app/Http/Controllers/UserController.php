@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Spatie\Permission\Models\Role;
 use Yajra\DataTables\Facades\DataTables;
 
 class UserController extends Controller
@@ -35,6 +36,16 @@ class UserController extends Controller
         ->addColumn('email', function($data){
             return $data->email;
         })
+        ->addColumn('role', function($data){
+            $roles = $data->getRoleNames();
+            $rolesList = '';
+        
+            foreach ($roles as $role) {
+                $rolesList .= '<span class="badge badge-primary">' . $role . '</span> '; 
+            }
+        
+            return $rolesList; 
+        })
         ->addColumn('action', function ($data) {
             return
                 '<div class="text-center">' .
@@ -43,7 +54,7 @@ class UserController extends Controller
                 '<i class="fa fa-trash-o"></i> Delete</button>' .
                 '</div>';
         })
-        ->rawColumns([ 'action'])
+        ->rawColumns([ 'action','role'])
         ->make(true);
         }
         return view('user::index', compact('title','breadcrumb'));
@@ -55,7 +66,8 @@ class UserController extends Controller
     {
         $title = "Create Data Users";
         $breadcrumb = "Create Users";
-        return view('user::create', compact('title','breadcrumb'));
+        $roles = Role::pluck('name','name')->all();
+        return view('user::create', compact('title','breadcrumb','roles'));
     }
 
     /**
@@ -64,9 +76,10 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email'],
-            'password' =>'required|min:8'
+            'name' => 'required|string',
+            'email' => 'required|string|email|max:255|unique:users,email',
+            'password' =>'required|min:8',
+            'roles' => 'required',
         ]);
 
         //check if validation fails
@@ -83,6 +96,7 @@ class UserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
+        $data->syncRoles($request->roles);
         return response()->json([
             'success' => true,
             'message' => 'User created successfully',
@@ -107,7 +121,10 @@ class UserController extends Controller
         $title = "Edit Data Users";
         $breadcrumb = "Edit Users";
         $data = User::find($id);
-        return view('user::edit', compact('data', 'title','breadcrumb'));
+        $roles = Role::pluck('name','name')->all();
+        $userRole = $data->roles->pluck('name','name')->all();
+
+        return view('user::edit', compact('data', 'title','breadcrumb','roles','userRole'));
     }
 
     /**
@@ -119,6 +136,7 @@ class UserController extends Controller
             'name' => 'required',
             'email' => 'required|string|lowercase|email|max:255|unique:users,email,' . $id,
             'password' => 'nullable',
+            'roles' => 'required|array',
         ]);
         $user = User::find($id);
 
@@ -140,6 +158,8 @@ class UserController extends Controller
     if ($request->filled('email')) {
         $user->email = $request->email;
     }
+    // Update role
+    $user->syncRoles($request->roles);
         $user->save();
 
         return response()->json([
