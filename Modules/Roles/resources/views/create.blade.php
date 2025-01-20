@@ -12,10 +12,21 @@
               <div class="form-group">
                   <label for="name">Name</label>
                   <input type="text" class="form-control" name="name" id="name" required>
-                  @if ($errors->has('name'))
-                      <span class="text-danger">{{ $errors->first('name') }}</span>
-                  @endif
               </div>
+              @foreach ($permissions as $key => $permission)
+              <div class="form-group mr-2">
+                  <div class="custom-control custom-switch">
+                      <input type="checkbox" class="custom-control-input" id="customSwitch{{ $key }}" 
+                          name="permission[]" value="{{ $permission->name }}"
+                          {{in_array($permission->id,$rolePermissions)? 'checked' : ''}}>
+                      <label class="custom-control-label" for="customSwitch{{ $key }}">
+                          {{ $permission->name }}
+                      </label>
+                  </div>
+                  
+              </div>
+          @endforeach
+
           </div>
           <!-- /.card-body -->
   

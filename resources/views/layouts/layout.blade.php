@@ -18,6 +18,8 @@
   <link rel="stylesheet" href={{asset('/template/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css')}}>
   <link rel="stylesheet" href={{asset('/template/plugins/datatables-responsive/css/responsive.bootstrap4.min.css')}}>
   <link rel="stylesheet" href={{asset('/template/plugins/datatables-buttons/css/buttons.bootstrap4.min.css')}}>
+  <link rel="stylesheet" href={{asset('/template/plugins/select2/css/select2.min.css')}}>
+
   <!-- Theme style -->
   <link rel="stylesheet" href={{asset('/template/dist/css/adminlte.min.css')}}>
   <!-- Daterange picker -->
@@ -192,6 +194,7 @@
 <script src={{asset('/template/plugins/datatables-buttons/js/buttons.colVis.min.js')}}></script>
 <script src="{{asset('template/plugins/toastr/toastr.min.js')}}"></script>
 <script src="{{asset('/template/dist/js/adminlte.js')}}"></script>
+<script src="{{asset('/template/plugins/select2/js/select2.full.min.js')}}"></script>
 @yield('script')
 </body>
 </html>

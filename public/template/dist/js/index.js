@@ -132,4 +132,33 @@ $(document).ready(function() {
             },
         ]
     });
+
+
+
+
+    //getDataRoleInUser
+
+    $('.allRole').select2({
+        ajax: {
+            url: '/roles/getDataRole', 
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return {
+                    search: params.term 
+                };
+            },
+            processResults: function (data) {
+                return {
+                    results: data.map(function (role) {
+                        return {
+                            id: role.name,
+                            text: role.name
+                        };
+                    })
+                };
+            },
+            cache: true
+        }
+    });
 })

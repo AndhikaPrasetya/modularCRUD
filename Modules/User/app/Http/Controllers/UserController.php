@@ -19,45 +19,45 @@ class UserController extends Controller
     {
         $title = "Data Users";
         $breadcrumb = "Users";
-        if($request->ajax()){
+        if ($request->ajax()) {
             $data = User::query();
-            if($search= $request->input('search.value')){
-                $data->where(function($data) use ($search){
-                    $data->where('name','like',"%{$search}%")
-                    ->orWhere('email','like',"%{$search}%");
+            if ($search = $request->input('search.value')) {
+                $data->where(function ($data) use ($search) {
+                    $data->where('name', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%");
                 });
             }
-        
-        return DataTables::eloquent($data)
-        ->addIndexColumn()
-        ->addColumn('name', function($data){
-            return $data->name;
-        })
-        ->addColumn('email', function($data){
-            return $data->email;
-        })
-        ->addColumn('role', function($data){
-            $roles = $data->getRoleNames();
-            $rolesList = '';
-        
-            foreach ($roles as $role) {
-                $rolesList .= '<span class="badge badge-primary">' . $role . '</span> '; 
-            }
-        
-            return $rolesList; 
-        })
-        ->addColumn('action', function ($data) {
-            return
-                '<div class="text-center">' .
-                '<a href="' . route('users.edit', $data->id) . '" class="btn btn-outline-info btn-sm mr-1"> <i class="icon-pencil"></i> <span>Edit</span></a>' .
-                '<button type="button" class="btn btn-outline-danger btn-sm delete-button" data-id="' . $data->id . '" data-section="users">' .
-                '<i class="fa fa-trash-o"></i> Delete</button>' .
-                '</div>';
-        })
-        ->rawColumns([ 'action','role'])
-        ->make(true);
+
+            return DataTables::eloquent($data)
+                ->addIndexColumn()
+                ->addColumn('name', function ($data) {
+                    return $data->name;
+                })
+                ->addColumn('email', function ($data) {
+                    return $data->email;
+                })
+                ->addColumn('role', function ($data) {
+                    $roles = $data->getRoleNames();
+                    $rolesList = '';
+
+                    foreach ($roles as $role) {
+                        $rolesList .= '<span class="badge badge-primary">' . $role . '</span> ';
+                    }
+
+                    return $rolesList;
+                })
+                ->addColumn('action', function ($data) {
+                    return
+                        '<div class="text-center">' .
+                        '<a href="' . route('users.edit', $data->id) . '" class="btn btn-outline-info btn-sm mr-1" > <i class="icon-pencil"></i> <span>Edit</span></a>' .
+                        '<button type="button" class="btn btn-outline-danger btn-sm delete-button" data-id="' . $data->id . '" data-section="users">' .
+                        '<i class="fa fa-trash-o"></i> Delete</button>' .
+                        '</div>';
+                })
+                ->rawColumns(['action', 'role'])
+                ->make(true);
         }
-        return view('user::index', compact('title','breadcrumb'));
+        return view('user::index', compact('title', 'breadcrumb'));
     }
     /**
      * Show the form for creating a new resource.
@@ -66,8 +66,8 @@ class UserController extends Controller
     {
         $title = "Create Data Users";
         $breadcrumb = "Create Users";
-        $roles = Role::pluck('name','name')->all();
-        return view('user::create', compact('title','breadcrumb','roles'));
+        $roles = Role::pluck('name', 'name')->all();
+        return view('user::create', compact('title', 'breadcrumb', 'roles'));
     }
 
     /**
@@ -76,9 +76,9 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string',
+            'name' => 'required',
             'email' => 'required|string|email|max:255|unique:users,email',
-            'password' =>'required|min:8',
+            'password' => 'required|min:8',
             'roles' => 'required',
         ]);
 
@@ -88,7 +88,7 @@ class UserController extends Controller
                 'status' => false,
                 'message' => 'Validation Failed',
                 'errors' => $validator->errors()
-            ],422);
+            ], 422);
         }
 
         $data =  User::create([
@@ -121,10 +121,10 @@ class UserController extends Controller
         $title = "Edit Data Users";
         $breadcrumb = "Edit Users";
         $data = User::find($id);
-        $roles = Role::pluck('name','name')->all();
-        $userRole = $data->roles->pluck('name','name')->all();
+        $roles = Role::pluck('name', 'name')->all();
+        $userRole = $data->roles->pluck('name', 'name')->all();
 
-        return view('user::edit', compact('data', 'title','breadcrumb','roles','userRole'));
+        return view('user::edit', compact('data', 'title', 'breadcrumb', 'roles', 'userRole'));
     }
 
     /**
@@ -135,7 +135,7 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required',
             'email' => 'required|string|lowercase|email|max:255|unique:users,email,' . $id,
-            'password' => 'nullable',
+            'password' => 'nullable|min:8',
             'roles' => 'required|array',
         ]);
         $user = User::find($id);
@@ -146,20 +146,20 @@ class UserController extends Controller
                 'message' => 'User not found',
             ], 404);
         }
-        
+
         $user->name = $request->name;
 
-      // Update password jika diisi
-    if ($request->filled('password')) {
-        $user->password = bcrypt($request->password);
-    }
+        // Update password jika diisi
+        if ($request->filled('password')) {
+            $user->password = bcrypt($request->password);
+        }
 
-    // Update email jika diisi
-    if ($request->filled('email')) {
-        $user->email = $request->email;
-    }
-    // Update role
-    $user->syncRoles($request->roles);
+        // Update email jika diisi
+        if ($request->filled('email')) {
+            $user->email = $request->email;
+        }
+        // Update role
+        $user->syncRoles($request->roles);
         $user->save();
 
         return response()->json([
@@ -176,20 +176,19 @@ class UserController extends Controller
     public function destroy($id)
     {
         $user = User::find($id);
-    
+
         if (!$user) {
             return response()->json([
                 'success' => false,
                 'message' => 'User not found',
             ], 404);
         }
-    
+
         $user->delete();
-    
+
         return response()->json([
             'success' => true,
             'message' => 'User deleted successfully',
         ], 200);
     }
-    
-} 
+}

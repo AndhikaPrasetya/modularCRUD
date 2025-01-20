@@ -7,11 +7,11 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card">
-                            <div class="p-3">
-                                <a href="{{ route('roles.create') }}" class="btn btn-primary">Create</a>
-
-                            </div>
-                        
+                        @can('create role')
+                        <div class="p-3">
+                            <a href="{{ route('roles.create') }}" class="btn btn-primary">Create</a>
+                        </div>
+                        @endcan
                         <div class="card-body">
                             <table class="table table-bordered table-hover" id="table_role">
                                 <thead>

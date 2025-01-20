@@ -16,13 +16,12 @@
                         <label for="email">email</label>
                         <input type="text" class="form-control" name="email" id="email" required>
                     </div>
-                    <div class="form-group col-3">
-                        <label for="">Roles</label>
-                      <select name="roles[]" class="form-control" size="3" multiple>
-                        @foreach($roles as $role)
-                        <option value="{{$role}}">{{$role}}</option>
-                        @endforeach
-                      </select>
+                    <div class="form-group">
+                        <label for="">Roles</label>                     
+                        <select class="allRole" name="roles[]" multiple="multiple" style="width: 100%;">      
+                        </select>
+                    
+
                     </div>
                     <div class="form-group">
                         <label for="password">password</label>
@@ -43,21 +42,10 @@
 @endsection
 @section('script')
 <script>
+
   $(document).ready(() => {
 
-      // const Toast = Swal.mixin({
-      //     toast: true,
-      //     position: 'top-end',
-      //     showConfirmButton: false,
-      //     timer: 3000
-      // });
 
-      // const showToast = (icon, message) => {
-      //     Toast.fire({
-      //         icon: icon,
-      //         title: message
-      //     });
-      // };
       toastr.options = {
             "closeButton": true,
             "progressBar": true,
@@ -84,8 +72,10 @@
               url: '/users/store',
               type: 'POST',
               data: $(this).serialize(),
-              success: function(data) {
-                  window.location.href = '/users/edit/' + data.data;
+              success: function(response) {
+                showToast('success',response.message)
+                
+                  window.location.href = '/users/edit/' + response.data;
               },
               error: (xhr) => {
                     if (xhr.status === 422) {
@@ -98,11 +88,16 @@
                             });
                         }
                     } else {
-                        showToast('error', 'An unexpected error occurred.');
+                        showToast('error', xhr.responseJSON.error);
+                        console.log(xhr.responseJSON.error);
                     }
                 }
           });
       });
+
+
+   
+
   });
 </script>
 

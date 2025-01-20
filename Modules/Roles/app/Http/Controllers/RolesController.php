@@ -6,48 +6,62 @@ use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Permission;
 use Yajra\DataTables\Facades\DataTables;
 
 class RolesController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
+
     public function index(Request $request)
     {
         $title = "Data Role";
         $breadcrumb = "Role";
-        if($request->ajax()){
+        if ($request->ajax()) {
             $data = Role::query();
-            if($search= $request->input('search.value')){
-                $data->where(function($data) use ($search){
-                    $data->where('name','like',"%{$search}%");
+            if ($search = $request->input('search.value')) {
+                $data->where(function ($data) use ($search) {
+                    $data->where('name', 'like', "%{$search}%");
                 });
             }
-        
-        return DataTables::eloquent($data)
-        ->addIndexColumn()
-        ->addColumn('Name', function($data){
-            return $data->name;
-        })
-        ->addColumn('Guard Name', function($data){
-            return $data->guard_name;
-        })
-        ->addColumn('action', function ($data) {
-            return
-                '<div class="text-center">' .
-                '<a href="' . route('roles.edit', $data->id) . '" class="btn btn-outline-info btn-sm mr-1"> <i class="icon-pencil"></i> <span>Edit</span></a>' .
-                '<a href="' . route('roles.permission', $data->id) . '" class="btn btn-outline-info btn-sm mr-1"> <i class="icon-pencil"></i> <span>Add/Edit Permission</span></a>' .
-                '<button type="button" class="btn btn-outline-danger btn-sm delete-button" data-id="' . $data->id . '" data-section="roles">' .
-                '<i class="fa fa-trash-o"></i> Delete</button>' .
-                '</div>';
-        })
-        ->rawColumns([ 'action'])
-        ->make(true);
+
+            return DataTables::eloquent($data)
+                ->addIndexColumn()
+                ->addColumn('Name', function ($data) {
+                    return $data->name;
+                })
+                ->addColumn('Guard Name', function ($data) {
+                    return $data->guard_name;
+                })
+                ->addColumn('action', function ($data) {
+                    $buttons = '<div class="text-center">';
+    
+                    // Check permission for editing roles
+                    if (Auth::user()->can('update role')) {
+                        $buttons .= '<a href="' . route('roles.edit', $data->id) . '" class="btn btn-outline-info btn-sm mr-1"> <i class="icon-pencil"></i> <span>Edit</span></a>';
+                    }
+    
+                    //Check permission for adding/editing permissions
+                    if (Auth::user()->can('set permission role')) {
+                        $buttons .= '<a href="' . route('roles.permission', $data->id) . '" class="btn btn-outline-info btn-sm mr-1"> <i class="icon-pencil"></i> <span>Add/Edit Permission</span></a>';
+                    }
+    
+                    // Check permission for deleting roles
+                    if (Auth::user()->can('delete role')) {
+                        $buttons .= '<button type="button" class="btn btn-outline-danger btn-sm delete-button" data-id="' . $data->id . '" data-section="roles">' .
+                            '<i class="fa fa-trash-o"></i> Delete</button>';
+                    }
+    
+                    $buttons .= '</div>';
+    
+                    return $buttons;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
         }
-        return view('roles::index', compact('title','breadcrumb'));
+        return view('roles::index', compact('title', 'breadcrumb'));
     }
 
     /**
@@ -57,7 +71,7 @@ class RolesController extends Controller
     {
         $title = "Create Role";
         $breadcrumb = "Create Role";
-        return view('roles::create', compact('title','breadcrumb'));
+        return view('roles::create', compact('title', 'breadcrumb'));
     }
 
     /**
@@ -74,7 +88,7 @@ class RolesController extends Controller
                 'status' => false,
                 'message' => 'Validation Failed',
                 'errors' => $validator->errors()->first('name')
-            ],422);
+            ], 422);
         }
 
 
@@ -105,7 +119,7 @@ class RolesController extends Controller
         $data = Role::find($id);
         $title = "Edit Data Role";
         $breadcrumb = "Edit Role";
-        return view('roles::edit', compact('data','title','breadcrumb'));
+        return view('roles::edit', compact('data', 'title', 'breadcrumb'));
     }
 
     /**
@@ -120,7 +134,8 @@ class RolesController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => 'Validation Failed',
-                'errors' => $validator->errors()->first('name')], 422);
+                'errors' => $validator->errors()->first('name')
+            ], 422);
         }
 
 
@@ -134,13 +149,53 @@ class RolesController extends Controller
         ], 200);
     }
 
-    public function addPermission($roleId){
+    public function addPermission($roleId)
+    {
         $title = "Edit Permission";
         $breadcrumb = "Edit Permission";
         $role = Role::find($roleId);
         $permissions = Permission::get();
-        return view('roles::addPermission', compact('role','permissions','title','breadcrumb'));
+        $rolePermissions = DB::table('role_has_permissions')
+            ->where('role_has_permissions.role_id', $role->id)
+            ->pluck('role_has_permissions.permission_id', 'role_has_permissions.permission_id')->all();
+        return view('roles::addPermission', compact('role', 'permissions', 'rolePermissions', 'title', 'breadcrumb'));
     }
+
+    public function givePermissionToRole(Request $request, $roleId)
+    {
+        $validator = Validator::make($request->all(),  [
+            'permission' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validation Failed',
+                'errors' => $validator->errors()->first('permission')
+            ], 422);
+        }
+        $role = Role::find($roleId);
+        $role->syncPermissions($request->permission);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Permission added successfully',
+            'data' => $role
+        ], 200);
+    }
+
+    public function getDataRole(Request $request)
+    {
+        $search = $request->input('search');
+
+        $role = Role::get();
+
+        if ($search) {
+            $role->where('name', 'like', "%{$search}%");
+        }
+
+        return response()->json($role);
+    }
+
 
     /**
      * Remove the specified resource from storage.
@@ -153,6 +208,6 @@ class RolesController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Role deleted successfully',
-            ], 200);
+        ], 200);
     }
 }
