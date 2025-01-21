@@ -21,7 +21,7 @@ Route::middleware(['auth','verified','role:admin|super admin'])->group( function
     Route::get('/roles/edit/{id}', [RolesController::class,'edit'])->name('roles.edit')->middleware(['permission:update role']);
     Route::put('/roles/update/{id}', [RolesController::class,'update'])->name('roles.update');
     Route::delete('/roles/delete/{id}', [RolesController::class,'destroy'])->name('roles.destroy')->middleware(['permission:delete role']);
-    Route::get('/roles/addPermission/{Roleid}', [RolesController::class,'addPermission'])->name('roles.permission')->middleware(['permission:set permission role']);
-    Route::put('/roles/givePermission/{Roleid}', [RolesController::class,'givePermissionToRole'])->name('roles.givePermission');
     Route::get('/roles/getDataRole', [RolesController::class,'getDataRole']);
+
+    
 });

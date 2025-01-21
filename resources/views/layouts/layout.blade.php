@@ -13,12 +13,16 @@
   <!-- Ionicons -->
   
   <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- FilePond CSS -->
+<link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
+
   <!-- iCheck -->
   <link rel="stylesheet" href={{asset('/template/plugins/icheck-bootstrap/icheck-bootstrap.min.css')}}>
   <link rel="stylesheet" href={{asset('/template/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css')}}>
   <link rel="stylesheet" href={{asset('/template/plugins/datatables-responsive/css/responsive.bootstrap4.min.css')}}>
   <link rel="stylesheet" href={{asset('/template/plugins/datatables-buttons/css/buttons.bootstrap4.min.css')}}>
   <link rel="stylesheet" href={{asset('/template/plugins/select2/css/select2.min.css')}}>
+  <link rel="stylesheet" href="{{asset('/template/plugins/daterangepicker/daterangepicker.css')}}">
 
   <!-- Theme style -->
   <link rel="stylesheet" href={{asset('/template/dist/css/adminlte.min.css')}}>
@@ -83,55 +87,51 @@
       <nav class="mt-2">
         
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-          {{-- @if (auth()->user()->hasRole('admin')) --}}
-
-          <li class="nav-item">
-            <a href="#" class="nav-link ">
-              <i class="fas fa-users"></i>
-                <p>
-                    Users Management
-                    <i class="right fas fa-angle-left"></i>
-                </p>
-            </a>
-            <ul class="nav nav-treeview">
-                <li class="nav-item">
-                    <a href="{{ route('users.index') }}" class="nav-link">
-                        <i class="nav-icon fas fa-user"></i>
-                        <p>Users</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('roles.index') }}" class="nav-link">
-                        <i class="nav-icon fas fa-shield-alt"></i>
-                        <p>Roles</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('permission.index') }}" class="nav-link">
-                        <i class="nav-icon fas fa-cogs"></i>
-                        <p>Permission</p>
-                    </a>
-                </li>
-            </ul>
-        </li>
-        
-        
-        
-          {{-- @endif --}}
-         
-          <li class="nav-item">
-            <a href="/post" class="nav-link">
-              <i class="nav-icon far fa-calendar-alt"></i>
-              <p>
-                Guest
-             
-              </p>
-            </a>
+          @if (auth()->user()->hasRole('super admin'))
+          <li class="nav-item {{ Route::is('users.index', 'roles.index', 'permission.index') ? 'menu-open' : '' }}">
+              <a href="#" class="nav-link {{ Route::is('users.index', 'roles.index', 'permission.index') ? 'active' : '' }}">
+                  <i class="fas fa-users mr-2"></i>
+                  <p>
+                      Users Management
+                      <i class="right fas fa-angle-left"></i>
+                  </p>
+              </a>
+              <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                      <a href="{{ route('users.index') }}" class="nav-link {{ Route::is('users.index') ? 'active' : '' }}">
+                          <i class="nav-icon fas fa-user"></i>
+                          <p>Users</p>
+                      </a>
+                  </li>
+                  <li class="nav-item">
+                      <a href="{{ route('roles.index') }}" class="nav-link {{ Route::is('roles.index') ? 'active' : '' }}">
+                          <i class="nav-icon fas fa-shield-alt"></i>
+                          <p>Roles</p>
+                      </a>
+                  </li>
+                  <li class="nav-item">
+                      <a href="{{ route('permission.index') }}" class="nav-link {{ Route::is('permission.index') ? 'active' : '' }}">
+                          <i class="nav-icon fas fa-cogs"></i>
+                          <p>Permission</p>
+                      </a>
+                  </li>
+              </ul>
           </li>
-
-          
-       
-        </ul>
+        <li class="nav-item">
+            <a href="{{ route('document.create') }}" class="nav-link {{ Route::is('document.create') ? 'active' : '' }}">
+                <i class="nav-icon fas fa-file"></i>
+                <p>Document</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('document.create') }}" class="nav-link {{ Route::is('document.create') ? 'active' : '' }}">
+                <i class="nav-icon fas fa-tag"></i>
+                <p>Category</p>
+            </a>
+        </li>
+          @endif
+      </ul>
+      
       </nav>
       <!-- /.sidebar-menu -->
     </div>
@@ -195,6 +195,9 @@
 <script src="{{asset('template/plugins/toastr/toastr.min.js')}}"></script>
 <script src="{{asset('/template/dist/js/adminlte.js')}}"></script>
 <script src="{{asset('/template/plugins/select2/js/select2.full.min.js')}}"></script>
+<script src="{{asset('/template/plugins/daterangepicker/daterangepicker.js')}}"></script>
+<script src="https://unpkg.com/filepond/dist/filepond.min.js"></script>
+<script src="https://unpkg.com/jquery-filepond/filepond.jquery.js"></script>
 @yield('script')
 </body>
 </html>

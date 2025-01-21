@@ -13,19 +13,24 @@
                   <label for="name">Name</label>
                   <input type="text" class="form-control" name="name" id="name" required>
               </div>
-              @foreach ($permissions as $key => $permission)
-              <div class="form-group mr-2">
-                  <div class="custom-control custom-switch">
-                      <input type="checkbox" class="custom-control-input" id="customSwitch{{ $key }}" 
-                          name="permission[]" value="{{ $permission->name }}"
-                          {{in_array($permission->id,$rolePermissions)? 'checked' : ''}}>
-                      <label class="custom-control-label" for="customSwitch{{ $key }}">
-                          {{ $permission->name }}
-                      </label>
+              <div class="permission-section">
+                <label>Permission</label>
+                  <div class="d-flex">
+                      @foreach ($permissions as $key => $permission)
+                          <div class="form-group">
+                              <div class="form-check">
+                                  <div class="custom-control custom-checkbox">
+                                      <input class="custom-control-input" type="checkbox"
+                                          id="customCheckbox{{ $key }}" name="permission[]"
+                                          value="{{ $permission->name }}">
+                                      <label for="customCheckbox{{ $key }}"
+                                          class="custom-control-label">{{ $permission->name }}</label>
+                                  </div>
+                              </div>
+                          </div>
+                      @endforeach
                   </div>
-                  
               </div>
-          @endforeach
 
           </div>
           <!-- /.card-body -->
@@ -72,7 +77,7 @@
             success:function(response){
               if (response.success) {
                   showToast('success',response.message)
-                //move page after 3000
+                //move page after 1000
                  setTimeout(() => {
                        window.location.href = '/roles/edit/' + response.role_id;
                  }, 1000);

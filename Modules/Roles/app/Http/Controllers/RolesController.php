@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Spatie\Permission\Models\Permission;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -37,25 +38,21 @@ class RolesController extends Controller
                 })
                 ->addColumn('action', function ($data) {
                     $buttons = '<div class="text-center">';
-    
-                    // Check permission for editing roles
-                    if (Auth::user()->can('update role')) {
-                        $buttons .= '<a href="' . route('roles.edit', $data->id) . '" class="btn btn-outline-info btn-sm mr-1"> <i class="icon-pencil"></i> <span>Edit</span></a>';
-                    }
-    
+
+
                     //Check permission for adding/editing permissions
-                    if (Auth::user()->can('set permission role')) {
-                        $buttons .= '<a href="' . route('roles.permission', $data->id) . '" class="btn btn-outline-info btn-sm mr-1"> <i class="icon-pencil"></i> <span>Add/Edit Permission</span></a>';
+                    if (Auth::user()->can('update role')) {
+                        $buttons .= '<a href="' . route('roles.edit', $data->id) . '" class="btn btn-outline-info btn-sm mr-1"><span>Add/Edit Permission & Role</span></a>';
                     }
-    
+
                     // Check permission for deleting roles
                     if (Auth::user()->can('delete role')) {
                         $buttons .= '<button type="button" class="btn btn-outline-danger btn-sm delete-button" data-id="' . $data->id . '" data-section="roles">' .
-                            '<i class="fa fa-trash-o"></i> Delete</button>';
+                            ' Delete</button>';
                     }
-    
+
                     $buttons .= '</div>';
-    
+
                     return $buttons;
                 })
                 ->rawColumns(['action'])
@@ -71,7 +68,8 @@ class RolesController extends Controller
     {
         $title = "Create Role";
         $breadcrumb = "Create Role";
-        return view('roles::create', compact('title', 'breadcrumb'));
+        $permissions = Permission::get();
+        return view('roles::create', compact('title', 'breadcrumb', 'permissions'));
     }
 
     /**
@@ -81,8 +79,8 @@ class RolesController extends Controller
     {
         $validator = Validator::make($request->all(),  [
             'name' => 'required|unique:roles',
+            'permission' => 'required',
         ]);
-        //check if validation fails
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
@@ -90,16 +88,15 @@ class RolesController extends Controller
                 'errors' => $validator->errors()->first('name')
             ], 422);
         }
-
-
-        $data = Role::create([
-            'name' => $request->name,
-            Auth::guard('web')
-        ]);
+        $role = new Role();
+        $role->name = $request->name;
+        $role->save();
+        $role->syncPermissions($request->permission);
+       
         return response()->json([
             'success' => true,
             'message' => 'Role created successfully',
-            'role_id' => $data->id
+            'role_id' => $role->id
         ], 200);
     }
 
@@ -116,10 +113,14 @@ class RolesController extends Controller
      */
     public function edit($id)
     {
-        $data = Role::find($id);
+        $role = Role::find($id);
         $title = "Edit Data Role";
         $breadcrumb = "Edit Role";
-        return view('roles::edit', compact('data', 'title', 'breadcrumb'));
+        $permissions = Permission::get();
+        $rolePermissions = DB::table('role_has_permissions')
+        ->where('role_has_permissions.role_id', $role->id)
+        ->pluck('role_has_permissions.permission_id', 'role_has_permissions.permission_id')->all();
+        return view('roles::edit', compact('role', 'title', 'breadcrumb','permissions','rolePermissions'));
     }
 
     /**
@@ -128,19 +129,19 @@ class RolesController extends Controller
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(),  [
-            'name' => 'required|unique:roles',
+            'name' => ['nullable',Rule::unique('roles')->ignore($id),],
+            'permission' => 'required',
         ]);
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
                 'message' => 'Validation Failed',
-                'errors' => $validator->errors()->first('name')
+                'errors' => $validator->errors()
             ], 422);
         }
-
-
         $data = Role::find($id);
         $data->name = $request->name;
+        $data->syncPermissions($request->permission);
         $data->save();
         return response()->json([
             'success' => true,
@@ -192,7 +193,6 @@ class RolesController extends Controller
         if ($search) {
             $role->where('name', 'like', "%{$search}%");
         }
-
         return response()->json($role);
     }
 
