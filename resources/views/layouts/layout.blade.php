@@ -87,9 +87,9 @@
       <nav class="mt-2">
         
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-          @if (auth()->user()->hasRole('super admin'))
-          <li class="nav-item {{ Route::is('users.index', 'roles.index', 'permission.index') ? 'menu-open' : '' }}">
-              <a href="#" class="nav-link {{ Route::is('users.index', 'roles.index', 'permission.index') ? 'active' : '' }}">
+          @if (auth()->user()->hasRole('admin'))
+          <li class="nav-item {{ Route::is('users.*', 'roles.*', 'permission.*') ? 'menu-open' : '' }}">
+              <a href="#" class="nav-link {{ Route::is('users.*', 'roles.*', 'permission.*') ? 'active' : '' }}">
                   <i class="fas fa-users mr-2"></i>
                   <p>
                       Users Management
@@ -98,19 +98,19 @@
               </a>
               <ul class="nav nav-treeview">
                   <li class="nav-item">
-                      <a href="{{ route('users.index') }}" class="nav-link {{ Route::is('users.index') ? 'active' : '' }}">
+                      <a href="{{ route('users.index') }}" class="nav-link {{ Route::is('users.*') ? 'active' : '' }}">
                           <i class="nav-icon fas fa-user"></i>
                           <p>Users</p>
                       </a>
                   </li>
                   <li class="nav-item">
-                      <a href="{{ route('roles.index') }}" class="nav-link {{ Route::is('roles.index') ? 'active' : '' }}">
+                      <a href="{{ route('roles.index') }}" class="nav-link {{ Route::is('roles.*') ? 'active' : '' }}">
                           <i class="nav-icon fas fa-shield-alt"></i>
                           <p>Roles</p>
                       </a>
                   </li>
                   <li class="nav-item">
-                      <a href="{{ route('permission.index') }}" class="nav-link {{ Route::is('permission.index') ? 'active' : '' }}">
+                      <a href="{{ route('permission.index') }}" class="nav-link {{ Route::is('permission.*') ? 'active' : '' }}">
                           <i class="nav-icon fas fa-cogs"></i>
                           <p>Permission</p>
                       </a>
@@ -118,7 +118,7 @@
               </ul>
           </li>
         <li class="nav-item">
-            <a href="{{ route('document.create') }}" class="nav-link {{ Route::is('document.create') ? 'active' : '' }}">
+            <a href="{{ route('document.create') }}" class="nav-link {{ Route::is('document.*') ? 'active' : '' }}">
                 <i class="nav-icon fas fa-file"></i>
                 <p>Document</p>
             </a>

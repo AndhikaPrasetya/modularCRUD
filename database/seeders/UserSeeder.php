@@ -3,8 +3,10 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use Exception;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class UserSeeder extends Seeder
 {
@@ -13,18 +15,21 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        $admin = User::create([
-            'name' => 'User',
-            'email' => 'admin@example.com',
-            'password' => bcrypt('password'),
-        ]);
-        $admin->assignRole('admin');
+        DB::beginTransaction();
+        try{
+            $admin = User::create([
+                'name' => 'Super Admin',
+                'email' => 'super-admin@example.com',
+                'password' => bcrypt('password'),
+            ]);
+            $admin->assignRole('admin');
 
-        $penulis = User::create([
-            'name' => 'penulis',
-            'email' => 'penulis@example.com',
-            'password' => bcrypt('password'),
-        ]);
-        $penulis->assignRole('penulis');
+            DB::commit();
+        }catch(Exception $e){
+            DB::rollBack();
+            $this->command->error('Seeding failed: ' . $e->getMessage());
+        }
+
+       
     }
 }

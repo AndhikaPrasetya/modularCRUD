@@ -7,7 +7,7 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card">
-                        @can('create role')
+                        @can('create-role')
                         <div class="p-3">
                             <a href="{{ route('roles.create') }}" class="btn btn-primary">Create</a>
                         </div>
@@ -25,15 +25,10 @@
                               
                             </table>
                         </div>
-                        <!-- /.card-body -->
                     </div>
-                    <!-- /.card -->
                 </div>
-                <!-- /.col -->
             </div>
-            <!-- /.row -->
         </div>
-        <!-- /.container-fluid -->
     </section>
 @endsection
 

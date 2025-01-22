@@ -38,15 +38,13 @@ class RolesController extends Controller
                 })
                 ->addColumn('action', function ($data) {
                     $buttons = '<div class="text-center">';
-
-
                     //Check permission for adding/editing permissions
-                    if (Auth::user()->can('update role')) {
+                    if (Auth::user()->can('update-role')) {
                         $buttons .= '<a href="' . route('roles.edit', $data->id) . '" class="btn btn-outline-info btn-sm mr-1"><span>Add/Edit Permission & Role</span></a>';
                     }
 
                     // Check permission for deleting roles
-                    if (Auth::user()->can('delete role')) {
+                    if (Auth::user()->can('delete-role')) {
                         $buttons .= '<button type="button" class="btn btn-outline-danger btn-sm delete-button" data-id="' . $data->id . '" data-section="roles">' .
                             ' Delete</button>';
                     }
@@ -68,8 +66,15 @@ class RolesController extends Controller
     {
         $title = "Create Role";
         $breadcrumb = "Create Role";
+        $permissionGroups = [
+            'Role' => Permission::whereIn('name', ['create-role', 'read-role', 'update-role', 'delete-role'])->get(),
+            'Permission' => Permission::whereIn('name', ['create-permission', 'read-permission', 'update-permission', 'delete-permission'])->get(),
+            'User' => Permission::whereIn('name', ['create-user', 'read-user', 'update-user', 'delete-user'])->get(),
+            'Document' => Permission::whereIn('name', ['create-document', 'read-document', 'update-document', 'delete-document'])->get(),
+            'Category' => Permission::whereIn('name', ['create-category', 'read-category', 'update-category', 'delete-category'])->get(),
+        ];
         $permissions = Permission::get();
-        return view('roles::create', compact('title', 'breadcrumb', 'permissions'));
+        return view('roles::create', compact('title', 'breadcrumb', 'permissions','permissionGroups'));
     }
 
     /**
@@ -116,11 +121,18 @@ class RolesController extends Controller
         $role = Role::find($id);
         $title = "Edit Data Role";
         $breadcrumb = "Edit Role";
+        $permissionGroups = [
+            'Role' => Permission::whereIn('name', ['create-role', 'read-role', 'update-role', 'delete-role'])->get(),
+            'Permission' => Permission::whereIn('name', ['create-permission', 'read-permission', 'update-permission', 'delete-permission'])->get(),
+            'User' => Permission::whereIn('name', ['create-user', 'read-user', 'update-user', 'delete-user'])->get(),
+            'Document' => Permission::whereIn('name', ['create-document', 'read-document', 'update-document', 'delete-document'])->get(),
+            'Category' => Permission::whereIn('name', ['create-category', 'read-category', 'update-category', 'delete-category'])->get(),
+        ];
         $permissions = Permission::get();
         $rolePermissions = DB::table('role_has_permissions')
         ->where('role_has_permissions.role_id', $role->id)
         ->pluck('role_has_permissions.permission_id', 'role_has_permissions.permission_id')->all();
-        return view('roles::edit', compact('role', 'title', 'breadcrumb','permissions','rolePermissions'));
+        return view('roles::edit', compact('role', 'title', 'breadcrumb','permissions','rolePermissions','permissionGroups'));
     }
 
     /**
