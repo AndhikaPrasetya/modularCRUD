@@ -1,3 +1,4 @@
+//delete button data
 $(document).on('click', '.delete-button', function(e) {
     e.preventDefault();
     let id = $(this).data('id');
@@ -57,7 +58,7 @@ $(document).ready(function() {
             { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
             {
                 data: 'name',
-                name: 'name'
+                name: 'name',
             },
             {
                 data: 'email',
@@ -95,6 +96,10 @@ $(document).ready(function() {
             {
                 data: 'guard_name',
                 name: 'Guard Name'
+            },
+            {
+                data: 'permission',
+                name: 'Permission'
             },
             {
                 data: 'action',
@@ -161,4 +166,38 @@ $(document).ready(function() {
             cache: true
         }
     });
-})
+});
+
+
+//setup filepond input photo profile 
+$(document).ready(function () {
+    $('#photo').filePond();
+    // Aktivasi plugin FilePond
+    // FilePond.registerPlugin(
+    //     FilePondPluginFileValidateType,
+    //     FilePondPluginImagePreview
+    // );
+
+    // // Inisialisasi FilePond pada input
+    // const pond = FilePond.create(document.querySelector('#photo'), {
+    //     acceptedFileTypes: ['image/*'], // Hanya gambar yang diterima
+    //     labelFileTypeNotAllowed: 'Hanya file gambar yang diizinkan',
+    //     imagePreviewHeight: 150,
+    //     stylePanelAspectRatio: 1,
+    //     styleLoadIndicatorPosition: 'center bottom',
+    //     styleProgressIndicatorPosition: 'center bottom',
+    // });
+
+    // // Atur URL upload (contoh menggunakan Laravel route)
+    // pond.setOptions({
+    //     server: {
+    //         url: '/users/store', // Ganti dengan endpoint upload server Anda
+    //         process: {
+    //             method: 'POST',
+    //             headers: {
+    //                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'), // Jika menggunakan Laravel
+    //             },
+    //         },
+    //     },
+    // });
+});

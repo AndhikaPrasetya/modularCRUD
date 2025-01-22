@@ -19,6 +19,7 @@
                                         <th>No</th>
                                         <th>Name</th>
                                         <th>Guard Name</th>
+                                        <th class="w-50">Permission</th>
                                         <th class="w-25 text-center">Action</th>
                                     </tr>
                                 </thead>

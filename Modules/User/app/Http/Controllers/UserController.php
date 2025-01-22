@@ -4,11 +4,12 @@ namespace Modules\User\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
-use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -80,6 +81,7 @@ class UserController extends Controller
             'email' => 'required|string|email|max:255|unique:users,email',
             'password' => 'required|min:8',
             'roles' => 'required',
+            'image' => 'required|file|mimes:jpg,jpeg,png|max:2048',
         ]);
 
         //check if validation fails
@@ -90,12 +92,17 @@ class UserController extends Controller
                 'errors' => $validator->errors()
             ], 422);
         }
+        $image = $request->file('image');
+        $fileName = time() . '.' . $image->getClientOriginalExtension();
+        $image->storeAs('foto-profile', $fileName, 'public'); // Simpan file di storage
 
         $data =  User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'image' => 'images/' . $fileName,
         ]);
+
         $data->syncRoles($request->roles);
         return response()->json([
             'success' => true,
@@ -104,6 +111,27 @@ class UserController extends Controller
 
         ], 200);
     }
+    public function uploadImage(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'image' => 'required|file|mimes:jpg,jpeg,png|max:204'
+        ]);
+        //check if validation fails
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validation Failed',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $image = $request->file('image');
+        $fileName = time() . '.' . $image->getClientOriginalExtension();
+        $image->storeAs('foto-profile', $fileName, 'public'); // Simpan file di storage
+        
+
+    }
+
 
     /**
      * Show the specified resource.

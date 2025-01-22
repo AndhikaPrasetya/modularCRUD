@@ -17,45 +17,50 @@
         </div><!-- /.container-fluid -->
     </section>
     <section class="content">
-
         <div class="card card-primary">
             <form id="updateFormUser" data-id="{{ $data->id }}">
                 @csrf
                 @method('PUT')
                 <div class="card-body">
-                    <div class="form-group">
-                        <label for="name">name</label>
-                        <input type="text" class="form-control" name="name" id="name"
-                            value="{{ $data->name }}">
+                   <div class="row">
+                    <div class="col-12 col-md-6">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" class="form-control" name="name" id="name"   value="{{ $data->name }}">
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="email">email</label>
-                        <input type="text" class="form-control" name="email" id="email"
-                            value="{{ $data->email }}">
+                    <div class="col-12 col-md-6">
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="text" class="form-control" name="email" id="email"   value="{{ $data->email }}">
+                        </div>
                     </div>
-                    
-                      <div class="form-group">
-                        <label for="">Roles</label>                     
-                        <select class="allRole" name="roles[]" multiple="multiple" style="width: 100%;"> 
-                            @foreach($roles as $role)
-                            <option value="{{$role}}" {{in_array($role, $userRole)?'selected':''}}>{{$role}}</option>
-                            @endforeach     
-                        </select>
-                    
-
+                   </div>
+                   <div class="row">
+                    <div class="col-12 col-md-6">
+                        <div class="form-group">
+                            <label for="">Roles</label>                     
+                            <select class="allRole" name="roles[]" multiple="multiple" style="width: 100%;">
+                                @foreach($roles as $role)
+                                <option value="{{$role}}" {{in_array($role, $userRole)?'selected':''}}>{{$role}}</option>
+                                @endforeach         
+                            </select>
+                        </div>
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="password">new password</label>
-                        <input type="text" class="form-control" name="password" id="password">
+                    <div class="col-12 col-md-6">
+                        <div class="form-group">
+                            <label for="password">New password</label>
+                            <input type="text" class="form-control" name="password" id="password">
+                        </div>
                     </div>
+                   </div>
                 </div>
-
-
                 <div class="card-footer">
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                    <button type="button"onclick="window.location.href='{{ route('users.index') }}'"
-                        class="btn btn-warning"><span>Back</span></button>
+                    <div class="d-flex justify-content-end">
+                        <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                        <button type="button"onclick="window.location.href='{{ route('users.index') }}'"
+                            class="btn btn-warning"><span>Back</span></button>
+                    </div>
                 </div>
             </form>
         </div>

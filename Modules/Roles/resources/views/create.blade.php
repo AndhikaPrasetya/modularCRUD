@@ -29,9 +29,9 @@
                                             <div class="form-check">
                                                 <div class="custom-control custom-checkbox">
                                                     <input class="custom-control-input" type="checkbox"
-                                                        id="customCheckbox{{ $key }}" name="permission[]"
+                                                        id="customCheckbox{{$group}}{{ $key }}" name="permission[]"
                                                         value="{{ $permission->name }}">
-                                                    <label for="customCheckbox{{ $key }}"
+                                                    <label for="customCheckbox{{$group}}{{ $key }}"
                                                         class="custom-control-label">{{ $permission->name }}</label>
                                                 </div>
                                             </div>

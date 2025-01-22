@@ -23,6 +23,11 @@
   <link rel="stylesheet" href={{asset('/template/plugins/datatables-buttons/css/buttons.bootstrap4.min.css')}}>
   <link rel="stylesheet" href={{asset('/template/plugins/select2/css/select2.min.css')}}>
   <link rel="stylesheet" href="{{asset('/template/plugins/daterangepicker/daterangepicker.css')}}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/css/dropify.css">
+  <link
+    href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css"
+    rel="stylesheet"
+/>
 
   <!-- Theme style -->
   <link rel="stylesheet" href={{asset('/template/dist/css/adminlte.min.css')}}>
@@ -198,6 +203,8 @@
 <script src="{{asset('/template/plugins/daterangepicker/daterangepicker.js')}}"></script>
 <script src="https://unpkg.com/filepond/dist/filepond.min.js"></script>
 <script src="https://unpkg.com/jquery-filepond/filepond.jquery.js"></script>
+<script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/js/dropify.min.js"></script>
 @yield('script')
 </body>
 </html>

@@ -36,6 +36,16 @@ class RolesController extends Controller
                 ->addColumn('Guard Name', function ($data) {
                     return $data->guard_name;
                 })
+                ->addColumn('permission', function ($data) {
+                    $permissions = $data->getPermissionNames();
+                    $permissionsList = '';
+
+                    foreach ($permissions as $permission) {
+                        $permissionsList .= '<span class="badge badge-primary">' . $permission . '</span> ';
+                    }
+
+                    return $permissionsList;
+                })
                 ->addColumn('action', function ($data) {
                     $buttons = '<div class="text-center">';
                     //Check permission for adding/editing permissions
@@ -48,12 +58,13 @@ class RolesController extends Controller
                         $buttons .= '<button type="button" class="btn btn-outline-danger btn-sm delete-button" data-id="' . $data->id . '" data-section="roles">' .
                             ' Delete</button>';
                     }
+                    
 
                     $buttons .= '</div>';
 
                     return $buttons;
                 })
-                ->rawColumns(['action'])
+                ->rawColumns(['action','permission'])
                 ->make(true);
         }
         return view('roles::index', compact('title', 'breadcrumb'));
