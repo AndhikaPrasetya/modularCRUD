@@ -18,7 +18,7 @@
     </section>
     <section class="content">
         <div class="card card-primary">
-            <form id="updateFormUser" data-id="{{ $data->id }}">
+            <form id="updateFormUser" data-id="{{ $data->id }}" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div class="card-body">
@@ -53,6 +53,11 @@
                             <input type="text" class="form-control" name="password" id="password">
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label for="image">Foto</label>
+                            <input id="input-fcount-2" name="image" type="file"
+                                 value="{{asset($data->image)}}">
+                    </div>
                    </div>
                 </div>
                 <div class="card-footer">
@@ -69,6 +74,34 @@
 @section('script')
     <script>
         $(document).ready(() => {
+            $("#input-fcount-2").fileinput({
+        showUpload: false,
+        showRemove: true,
+        uploadAsync: false,
+        showUploadedThumbs: false,
+        validateInitialCount: true,
+        showZoom: false,
+        initialPreview: [
+            "{{ asset($data->image) }}" // Tampilkan gambar yang sudah ada
+        ],
+        initialPreviewConfig: [{
+        caption: "{{ basename($data->image) }}", // Nama file
+        size: 0,
+        width: "120px",
+        key: 1,
+    }],
+        initialPreviewAsData: true, // Gunakan true untuk menampilkan sebagai gambar
+        initialPreviewFileType: 'image',
+        allowedFileExtensions: ["jpg", "jpeg", "png"],
+        fileActionSettings: {
+            showRotate: false,
+            showDrag: false,
+            showZoom: true,
+            showUpload: false,
+            showRemove: true,
+        }
+    });
+
             toastr.options = {
             "closeButton": true,
             "progressBar": true,
@@ -90,43 +123,60 @@
         };
 
 
-            const handleFormSubmit = (formId) => {
-                const form = $(`#${formId}`);
-                const id = form.data('id');
+        const handleFormSubmit = (formId) => {
+    const form = $(`#${formId}`);
+    const id = form.data('id');
+     // Buat FormData object
+     const formData = new FormData(form[0]);
+    
+    // Tambahkan file jika ada
+    const fileInput = $('#input-fcount-2')[0];
+    if (fileInput.files.length > 0) {
+        formData.append('image', fileInput.files[0]);
+    }
 
-                $.ajax({
-                    url: `/users/update/${id}`,
-                    type: 'PUT',
-                    data: form.serialize(),
-                    success: (response) => {
-                        if (response.success) {
-                            showToast('success', response.message);
-                        } else {
-                            showToast('error', response.message);
-                        }
-                    },
-                    error: (xhr) => {
-                        if (xhr.status === 422) {
-                        const errors = xhr.responseJSON.errors;
-                        // Iterasi untuk semua error
-                        for (const [field, messages] of Object.entries(errors)) {
-                            messages.forEach(message => {
-                                showToast('error', message);
-                                // console.log(message); 
-                            });
-                        }
-                    } else {
-                        showToast('error', 'An unexpected error occurred.');
-                        console.log(xhr.responseJson);
-                    }
-                    }
-                });
-            };
+    // Tambahkan method PUT karena route menggunakan PUT
+    formData.append('_method', 'PUT');
 
-            $('#updateFormUser').on('submit', function(e) {
-                e.preventDefault();
-                handleFormSubmit('updateFormUser');
-            });
+   
+
+
+    $.ajax({
+        url: `/users/update/${id}`,
+        type: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        data: formData,
+        processData: false, 
+        contentType: false, 
+        success: (response) => {
+            if (response.success) {
+                showToast('success', response.message);
+            } else {
+                showToast('error', response.message);
+            }
+        },
+        error: (xhr) => {
+            if (xhr.status === 422) {
+                const errors = xhr.responseJSON.errors;
+                for (const [field, messages] of Object.entries(errors)) {
+                    messages.forEach(message => {
+                        showToast('error', message);
+                    });
+                }
+            } else {
+                showToast('error', 'An unexpected error occurred.');
+            }
+        }
+    });
+};
+
+$('#updateFormUser').on('submit', function(e) {
+    e.preventDefault();
+    handleFormSubmit('updateFormUser');
+});
+
 
 
         });

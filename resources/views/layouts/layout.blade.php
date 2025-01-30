@@ -14,7 +14,7 @@
   
   <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
   <!-- FilePond CSS -->
-<link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet">
 
   <!-- iCheck -->
   <link rel="stylesheet" href={{asset('/template/plugins/icheck-bootstrap/icheck-bootstrap.min.css')}}>
@@ -201,10 +201,11 @@
 <script src="{{asset('/template/dist/js/adminlte.js')}}"></script>
 <script src="{{asset('/template/plugins/select2/js/select2.full.min.js')}}"></script>
 <script src="{{asset('/template/plugins/daterangepicker/daterangepicker.js')}}"></script>
-<script src="https://unpkg.com/filepond/dist/filepond.min.js"></script>
-<script src="https://unpkg.com/jquery-filepond/filepond.jquery.js"></script>
-<script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/js/dropify.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/kartik-v/bootstrap-fileinput@5.5.0/js/plugins/buffer.min.js" type="text/javascript"></script>
+<script src="https://cdn.jsdelivr.net/gh/kartik-v/bootstrap-fileinput@5.5.0/js/plugins/filetype.min.js" type="text/javascript"></script>
+<script src="https://cdn.jsdelivr.net/gh/kartik-v/bootstrap-fileinput@5.5.0/js/plugins/piexif.min.js" type="text/javascript"></script>
+<script src="https://cdn.jsdelivr.net/gh/kartik-v/bootstrap-fileinput@5.5.0/js/plugins/sortable.min.js" type="text/javascript"></script>
+<script src="https://cdn.jsdelivr.net/gh/kartik-v/bootstrap-fileinput@5.5.0/js/fileinput.min.js"></script>
 @yield('script')
 </body>
 </html>

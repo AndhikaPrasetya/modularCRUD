@@ -34,9 +34,10 @@
                                 <input type="text" class="form-control" name="password" id="password" required>
                             </div>
                         </div>
-                        <div class="col-12 col-md-6">
-                            <label for="image">Upload Photo</label>
-                            <input type="file" class="dropify" name="image" id="image">
+                        <div class="form-group">
+                            <label for="inputAttachment">Foto</label>
+                                <input id="input-fcount-2" name="image" type="file"
+                                    form="approval-form">
                         </div>
                     </div>
                 </div>
@@ -56,63 +57,81 @@
 @endsection
 @section('script')
     <script>
-        $(document).ready(() => {
-            $('.dropify').dropify();
-            toastr.options = {
-                "closeButton": true,
-                "progressBar": true,
-                "positionClass": "toast-top-right", // Posisi toast
-                "timeOut": "2000",
-            };
+      $(document).ready(() => {
+    // Konfigurasi Toast
+    toastr.options = {
+        "closeButton": true,
+        "progressBar": true,
+        "positionClass": "toast-top-right",
+        "timeOut": "2000",
+    };
 
-            const showToast = (icon, message) => {
-                if (icon === 'error') {
-                    toastr.error(message); // Toast untuk error
-                } else if (icon === 'success') {
-                    toastr.success(message); // Toast untuk sukses
-                } else if (icon === 'info') {
-                    toastr.info(message); // Toast untuk info
-                } else {
-                    toastr.warning(message); // Toast untuk warning
-                }
-            };
+    const showToast = (icon, message) => {
+        if (icon === 'error') {
+            toastr.error(message);
+        } else if (icon === 'success') {
+            toastr.success(message);
+        } else if (icon === 'info') {
+            toastr.info(message);
+        } else {
+            toastr.warning(message);
+        }
+    };
 
-            $('#createFormUser').on('submit', function(e) {
-                e.preventDefault();
-                const formData = new FormData(this);
-                $.ajax({
-                    url: '/users/store',
-                    type: 'POST',
-                    data: formData,
-                    processData: false,  
-                    contentType: false, 
-                    success: function(response) {
-                        showToast('success', response.message)
+    // File upload initialization
+    $("#input-fcount-2").fileinput({
+        showUpload: false,
+        showRemove: true,
+        uploadAsync: false,
+        showUploadedThumbs: false,
+        validateInitialCount: true,
+        overwriteInitial: false,
+        showZoom: false,
+        allowedFileExtensions: ["jpg", "jpeg", "png"],
+        fileActionSettings: {
+            showRotate: false,
+            showDrag: false,
+            showZoom: true,
+            showUpload: false,
+            showRemove: true,
+        }
+    });
 
-                        window.location.href = '/users/edit/' + response.data;
-                    },
-                    error: (xhr) => {
-                        if (xhr.status === 422) {
-                            const errors = xhr.responseJSON.errors;
-                            console.log(errors);
-                            // Iterasi untuk semua error
-                            for (const [field, messages] of Object.entries(errors)) {
-                                messages.forEach(message => {
-                                    showToast('error', message);
-                                    console.log(message); 
-                                });
-                            }
-                        } else {
-                            showToast('error', xhr.responseJSON.error);
-                            console.log(xhr.responseJSON.error);
-                        }
+    // Form submission
+    $('#createFormUser').on('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        
+        // Ambil file dari input file
+        const fileInput = $('#input-fcount-2')[0];
+        if (fileInput.files.length > 0) {
+            formData.append('image', fileInput.files[0]);
+        }
+
+        $.ajax({
+            url: '/users/store',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                showToast('success', response.message);
+                window.location.href = '/users/edit/' + response.data;
+            },
+            error: (xhr) => {
+                if (xhr.status === 422) {
+                    const errors = xhr.responseJSON.errors;
+                    for (const [field, messages] of Object.entries(errors)) {
+                        messages.forEach(message => {
+                            showToast('error', message);
+                        });
                     }
-                });
-            });
-
-
-
-
+                } else {
+                    showToast('error', xhr.responseJSON.error);
+                }
+            }
         });
-    </script>
+    });
+});    </script>
 @endsection

@@ -81,7 +81,7 @@ class UserController extends Controller
             'email' => 'required|string|email|max:255|unique:users,email',
             'password' => 'required|min:8',
             'roles' => 'required',
-            'image' => 'required|file|mimes:jpg,jpeg,png|max:2048',
+            'image' => 'required|file|mimes:jpg,jpeg,png|max:3000',
         ]);
 
         //check if validation fails
@@ -100,36 +100,19 @@ class UserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'image' => 'images/' . $fileName,
+            'image' => 'storage/foto-profile/' . $fileName,
         ]);
 
-        $data->syncRoles($request->roles);
+        if (!empty($request->roles)) {
+            $data->syncRoles($request->roles);
+        }
+    
         return response()->json([
             'success' => true,
             'message' => 'User created successfully',
             'data' => $data->id,
 
         ], 200);
-    }
-    public function uploadImage(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'image' => 'required|file|mimes:jpg,jpeg,png|max:204'
-        ]);
-        //check if validation fails
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Validation Failed',
-                'errors' => $validator->errors()
-            ], 422);
-        }
-
-        $image = $request->file('image');
-        $fileName = time() . '.' . $image->getClientOriginalExtension();
-        $image->storeAs('foto-profile', $fileName, 'public'); // Simpan file di storage
-        
-
     }
 
 
@@ -165,14 +148,19 @@ class UserController extends Controller
             'email' => 'required|string|lowercase|email|max:255|unique:users,email,' . $id,
             'password' => 'nullable|min:8',
             'roles' => 'required|array',
+            'image' => 'nullable|file|mimes:jpg,jpeg,png|max:3000'
         ]);
         $user = User::find($id);
 
-        if (!$user) {
-            return response()->json([
-                'success' => false,
-                'message' => 'User not found',
-            ], 404);
+        if ($request->hasFile('image')) {
+            if ($user->image && Storage::exists('public/' . $user->image)) {
+                Storage::delete('public/' . $user->image);
+            }
+    
+            // Upload file baru
+            $fileName = time() . '.' . $request->image->extension();
+            $request->image->storeAs('foto-profile', $fileName, 'public');
+            $user->image = 'storage/foto-profile/' . $fileName;
         }
 
         $user->name = $request->name;
@@ -194,7 +182,6 @@ class UserController extends Controller
             'success' => true,
             'message' => 'User updated successfully',
             'data' => $user,
-
         ], 200);
     }
 
