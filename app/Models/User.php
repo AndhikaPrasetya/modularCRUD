@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Modules\Document\Models\Document;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
 
@@ -40,6 +41,11 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    public function documents()
+{
+    return $this->hasMany(Document::class, 'user_id');
+}
 
     /**
      * Get the attributes that should be cast.

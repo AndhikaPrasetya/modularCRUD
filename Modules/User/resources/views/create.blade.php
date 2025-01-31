@@ -36,8 +36,7 @@
                         </div>
                         <div class="form-group">
                             <label for="inputAttachment">Foto</label>
-                                <input id="input-fcount-2" name="image" type="file"
-                                    form="approval-form">
+                                <input id="input-fcount-2" name="image" type="file">
                         </div>
                     </div>
                 </div>

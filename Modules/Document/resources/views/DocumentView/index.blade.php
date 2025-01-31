@@ -9,7 +9,7 @@
                     <div class="card">
                         {{-- @can('create document') --}}
                         <div class="p-3">
-                            <a href="{{ route('roles.create') }}" class="btn btn-primary">Create</a>
+                            <a href="{{ route('document.create') }}" class="btn btn-primary">Create</a>
                         </div>
                         {{-- @endcan --}}
                         <div class="card-body">

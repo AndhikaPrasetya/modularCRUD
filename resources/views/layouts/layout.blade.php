@@ -15,6 +15,8 @@
   <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
   <!-- FilePond CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.min.css"
+        crossorigin="anonymous">
 
   <!-- iCheck -->
   <link rel="stylesheet" href={{asset('/template/plugins/icheck-bootstrap/icheck-bootstrap.min.css')}}>
@@ -123,13 +125,13 @@
               </ul>
           </li>
         <li class="nav-item">
-            <a href="{{ route('document.create') }}" class="nav-link {{ Route::is('document.*') ? 'active' : '' }}">
+            <a href="{{ route('document.index') }}" class="nav-link {{ Route::is('document.*') ? 'active' : '' }}">
                 <i class="nav-icon fas fa-file"></i>
                 <p>Document</p>
             </a>
         </li>
         <li class="nav-item">
-            <a href="{{ route('document.create') }}" class="nav-link {{ Route::is('document.create') ? 'active' : '' }}">
+            <a href="{{ route('category.index') }}" class="nav-link {{ Route::is('category.*') ? 'active' : '' }}">
                 <i class="nav-icon fas fa-tag"></i>
                 <p>Category</p>
             </a>

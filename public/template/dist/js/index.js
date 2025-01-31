@@ -137,6 +137,68 @@ $(document).ready(function() {
             },
         ]
     });
+    $('#table_document').DataTable({
+        processing: true,
+        serverSide: true,
+        searching: true,
+        stateSave: true,
+        ajax: {
+            url: "/document",
+            type: "GET"
+        },
+        columns: [
+            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+            {
+                data: 'file_name',
+                name: 'file_name'
+            },
+            {
+                data: 'category_id',
+                name: 'category_id'
+            },
+            {
+                data: 'status',
+                name: 'status'
+            },
+            {
+                data: 'uploaded_by',
+                name: 'uploaded_by'
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
+            },
+        ]
+    });
+    $('#table_category').DataTable({
+        processing: true,
+        serverSide: true,
+        searching: true,
+        stateSave: true,
+        ajax: {
+            url: "/category",
+            type: "GET"
+        },
+        columns: [
+            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+            {
+                data: 'name',
+                name: 'Name'
+            },
+            {
+                data: 'description',
+                name: 'description'
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
+            },
+        ]
+    });
 
 
 
@@ -169,35 +231,3 @@ $(document).ready(function() {
 });
 
 
-//setup filepond input photo profile 
-$(document).ready(function () {
-    $('#photo').filePond();
-    // Aktivasi plugin FilePond
-    // FilePond.registerPlugin(
-    //     FilePondPluginFileValidateType,
-    //     FilePondPluginImagePreview
-    // );
-
-    // // Inisialisasi FilePond pada input
-    // const pond = FilePond.create(document.querySelector('#photo'), {
-    //     acceptedFileTypes: ['image/*'], // Hanya gambar yang diterima
-    //     labelFileTypeNotAllowed: 'Hanya file gambar yang diizinkan',
-    //     imagePreviewHeight: 150,
-    //     stylePanelAspectRatio: 1,
-    //     styleLoadIndicatorPosition: 'center bottom',
-    //     styleProgressIndicatorPosition: 'center bottom',
-    // });
-
-    // // Atur URL upload (contoh menggunakan Laravel route)
-    // pond.setOptions({
-    //     server: {
-    //         url: '/users/store', // Ganti dengan endpoint upload server Anda
-    //         process: {
-    //             method: 'POST',
-    //             headers: {
-    //                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'), // Jika menggunakan Laravel
-    //             },
-    //         },
-    //     },
-    // });
-});
