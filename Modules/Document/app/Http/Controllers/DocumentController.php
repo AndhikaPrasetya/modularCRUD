@@ -23,7 +23,7 @@ class DocumentController extends Controller
         $title = "Data Category";
         $breadcrumb = "Category";
         if ($request->ajax()) {
-            $data = Document::with(['category', 'users']);
+            $data = Document::with(['category', 'user']);
             if ($search = $request->input('search.value')) {
                 $data->where(function ($data) use ($search) {
                     $data->where('file_name', 'like', "%{$search}%");
@@ -36,7 +36,7 @@ class DocumentController extends Controller
                     return $data->file_name;
                 })
                 ->addColumn('Category id', function ($data) {
-                    return $data->category ? $data->category->name : '-';
+                    return $data->category->name;
                 })
                 ->addColumn('Deskripsi', function ($data) {
                     return $data->description;
@@ -45,7 +45,7 @@ class DocumentController extends Controller
                     return $data->description;
                 })
                 ->addColumn('uploaded_by', function ($data) {
-                    return $data->users ? $data->users->name : '';
+                    return $data->user ? $data->user->name : '';
                 })
                 ->addColumn('action', function ($data) {
                     $buttons = '<div class="text-center">';
@@ -85,16 +85,17 @@ class DocumentController extends Controller
      */
     public function store(Request $request)
     {
-      
         $validator = Validator::make($request->all(), [
             'file_name' => 'required',
-            'file_path.*' => 'required|mimes:pdf,xlx,csv|max:2048', // Validasi untuk setiap file
+            'file_path' => 'required|array',  // Tambahkan rule array
+            'file_path.*' => 'mimes:pdf,xlx,csv|max:2048',
             'description' => 'nullable',
             'status' => 'required',
             'valid_from' => 'required',
             'valid_until' => 'required',
             'category_id' => 'required',
         ]);
+    
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
@@ -102,16 +103,17 @@ class DocumentController extends Controller
                 'errors' => $validator->errors()
             ], 422);
         }
+    
         try {
             $fileData = [];
-            if ($request->hasFile('file_path')) {
-                foreach ($request->file('file_path') as $file) {
-                    $fileName = Str::uuid() . '_' . time() . '_' . $file->getClientOriginalName(); 
-                    $file->storeAs('document', $fileName, 'public'); 
-                    $fileData[] = 'storage/document/' . $fileName; 
+            if ($request->hasFile('file_path')) {  
+                foreach ($request->file('file_path') as $file) {  
+                    $fileName = Str::uuid() . '_' . time() . '_' . $file->getClientOriginalName();
+                    $file->storeAs('document', $fileName, 'public');
+                    $fileData[] = 'storage/document/' . $fileName;
                 }
-            } 
-            
+            }
+    
             $document = new Document();
             $document->file_name = $request->file_name;
             $document->file_path = json_encode($fileData);
@@ -120,33 +122,31 @@ class DocumentController extends Controller
             $document->valid_from = $request->valid_from;
             $document->valid_until = $request->valid_until;
             $document->category_id = $request->category_id;
-            $document->uploaded_by = Auth::id(); 
+            $document->uploaded_by = Auth::id();
             $document->save();
-        
+    
             Log::debug('Document created: ', [
                 'document_id' => $document->id,
                 'status' => $document->status,
                 'file_path' => $document->file_path,
             ]);
-        
+    
             return response()->json([
                 'status' => true,
                 'message' => 'Document Created Successfully',
                 'document_id' => $document->id
             ], 200);
-        
+    
         } catch (\Exception $e) {
-            // Hapus file yang sudah terupload jika ada error
             Log::error('Error creating document: ', ['error' => $e->getMessage()]);
             foreach ($fileData as $file) {
                 if (Storage::exists('public/' . $file)) {
                     Storage::delete('public/' . $file);
                 }
             }
-        
+    
             return response()->json([
                 'status' => false,
-                
                 'error' => 'An error occurred while creating the document.'
             ], 500);
         }
@@ -165,16 +165,113 @@ class DocumentController extends Controller
      */
     public function edit($id)
     {
-        return view('document::DocumentView.edit');
+        $title = "Create Category";
+        $breadcrumb = "Create";
+        $document = Document::find($id);
+        $category = DocumentCategories::all();
+        $documentStatus =['active','expired'] ;
+        return view('document::DocumentView.edit', compact('title','breadcrumb','document','category','documentStatus'));
     }
 
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, $id)
-    {
-        //
+{
+    $validator = Validator::make($request->all(), [
+        'file_name' => 'required',
+        'file_path.*' => 'nullable|mimes:pdf,xlsx,csv|max:2048',
+        'description' => 'nullable',
+        'status' => 'required',
+        'valid_from' => 'required',
+        'valid_until' => 'required',
+        'category_id' => 'required',
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json([
+            'status' => false,
+            'message' => 'Validation Failed',
+            'errors' => $validator->errors()
+        ], 422);
     }
+
+    try {
+        $document = Document::find($id);
+        if (!$document) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Document not found'
+            ], 404);
+        }
+
+        // Get existing files
+        $existingFiles = json_decode($document->file_path, true) ?: [];
+
+        // Handle deleted files
+        if ($request->has('deleted_files')) {
+            $deletedFiles = json_decode($request->deleted_files, true);
+            foreach ($deletedFiles as $file) {
+                // Remove from storage
+                Storage::delete('public/' . str_replace('storage/', '', $file));
+                
+                // Remove from existing files array
+                $existingFiles = array_diff($existingFiles, [$file]);
+            }
+            // Reindex array
+            $existingFiles = array_values($existingFiles);
+        }
+
+        // Handle new uploaded files
+        if ($request->hasFile('file_path')) {
+            foreach ($request->file('file_path') as $file) {
+                $fileName = Str::uuid() . '_' . time() . '_' . $file->getClientOriginalName();
+                $file->storeAs('document', $fileName, 'public');
+                $existingFiles[] = 'storage/document/' . $fileName;
+            }
+        }
+
+        if ($request->filled('file_name')) {
+            $document->file_name = $request->file_name;
+        }
+        if ($request->filled('file_path')) {
+            $document->file_name =json_encode($existingFiles);
+        }
+        if ($request->filled('description')) {
+            $document->description = $request->description;
+        }
+        if ($request->filled('status')) {
+            $document->status = $request->status;
+        }
+        if ($request->filled('valid_from')) {
+            $document->valid_from = $request->valid_from;
+        }
+        if ($request->filled('valid_until')) {
+            $document->valid_until = $request->valid_until;
+        }
+        if ($request->filled('category_id')) {
+            $document->category_id = $request->category_id;
+        }
+        if ($request->filled('uploaded_by')) {
+            $document->uploaded_by = $request->uploaded_by;
+        }
+        $document->save();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Document updated successfully',
+            'document_id' => $document->id
+        ], 200);
+
+    } catch (\Exception $e) {
+        \Log::error('Error updating document: ' . $e->getMessage());
+        
+        return response()->json([
+            'status' => false,
+            'message' => 'An error occurred while updating the document.'
+        ], 500);
+    }
+}
 
     /**
      * Remove the specified resource from storage.

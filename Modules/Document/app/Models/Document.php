@@ -24,12 +24,12 @@ class Document extends Model
 
     public function category()
     {
-        return $this->belongsTo(DocumentCategories::class, 'category_id');
+        return $this->belongsTo(DocumentCategories::class);
     }
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class);
     }
 
     // protected static function newFactory(): DocumentFactory
