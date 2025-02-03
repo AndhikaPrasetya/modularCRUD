@@ -11,8 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('image')->nullable();  
+        Schema::create('attachment_documents', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('document_id')->constrained('documents');
+            $table->string('file_path');
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -21,8 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('image');  // Menghapus kolom phone_number jika rollback
-        });
+        Schema::dropIfExists('attachment_documents');
     }
 };

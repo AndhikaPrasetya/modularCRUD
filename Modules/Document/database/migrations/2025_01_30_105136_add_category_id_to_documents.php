@@ -12,8 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('documents', function (Blueprint $table) {
-            $table->unsignedBigInteger('category_id')->nullable(); // Menambahkan kolom category_id
-            $table->foreign('category_id')->references('id')->on('document_categories')->onDelete('cascade');
+            $table->foreignId('category_id')->constrained('document_categories');
         });
     }
 
@@ -23,7 +22,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('documents', function (Blueprint $table) {
-            $table->dropForeign(['category_id']); // Menghapus foreign key constraint
             $table->dropColumn('category_id'); // Menghapus kolom category_id
         });
     }

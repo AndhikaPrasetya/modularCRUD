@@ -4,6 +4,7 @@ namespace Modules\Document\Http\Controllers;
 
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -11,6 +12,7 @@ use Modules\Document\Models\Document;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
+use Modules\Document\Models\AttachmentDocument;
 use Modules\Document\Models\DocumentCategories;
 
 class DocumentController extends Controller
@@ -42,7 +44,7 @@ class DocumentController extends Controller
                     return $data->description;
                 })
                 ->addColumn('status', function ($data) {
-                    return $data->description;
+                    return $data->status;
                 })
                 ->addColumn('uploaded_by', function ($data) {
                     return $data->user ? $data->user->name : '';
@@ -57,7 +59,7 @@ class DocumentController extends Controller
                         $buttons .= '<button type="button" class="btn btn-outline-danger btn-sm delete-button" data-id="' . $data->id . '" data-section="category">' .
                             ' Delete</button>';
                     }
-                    
+
 
                     $buttons .= '</div>';
 
@@ -76,8 +78,8 @@ class DocumentController extends Controller
         $title = "Create Category";
         $breadcrumb = "Create";
         $category = DocumentCategories::all();
-        $documentStatus =['active','expired'] ;
-        return view('document::DocumentView.create',compact('category','title','documentStatus'));
+        $documentStatus = ['active', 'expired'];
+        return view('document::DocumentView.create', compact('category', 'title', 'documentStatus'));
     }
 
     /**
@@ -87,7 +89,6 @@ class DocumentController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'file_name' => 'required',
-            'file_path' => 'required|array',  // Tambahkan rule array
             'file_path.*' => 'mimes:pdf,xlx,csv|max:2048',
             'description' => 'nullable',
             'status' => 'required',
@@ -95,7 +96,7 @@ class DocumentController extends Controller
             'valid_until' => 'required',
             'category_id' => 'required',
         ]);
-    
+
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
@@ -103,20 +104,12 @@ class DocumentController extends Controller
                 'errors' => $validator->errors()
             ], 422);
         }
-    
+
         try {
-            $fileData = [];
-            if ($request->hasFile('file_path')) {  
-                foreach ($request->file('file_path') as $file) {  
-                    $fileName = Str::uuid() . '_' . time() . '_' . $file->getClientOriginalName();
-                    $file->storeAs('document', $fileName, 'public');
-                    $fileData[] = 'storage/document/' . $fileName;
-                }
-            }
-    
+            DB::beginTransaction();
+
             $document = new Document();
             $document->file_name = $request->file_name;
-            $document->file_path = json_encode($fileData);
             $document->description = $request->description;
             $document->status = $request->status;
             $document->valid_from = $request->valid_from;
@@ -124,27 +117,48 @@ class DocumentController extends Controller
             $document->category_id = $request->category_id;
             $document->uploaded_by = Auth::id();
             $document->save();
-    
-            Log::debug('Document created: ', [
-                'document_id' => $document->id,
-                'status' => $document->status,
-                'file_path' => $document->file_path,
-            ]);
-    
+
+
+            if ($request->hasFile('file_path')) {
+                foreach ($request->file('file_path') as $file) {
+                    $fileName = time() . '_' . $file->getClientOriginalName();
+                    $file->storeAs('document', $fileName, 'public');
+                    $fileData = 'storage/document/' . $fileName;
+
+                    $attachment = new AttachmentDocument();
+                    $attachment->document_id = $document->id;
+                    $attachment->file_path = $fileData;
+                    $attachment->save();
+                }
+            }
+
+            DB::commit();
+
+            // Log::debug('Document created: ', [
+            //     'document_id' => $document->id,
+            //     'status' => $document->status,
+            //     'attachments' => $fileData
+            // ]);
+
             return response()->json([
                 'status' => true,
                 'message' => 'Document Created Successfully',
                 'document_id' => $document->id
             ], 200);
-    
         } catch (\Exception $e) {
-            Log::error('Error creating document: ', ['error' => $e->getMessage()]);
-            foreach ($fileData as $file) {
-                if (Storage::exists('public/' . $file)) {
-                    Storage::delete('public/' . $file);
+            DB::rollBack();
+
+            // Hapus file yang sudah terupload jika terjadi error
+            if (!empty($fileData)) {
+                foreach ($fileData as $file) {
+                    if (Storage::exists('public/document/' . basename($file))) {
+                        Storage::delete('public/document/' . basename($file));
+                    }
                 }
             }
-    
+
+            // Log::error('Error creating document: ' . $e->getMessage());
+
             return response()->json([
                 'status' => false,
                 'error' => 'An error occurred while creating the document.'
@@ -152,126 +166,115 @@ class DocumentController extends Controller
         }
     }
 
-    /**
-     * Show the specified resource.
-     */
-    public function show($id)
-    {
-        return view('document::DocumentView.show');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit($id)
     {
         $title = "Create Category";
         $breadcrumb = "Create";
         $document = Document::find($id);
         $category = DocumentCategories::all();
-        $documentStatus =['active','expired'] ;
-        return view('document::DocumentView.edit', compact('title','breadcrumb','document','category','documentStatus'));
+        $oldAttachments = AttachmentDocument::where('document_id', $id)->get();
+        return view('document::DocumentView.edit', compact('title', 'breadcrumb', 'document', 'category', 'oldAttachments'));
     }
+
+
 
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, $id)
-{
-    $validator = Validator::make($request->all(), [
-        'file_name' => 'required',
-        'file_path.*' => 'nullable|mimes:pdf,xlsx,csv|max:2048',
-        'description' => 'nullable',
-        'status' => 'required',
-        'valid_from' => 'required',
-        'valid_until' => 'required',
-        'category_id' => 'required',
-    ]);
+    {
+        $validator = Validator::make($request->all(), [
+            'file_name' => 'nullable',
+            'file_path.*' => 'mimes:pdf,xlsx,csv|max:2048',
+            'description' => 'nullable',
+            'status' => 'nullable',
+            'valid_from' => 'nullable',
+            'valid_until' => 'nullable',
+            'category_id' => 'nullable',
+        ]);
 
-    if ($validator->fails()) {
-        return response()->json([
-            'status' => false,
-            'message' => 'Validation Failed',
-            'errors' => $validator->errors()
-        ], 422);
-    }
-
-    try {
-        $document = Document::find($id);
-        if (!$document) {
+        if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'message' => 'Document not found'
-            ], 404);
+                'message' => 'Validation Failed',
+                'errors' => $validator->errors()
+            ], 422);
         }
 
-        // Get existing files
-        $existingFiles = json_decode($document->file_path, true) ?: [];
+        try {
+            DB::beginTransaction();
 
-        // Handle deleted files
-        if ($request->has('deleted_files')) {
-            $deletedFiles = json_decode($request->deleted_files, true);
-            foreach ($deletedFiles as $file) {
-                // Remove from storage
-                Storage::delete('public/' . str_replace('storage/', '', $file));
-                
-                // Remove from existing files array
-                $existingFiles = array_diff($existingFiles, [$file]);
+            $document = Document::find($id);
+            if (!$document) {
+                return response()->json(['status' => false, 'message' => 'Document not found'], 404);
             }
-            // Reindex array
-            $existingFiles = array_values($existingFiles);
-        }
 
-        // Handle new uploaded files
-        if ($request->hasFile('file_path')) {
-            foreach ($request->file('file_path') as $file) {
-                $fileName = Str::uuid() . '_' . time() . '_' . $file->getClientOriginalName();
-                $file->storeAs('document', $fileName, 'public');
-                $existingFiles[] = 'storage/document/' . $fileName;
+  
+            $updateData = [];
+
+            if ($request->filled('file_name')) {
+                $updateData['file_name'] = $request->file_name;
             }
-        }
+            if ($request->filled('status')) {
+                $updateData['status'] = $request->status;
+            }
+            if ($request->filled('valid_from')) {
+                $updateData['valid_from'] = $request->valid_from;
+            }
+            if ($request->filled('valid_until')) {
+                $updateData['valid_until'] = $request->valid_until;
+            }
+            if ($request->filled('category_id')) {
+                $updateData['category_id'] = $request->category_id;
+            }
+            if ($request->filled('description')) {
+                $updateData['description'] = $request->description;
+            }
 
-        if ($request->filled('file_name')) {
-            $document->file_name = $request->file_name;
-        }
-        if ($request->filled('file_path')) {
-            $document->file_name =json_encode($existingFiles);
-        }
-        if ($request->filled('description')) {
-            $document->description = $request->description;
-        }
-        if ($request->filled('status')) {
-            $document->status = $request->status;
-        }
-        if ($request->filled('valid_from')) {
-            $document->valid_from = $request->valid_from;
-        }
-        if ($request->filled('valid_until')) {
-            $document->valid_until = $request->valid_until;
-        }
-        if ($request->filled('category_id')) {
-            $document->category_id = $request->category_id;
-        }
-        if ($request->filled('uploaded_by')) {
-            $document->uploaded_by = $request->uploaded_by;
-        }
-        $document->save();
+            $document->uploaded_by = Auth::id();
 
-        return response()->json([
-            'status' => true,
-            'message' => 'Document updated successfully',
-            'document_id' => $document->id
-        ], 200);
+            $document->update($updateData);
 
-    } catch (\Exception $e) {
-        \Log::error('Error updating document: ' . $e->getMessage());
-        
-        return response()->json([
-            'status' => false,
-            'message' => 'An error occurred while updating the document.'
-        ], 500);
+
+            if ($request->hasFile('file_path')) {
+                //old file 
+                $oldAttachments = AttachmentDocument::where('document_id', $document->id)->get();
+                foreach ($oldAttachments as $oldAttachment) {
+                    if (Storage::exists('public/document' . basename($oldAttachment->file_path))) {
+                        Storage::delete('public/document' . basename($oldAttachment->file_path));
+                    }
+                    $oldAttachment->delete();
+                }
+
+                foreach ($request->file('file_path') as $file) {
+                    $fileName = time() . '_' . $file->getClientOriginalName();
+                    $file->storeAs('document', $fileName, 'public');
+                    $fileData = 'storage/document/' . $fileName;
+
+                    $attachment = new AttachmentDocument();
+                    $attachment->document_id = $document->id;
+                    $attachment->file_path = $fileData;
+                    $attachment->save();
+                }
+            }
+            DB::commit();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Document updated successfully',
+                'document' => $document
+            ], 200);
+        } catch (\Exception $e) {
+            \Log::error('Error updating document: ' . $e->getMessage());
+
+            return response()->json([
+                'status' => false,
+                'message' => 'An error occurred while updating the document.'
+            ], 500);
+        }
     }
-}
+
+
 
     /**
      * Remove the specified resource from storage.

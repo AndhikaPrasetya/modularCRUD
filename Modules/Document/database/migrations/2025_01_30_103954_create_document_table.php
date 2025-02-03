@@ -14,13 +14,13 @@ return new class extends Migration
         Schema::create('documents', function (Blueprint $table) {
             $table->id();
             $table->string('file_name');
-            $table->string('file_path');
             $table->text('description')->nullable();
             $table->enum('status', [ 'active', 'expired'])->default('active');
             $table->timestamp('valid_from')->nullable(); 
             $table->timestamp('valid_until')->nullable(); 
             $table->foreignId('uploaded_by')->constrained('users');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

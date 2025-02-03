@@ -20,7 +20,7 @@
                                         <th>File Name</th>
                                         <th>Category</th>
                                         <th>Status</th>
-                                        <th>Uploaded By</th>
+                                        <th style="max-width: 15%;">Uploaded By</th>
                                         <th class="w-25 text-center">Action</th>
                                     </tr>
                                 </thead>

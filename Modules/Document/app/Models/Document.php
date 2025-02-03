@@ -5,11 +5,11 @@ namespace Modules\Document\Models;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-// use Modules\Document\Database\Factories\DocumentFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Document extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -24,13 +24,15 @@ class Document extends Model
 
     public function category()
     {
-        return $this->belongsTo(DocumentCategories::class);
+        return $this->belongsTo(DocumentCategories::class, 'category_id');
     }
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'uploaded_by');
     }
+
+    //soft delete
 
     // protected static function newFactory(): DocumentFactory
     // {
