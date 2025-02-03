@@ -111,19 +111,19 @@ let myDropzone = new Dropzone("#dropzoneArea", {
                 submitForm();
             }
         });
-        this.on("sendingmultiple", function(data, xhr, formData) {
+        myDropzone.on("sendingmultiple", function(data, xhr, formData) {
             let formValues = $('#createFormDoc').serializeArray();
             $.each(formValues, function(index, field) {
                 formData.append(field.name, field.value);
             });
         });
-        this.on("successmultiple", function(files, response) {
+        myDropzone.on("successmultiple", function(files, response) {
             showToast('success', 'Files uploaded successfully!');
             setTimeout(() => {
                        window.location.href = '/document/edit/' + response.document_id;
                  }, 1000);
         });
-        this.on("error", function(file, message) {
+        myDropzone.on("error", function(file, message) {
             showToast('error', message);
         });
     }

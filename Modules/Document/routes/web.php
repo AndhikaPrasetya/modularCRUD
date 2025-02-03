@@ -23,7 +23,7 @@ Route::middleware(['auth'])->group( function () {
     Route::get('/document/edit/{id}', [DocumentController::class,'edit'])->name('document.edit');
     Route::put('/document/update/{id}', [DocumentController::class,'update'])->name('document.update');
     Route::delete('/document/delete/{id}', [DocumentController::class,'destroy'])->name('document.destroy');
-    Route::post('/document/attachment',[DocumentController::class, 'uploadAttachment'])->name('document.uploadAttachment');
+    Route::post('/document/uploadAttachment',[DocumentController::class, 'uploadAttachment'])->name('document.uploadAttachment');
     Route::delete('/document/delete-file/{id}', [DocumentController::class, 'deleteFile'])->name('document.deleteFile');
 
 

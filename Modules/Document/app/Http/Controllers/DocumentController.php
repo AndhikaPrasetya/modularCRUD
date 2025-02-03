@@ -166,6 +166,8 @@ class DocumentController extends Controller
         }
     }
 
+
+
     public function edit($id)
     {
         $title = "Create Category";
@@ -276,14 +278,14 @@ class DocumentController extends Controller
     try {
     
         $file = AttachmentDocument::findOrFail($id);
-        $file->delete();
         
-        // if (Storage::exists('public/document'.basename($file->file_path))) {
-        //     Storage::delete('public/document'.basename($file->file_path));
-        // }
+        
+        if (Storage::exists('public/'.basename($file->file_path))) {
+            Storage::delete('public/'.basename($file->file_path));
+        }
 
-        // // Hapus dari database
-        // $file->delete();
+        // Hapus dari database
+        $file->delete();
 
         return response()->json(['message' => 'File berhasil dihapus'], 200);
     } catch (\Exception $e) {
