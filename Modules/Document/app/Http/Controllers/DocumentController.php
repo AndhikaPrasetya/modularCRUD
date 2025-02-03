@@ -172,8 +172,8 @@ class DocumentController extends Controller
         $breadcrumb = "Create";
         $document = Document::find($id);
         $category = DocumentCategories::all();
-        $oldAttachments = AttachmentDocument::where('document_id', $id)->get();
-        return view('document::DocumentView.edit', compact('title', 'breadcrumb', 'document', 'category', 'oldAttachments'));
+        $existingAttachment = AttachmentDocument::where('document_id', $id)->get();
+        return view('document::DocumentView.edit', compact('title', 'breadcrumb', 'document', 'category', 'existingAttachment'));
     }
 
 
@@ -208,7 +208,6 @@ class DocumentController extends Controller
             if (!$document) {
                 return response()->json(['status' => false, 'message' => 'Document not found'], 404);
             }
-
   
             $updateData = [];
 
@@ -237,24 +236,22 @@ class DocumentController extends Controller
 
 
             if ($request->hasFile('file_path')) {
-                //old file 
-                $oldAttachments = AttachmentDocument::where('document_id', $document->id)->get();
-                foreach ($oldAttachments as $oldAttachment) {
-                    if (Storage::exists('public/document' . basename($oldAttachment->file_path))) {
-                        Storage::delete('public/document' . basename($oldAttachment->file_path));
-                    }
-                    $oldAttachment->delete();
-                }
-
                 foreach ($request->file('file_path') as $file) {
                     $fileName = time() . '_' . $file->getClientOriginalName();
                     $file->storeAs('document', $fileName, 'public');
                     $fileData = 'storage/document/' . $fileName;
-
-                    $attachment = new AttachmentDocument();
-                    $attachment->document_id = $document->id;
-                    $attachment->file_path = $fileData;
-                    $attachment->save();
+            
+                    // Check if this exact file already exists for this document
+                    $existingAttachment = AttachmentDocument::where('document_id', $document->id)
+                        ->where('file_path', $fileData)
+                        ->first();
+            
+                    if (!$existingAttachment) {
+                        $attachment = new AttachmentDocument();
+                        $attachment->document_id = $document->id;
+                        $attachment->file_path = $fileData;
+                        $attachment->save();
+                    }
                 }
             }
             DB::commit();
@@ -265,7 +262,7 @@ class DocumentController extends Controller
                 'document' => $document
             ], 200);
         } catch (\Exception $e) {
-            \Log::error('Error updating document: ' . $e->getMessage());
+            // \Log::error('Error updating document: ' . $e->getMessage());
 
             return response()->json([
                 'status' => false,
@@ -273,6 +270,26 @@ class DocumentController extends Controller
             ], 500);
         }
     }
+
+    public function deleteFile($id)
+{
+    try {
+    
+        $file = AttachmentDocument::findOrFail($id);
+        $file->delete();
+        
+        // if (Storage::exists('public/document'.basename($file->file_path))) {
+        //     Storage::delete('public/document'.basename($file->file_path));
+        // }
+
+        // // Hapus dari database
+        // $file->delete();
+
+        return response()->json(['message' => 'File berhasil dihapus'], 200);
+    } catch (\Exception $e) {
+        return response()->json(['message' => 'Gagal menghapus file'], 500);
+    }
+}
 
 
 

@@ -7,9 +7,7 @@
             @csrf
             @method('PUT')
             <input type="hidden" id="documentId" value="{{ $document->id }}">
-    <input type="hidden" id="oldAttachments" value='@json($oldAttachments)'>
-    
-
+    <input type="hidden" id="existingAttachment" value='@json($existingAttachment)'>
     
     <div class="card-body">
         <div class="container">
@@ -69,9 +67,9 @@
                 </div>
             </div>
             
-            {{-- <!-- Hidden input untuk menyimpan file yang dihapus -->
+            <!-- Hidden input untuk menyimpan file yang dihapus -->
             <input type="hidden" name="deleted_files" id="deleted_files">
-             --}}
+            
     
             <div class="form-group">
                 <label for="description">Notes</label>
@@ -117,6 +115,7 @@ $(document).ready(function() {
 
     // Initialize Dropzone
     Dropzone.autoDiscover = false;
+    let deletedFiles = [];
     let myDropzone = new Dropzone("#dropzone", {
         
         url: "/document/update/" + $('#documentId').val(),
@@ -136,8 +135,8 @@ $(document).ready(function() {
         init: function() {
             let dz = this;
             // Load existing files
-            let oldAttachments = JSON.parse($('#oldAttachments').val());
-            oldAttachments.forEach(function(attachment) {
+            let existingAttachment = JSON.parse($('#existingAttachment').val());
+            existingAttachment.forEach(function(attachment) {
                 let mockFile = { 
                     name: attachment.file_path.split('/').pop(), 
                     size: 12345, 
@@ -165,9 +164,30 @@ $(document).ready(function() {
         dz.on("sending", function(file, xhr, formData) {
             formData.append("_method", "PUT");
         });
+        
             // After files are processed
-            dz.on("successmultiple", function(files, response) {
+        dz.on("successmultiple", function(files, response) {
                 submitFormData();
+        });
+          // Event untuk menangani penghapusan file
+          dz.on("removedfile", function(file) {
+                if (file.existingFile) {
+                    deletedFiles.push(file.id);
+                    $("#deleted_files").val(JSON.stringify(deletedFiles));
+
+                    // Kirim AJAX request untuk menghapus file dari server
+                    $.ajax({
+                        url: "/document/delete-file/" + file.id,  
+                        type: "DELETE",
+                        data: { _token: $('meta[name="csrf-token"]').attr('content') },
+                        success: function(response) {
+                            toastr.success(response.message);
+                        },
+                        error: function(xhr) {
+                            toastr.error('Gagal menghapus file.');
+                        }
+                    });
+                }
             });
         }
     });

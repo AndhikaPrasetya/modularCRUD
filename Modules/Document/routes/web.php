@@ -24,6 +24,8 @@ Route::middleware(['auth'])->group( function () {
     Route::put('/document/update/{id}', [DocumentController::class,'update'])->name('document.update');
     Route::delete('/document/delete/{id}', [DocumentController::class,'destroy'])->name('document.destroy');
     Route::post('/document/attachment',[DocumentController::class, 'uploadAttachment'])->name('document.uploadAttachment');
+    Route::delete('/document/delete-file/{id}', [DocumentController::class, 'deleteFile'])->name('document.deleteFile');
+
 
     //DocumentCategory
     Route::get('/category', [CategoryController::class,'index'])->name('category.index');
