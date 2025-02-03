@@ -138,9 +138,6 @@
     // Tambahkan method PUT karena route menggunakan PUT
     formData.append('_method', 'PUT');
 
-   
-
-
     $.ajax({
         url: `/users/update/${id}`,
         type: 'POST',
@@ -153,6 +150,8 @@
         success: (response) => {
             if (response.success) {
                 showToast('success', response.message);
+                // Reload halaman
+                window.location.reload();
             } else {
                 showToast('error', response.message);
             }

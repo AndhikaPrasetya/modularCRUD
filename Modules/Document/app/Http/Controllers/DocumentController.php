@@ -22,8 +22,8 @@ class DocumentController extends Controller
      */
     public function index(Request $request)
     {
-        $title = "Data Category";
-        $breadcrumb = "Category";
+        $title = "Data Document";
+        $breadcrumb = "Document";
         if ($request->ajax()) {
             $data = Document::with(['category', 'user']);
             if ($search = $request->input('search.value')) {
@@ -37,14 +37,14 @@ class DocumentController extends Controller
                 ->addColumn('file_name', function ($data) {
                     return $data->file_name;
                 })
-                ->addColumn('Category id', function ($data) {
+                ->addColumn('category_id', function ($data) {
                     return $data->category->name;
                 })
-                ->addColumn('Deskripsi', function ($data) {
+                ->addColumn('description', function ($data) {
                     return $data->description;
                 })
                 ->addColumn('status', function ($data) {
-                    return $data->status;
+                    return '<span class="badge badge-primary">' . $data->status . '</span>';
                 })
                 ->addColumn('uploaded_by', function ($data) {
                     return $data->user ? $data->user->name : '';
@@ -65,7 +65,7 @@ class DocumentController extends Controller
 
                     return $buttons;
                 })
-                ->rawColumns(['action'])
+                ->rawColumns(['action', 'status'])
                 ->make(true);
         }
         return view('document::DocumentView.index', compact('title', 'breadcrumb'));

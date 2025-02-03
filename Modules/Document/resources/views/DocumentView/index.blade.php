@@ -1,7 +1,7 @@
 @extends('layouts.layout')
 @section('content')
 
-{{-- @include('layouts.breadcrumb') --}}
+@include('layouts.breadcrumb')
     <section class="content">
         <div class="container-fluid">
             <div class="row">
