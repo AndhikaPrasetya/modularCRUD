@@ -79,6 +79,9 @@
                 success: (response) => {
                     if (response.success) {
                       showToast('success', response.message);
+                      setTimeout(() => {
+                                window.location.reload();
+                            }, 2000);
                     } else {
                         showToast('error', response.message);
                     }

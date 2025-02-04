@@ -1,6 +1,6 @@
 @extends('layouts.layout')
 @section('content')
-{{-- @include('layouts.breadcrumb') --}}
+@include('layouts.breadcrumb')
 <section class="content">
 
   <div class="card card-primary">
@@ -69,7 +69,6 @@
             success:function(response){
               if (response.success) {
                   showToast('success',response.message)
-                //move page after 1000
                  setTimeout(() => {
                        window.location.href = '/category/edit/' + response.category_id;
                  }, 1000);

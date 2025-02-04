@@ -23,7 +23,8 @@ class DatabaseSeeder extends Seeder
             'create-role', 'read-role', 'update-role', 'delete-role',
             'create-permission', 'read-permission', 'update-permission', 'delete-permission',
             'create-user', 'read-user', 'update-user', 'delete-user',
-            'create-document', 'read-document', 'update-document', 'delete-document'
+            'create-document', 'read-document', 'update-document', 'delete-document',
+            'create-category', 'read-category', 'update-category', 'delete-category'
         ];
 
         foreach ($permissions as $permission) {

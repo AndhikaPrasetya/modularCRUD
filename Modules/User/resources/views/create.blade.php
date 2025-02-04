@@ -116,7 +116,9 @@
             contentType: false,
             success: function(response) {
                 showToast('success', response.message);
+                setTimeout(() => {
                 window.location.href = '/users/edit/' + response.data;
+                }, 2000);
             },
             error: (xhr) => {
                 if (xhr.status === 422) {

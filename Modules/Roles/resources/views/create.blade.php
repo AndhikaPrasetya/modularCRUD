@@ -66,7 +66,8 @@
             toastr.options = {
                 "positionClass": "toast-top-right", // Posisi toast
                 "timeOut": "1000",
-
+                "closeButton": true,
+                "progressBar": true,
             };
 
             const showToast = (icon, message) => {

@@ -1,6 +1,6 @@
 @extends('layouts.layout')
 @section('content')
-{{-- @include('layouts.breadcrumb') --}}
+@include('layouts.breadcrumb')
 <section class="content">
 
   <div class="card card-primary">
@@ -45,6 +45,8 @@
         toastr.options = {
             "positionClass": "toast-top-right", // Posisi toast
             "timeOut": "1000",
+            "closeButton": true,
+            "progressBar": true,
         };
 
         const showToast = (icon, message) => {
@@ -69,6 +71,9 @@
             success: (response) => {
                         if (response.success) {
                             showToast('success', response.message);
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 1000);
                         } else {
                             showToast('error', response.message);
                         }

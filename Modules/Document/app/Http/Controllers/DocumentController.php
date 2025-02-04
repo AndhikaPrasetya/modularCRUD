@@ -44,7 +44,7 @@ class DocumentController extends Controller
                     return $data->description;
                 })
                 ->addColumn('status', function ($data) {
-                    return '<span class="badge badge-primary">' . $data->status . '</span>';
+                    return $data->status === 'active' ? '<span class="badge badge-primary">' . $data->status . '</span>': '<span class="badge badge-danger">' . $data->status . '</span>';
                 })
                 ->addColumn('uploaded_by', function ($data) {
                     return $data->user ? $data->user->name : '';
@@ -56,7 +56,7 @@ class DocumentController extends Controller
                         $buttons .= '<a href="' . route('document.edit', $data->id) . '" class="btn btn-outline-info btn-sm mr-1"><span>Edit</span></a>';
                     }
                     if (Auth::user()->can('delete-document')) {
-                        $buttons .= '<button type="button" class="btn btn-outline-danger btn-sm delete-button" data-id="' . $data->id . '" data-section="category">' .
+                        $buttons .= '<button type="button" class="btn btn-outline-danger btn-sm delete-button" data-id="' . $data->id . '" data-section="document">' .
                             ' Delete</button>';
                     }
 
@@ -147,16 +147,6 @@ class DocumentController extends Controller
             ], 200);
         } catch (\Exception $e) {
             DB::rollBack();
-
-            // Hapus file yang sudah terupload jika terjadi error
-            if (!empty($fileData)) {
-                foreach ($fileData as $file) {
-                    if (Storage::exists('public/document/' . basename($file))) {
-                        Storage::delete('public/document/' . basename($file));
-                    }
-                }
-            }
-
             // Log::error('Error creating document: ' . $e->getMessage());
 
             return response()->json([
@@ -170,8 +160,8 @@ class DocumentController extends Controller
 
     public function edit($id)
     {
-        $title = "Create Category";
-        $breadcrumb = "Create";
+        $title = "Edit Category";
+        $breadcrumb = "Edit";
         $document = Document::find($id);
         $category = DocumentCategories::all();
         $existingAttachment = AttachmentDocument::where('document_id', $id)->get();
@@ -210,7 +200,7 @@ class DocumentController extends Controller
             if (!$document) {
                 return response()->json(['status' => false, 'message' => 'Document not found'], 404);
             }
-  
+
             $updateData = [];
 
             if ($request->filled('file_name')) {
@@ -280,11 +270,11 @@ class DocumentController extends Controller
         $file = AttachmentDocument::findOrFail($id);
         
         
+        
         if (Storage::exists('public/'.basename($file->file_path))) {
             Storage::delete('public/'.basename($file->file_path));
         }
 
-        // Hapus dari database
         $file->delete();
 
         return response()->json(['message' => 'File berhasil dihapus'], 200);
@@ -300,6 +290,26 @@ class DocumentController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $data = Document::find($id);
+        if(!$data){
+            return response()->json(['message' => 'Data tidak ditemukan'], 404);
+        }
+        //get attachment from document_id
+        $attachmentDocument = AttachmentDocument::where('document_id', $id)->get();
+        //delete attachment from storage
+        foreach($attachmentDocument as $attachment){
+            if(isset($attachment->file_path) && Storage::exists('public/'. $attachment->file_path)){
+                Storage::delete('public/'. $attachment->file_path);
+            }
+        }
+        //delete attachment document
+        AttachmentDocument::where('document_id', $id)->delete();
+
+        $data->delete();
+        return response()->json([
+            'success' => true,
+            'message' => 'Document deleted successfully',
+        ], 200);
+    
     }
 }

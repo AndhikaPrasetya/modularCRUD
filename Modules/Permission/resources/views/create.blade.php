@@ -59,7 +59,6 @@
             success:function(response){
               if (response.success) {
                   showToast('success',response.message)
-                //move page after 3000
                  setTimeout(() => {
                        window.location.href = '/permission/edit/' + response.permission_id;
                  }, 1000);
