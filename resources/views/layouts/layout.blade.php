@@ -125,6 +125,35 @@
                   </li>
               </ul>
           </li>
+          <li class="nav-item {{ Route::is('perusahaan.*', 'roles.*', 'permission.*') ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{ Route::is('perusahaan.*', 'roles.*', 'permission.*') ? 'active' : '' }}">
+              <i class="nav-icon fas fa-file"></i>
+                <p>
+                    Document
+                    <i class="right fas fa-angle-left"></i>
+                </p>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a href="{{ route('perusahaan.index') }}" class="nav-link {{ Route::is('perusahaan.*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-user"></i>
+                        <p>Profile Perusahaan</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('roles.index') }}" class="nav-link {{ Route::is('roles.*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-shield-alt"></i>
+                        <p>Akte Perusahaan</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('permission.index') }}" class="nav-link {{ Route::is('permission.*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-cogs"></i>
+                        <p>Sewa Menyewa</p>
+                    </a>
+                </li>
+            </ul>
+        </li>
         <li class="nav-item">
             <a href="{{ route('document.index') }}" class="nav-link {{ Route::is('document.*') ? 'active' : '' }}">
                 <i class="nav-icon fas fa-file"></i>

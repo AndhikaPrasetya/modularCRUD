@@ -199,6 +199,37 @@ $(document).ready(function() {
             },
         ]
     });
+    $('#table_perusahaan').DataTable({
+        processing: true,
+        serverSide: true,
+        searching: true,
+        stateSave: true,
+        ajax: {
+            url: "/perusahaan",
+            type: "GET"
+        },
+        columns: [
+            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+            {
+                data: 'nama',
+                name: 'nama'
+            },
+            {
+                data: 'alamat',
+                name: 'alamat'
+            },
+            {
+                data: 'email',
+                name: 'email'
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
+            },
+        ]
+    });
 
 
 

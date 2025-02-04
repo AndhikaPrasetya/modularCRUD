@@ -1,0 +1,11 @@
+{
+    "name": "Perusahaan",
+    "alias": "perusahaan",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Perusahaan\\Providers\\PerusahaanServiceProvider"
+    ],
+    "files": []
+}

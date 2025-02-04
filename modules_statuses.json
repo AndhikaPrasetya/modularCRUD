@@ -3,5 +3,6 @@
     "User": true,
     "Roles": true,
     "Permission": true,
-    "Document": true
+    "Document": true,
+    "Perusahaan": true
 }
