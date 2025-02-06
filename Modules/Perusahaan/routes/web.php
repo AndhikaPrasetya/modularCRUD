@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\Perusahaan\Http\Controllers\AktaPerusahaanController;
 use Modules\Perusahaan\Http\Controllers\PerusahaanController;
 
 /*
@@ -23,5 +24,16 @@ Route::middleware(['auth','verified','role:admin'])->group( function () {
     Route::get('/perusahaan/edit/{id}', [PerusahaanController::class,'edit'])->name('perusahaan.edit');
     Route::put('/perusahaan/update/{id}', [PerusahaanController::class,'update'])->name('perusahaan.update');
     Route::delete('/perusahaan/delete/{id}', [PerusahaanController::class,'destroy'])->name('perusahaan.destroy');
+    Route::get('/perusahaan/domisili', [PerusahaanController::class, 'getPerusahaanDomisili'])->name('perusahaan.domisili');
+
+
+    Route::get('/aktaPerusahaan', [AktaPerusahaanController::class,'index'])->name('aktaPerusahaan.index');
+    Route::get('/aktaPerusahaan/create', [AktaPerusahaanController::class,'create'])->name('aktaPerusahaan.create');
+    Route::post('/aktaPerusahaan/store',[AktaPerusahaanController::class, 'store'])->name('aktaPerusahaan.store');
+    Route::get('/aktaPerusahaan/edit/{id}', [AktaPerusahaanController::class,'edit'])->name('aktaPerusahaan.edit');
+    Route::put('/aktaPerusahaan/update/{id}', [AktaPerusahaanController::class,'update'])->name('aktaPerusahaan.update');
+    Route::delete('/aktaPerusahaan/delete/{id}', [AktaPerusahaanController::class,'destroy'])->name('aktaPerusahaan.destroy');
+    Route::delete('/aktaPerusahaan/delete-file/{id}', [AktaPerusahaanController::class,'deleteFile'])->name('aktaPerusahaan.deleteFile');
+    
     
 });

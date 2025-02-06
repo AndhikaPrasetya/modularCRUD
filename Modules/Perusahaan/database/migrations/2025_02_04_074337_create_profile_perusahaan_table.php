@@ -15,7 +15,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('nama');
             $table->text('alamat');
-            $table->string('telp');
+            $table->string('no_telp');
             $table->string('email')->unique();
             $table->integer('kode_pos');
             $table->string('no_domisili')->nullable();

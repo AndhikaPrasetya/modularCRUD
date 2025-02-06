@@ -125,8 +125,8 @@
                   </li>
               </ul>
           </li>
-          <li class="nav-item {{ Route::is('perusahaan.*', 'roles.*', 'permission.*') ? 'menu-open' : '' }}">
-            <a href="#" class="nav-link {{ Route::is('perusahaan.*', 'roles.*', 'permission.*') ? 'active' : '' }}">
+          <li class="nav-item {{ Route::is('perusahaan.*', 'aktaPerusahaan.*', 'permission.*') ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link {{ Route::is('perusahaan.*', 'aktaPerusahaan.*', 'permission.*') ? 'active' : '' }}">
               <i class="nav-icon fas fa-file"></i>
                 <p>
                     Document
@@ -141,9 +141,9 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('roles.index') }}" class="nav-link {{ Route::is('roles.*') ? 'active' : '' }}">
+                    <a href="{{ route('aktaPerusahaan.index') }}" class="nav-link {{ Route::is('aktaPerusahaan.*') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-shield-alt"></i>
-                        <p>Akte Perusahaan</p>
+                        <p>Akta Perusahaan</p>
                     </a>
                 </li>
                 <li class="nav-item">

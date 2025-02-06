@@ -19,7 +19,7 @@ class profilePerusahaan extends Model
      protected $fillable = [
         'nama',
         'alamat',
-        'telp',
+        'no_telp',
         'email',
         'kode_pos',
         'no_domisili',
@@ -42,6 +42,11 @@ class profilePerusahaan extends Model
             }
         });
     }
+    public function aktaPerusahaan()
+    {
+        return $this->hasMany(AktaPerusahaan::class);
+    }
+    
     // protected static function newFactory(): ProfilePerusahaanFactory
     // {
     //     // return ProfilePerusahaanFactory::new();

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use App\Models\User;
+use Modules\Perusahaan\Models\profilePerusahaan;
 
 class DatabaseSeeder extends Seeder
 {
@@ -24,7 +25,9 @@ class DatabaseSeeder extends Seeder
             'create-permission', 'read-permission', 'update-permission', 'delete-permission',
             'create-user', 'read-user', 'update-user', 'delete-user',
             'create-document', 'read-document', 'update-document', 'delete-document',
-            'create-category', 'read-category', 'update-category', 'delete-category'
+            'create-category', 'read-category', 'update-category', 'delete-category',
+            'create-profilePerusahaan', 'read-profilePerusahaan', 'update-profilePerusahaan', 'delete-profilePerusahaan',
+            'create-aktaPerusahaan', 'read-aktaPerusahaan', 'update-aktaPerusahaan', 'delete-aktaPerusahaan',
         ];
 
         foreach ($permissions as $permission) {
@@ -49,8 +52,8 @@ class DatabaseSeeder extends Seeder
         DB::beginTransaction();
         try {
             $admin = User::create([
-                'name' => 'Super Admin',
-                'email' => 'super-admin@example.com',
+                'name' => 'john doe',
+                'email' => 'john@example.com',
                 'password' => bcrypt('password'),
             ]);
             $admin->assignRole('admin');
@@ -59,11 +62,22 @@ class DatabaseSeeder extends Seeder
             DB::rollBack();
             $this->command->error('Seeding failed: ' . $e->getMessage());
         }
-
-        // Create test user
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        profilePerusahaan::create([
+            'nama' => 'PT. ZAP',
+            'alamat' => 'Belleza Shopping Arcade GF Unit SA 86 & 1st Floor Unit SA 86, Jl. Jend Soepono, North Grogol, Kebayoran Lama, South Jakarta City, Jakarta',
+            'no_telp' => '0217992312',
+            'email' => 'zap@zap.com',
+            'kode_pos' => '12210',
+            'no_domisili' =>'22113',
+            'nama_domisili' => 'Jakarta',
+            'alamat_domisili' => 'Belleza Shopping Arcade GF Unit SA 86 & 1st Floor Unit SA 86, Jl. Jend Soepono, North Grogol, Kebayoran Lama, South Jakarta City, Jakarta',
+            'province_domisili' => 'DKI Jakarta',
+            'kota_domisili' => 'Jakarta Selatan',
+            'no_npwp' => '231231212',
+            'nama_npwp' => 'zulu alpha papa',
+            'alamat_npwp' => 'Belleza Shopping Arcade GF Unit SA 86 &
+            1st Floor Unit SA 86, Jl. Jend Soepono,
+            North Grogol, Kebayoran Lama, South Jakarta City, Jakarta',
         ]);
     }
 }

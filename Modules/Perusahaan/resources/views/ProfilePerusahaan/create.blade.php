@@ -30,8 +30,8 @@
             </div>
             <div class="col-12 col-md-6">
                 <div class="form-group">
-                    <label for="telp">No Phone</label>
-                    <input type="tel" class="form-control" name="telp" id="telp" required>
+                    <label for="no_telp">No Phone</label>
+                    <input type="tel" class="form-control" name="no_telp" id="no_telp" required>
                 </div>
             </div>
             <div class="col-12 col-md-6">

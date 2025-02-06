@@ -268,9 +268,7 @@ class DocumentController extends Controller
     try {
     
         $file = AttachmentDocument::findOrFail($id);
-        
-        
-        
+
         if (Storage::exists('public/'.basename($file->file_path))) {
             Storage::delete('public/'.basename($file->file_path));
         }

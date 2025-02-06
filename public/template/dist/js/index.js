@@ -230,6 +230,45 @@ $(document).ready(function() {
             },
         ]
     });
+    $('#table_aktaPerusahaan').DataTable({
+        processing: true,
+        serverSide: true,
+        searching: true,
+        stateSave: true,
+        ajax: {
+            url: "/aktaPerusahaan",
+            type: "GET"
+        },
+        columns: [
+            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+            {
+                data: 'kode_akta',
+                name: 'kode_akta'
+            },
+            {
+                data: 'nama_akta',
+                name: 'nama_akta'
+            },
+            {
+                data: 'uid_profile_perusahaan',
+                name: 'uid_profile_perusahaan'
+            },
+            {
+                data: 'tgl_terbit',
+                name: 'tgl_terbit'
+            },
+            {
+                data: 'status',
+                name: 'status'
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
+            },
+        ]
+    });
 
 
 

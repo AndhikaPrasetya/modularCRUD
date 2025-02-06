@@ -56,7 +56,7 @@ class PerusahaanController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         }
-        return view('perusahaan::index', get_defined_vars());
+        return view('perusahaan::ProfilePerusahaan.index', get_defined_vars());
     }
 
     /**
@@ -66,8 +66,23 @@ class PerusahaanController extends Controller
     {
         $title = "Create Data Perusahaan";
         $breadcrumb = "Perusahaan";
-        return view('perusahaan::create', get_defined_vars());
+        return view('perusahaan::ProfilePerusahaan.create', get_defined_vars());
     }
+
+    public function getPerusahaanDomisili(Request $request)
+{
+    $perusahaan = profilePerusahaan::find($request->id);
+
+    if ($perusahaan) {
+        return response()->json([
+            'success' => true,
+            'domisili' => $perusahaan->alamat_domisili,
+        ]);
+    }
+
+    return response()->json(['success' => false], 404);
+}
+
 
     /**
      * Store a newly created resource in storage.
@@ -77,7 +92,7 @@ class PerusahaanController extends Controller
         $validator = Validator::make($request->all(), [
             'nama' => 'required',
             'alamat' => 'required',
-            'telp' => 'required',
+            'no_telp' => 'required',
             'email' => 'required|email',
             'kode_pos' => 'required',
             'no_domisili' => 'required',
@@ -101,7 +116,7 @@ class PerusahaanController extends Controller
         $data = new profilePerusahaan();
         $data->nama = $request->nama;
         $data->alamat = $request->alamat;
-        $data->telp = $request->telp;
+        $data->no_telp = $request->no_telp;
         $data->email = $request->email;
         $data->kode_pos = $request->kode_pos;
         $data->no_domisili = $request->no_domisili;
@@ -137,7 +152,7 @@ class PerusahaanController extends Controller
         $title = "Edit Data Perusahaan";
         $breadcrumb = "Perusahaan";
         $data=profilePerusahaan::findOrFail($id);
-        return view('perusahaan::edit', get_defined_vars());
+        return view('perusahaan::ProfilePerusahaan.edit', get_defined_vars());
     }
 
     /**
@@ -148,7 +163,7 @@ class PerusahaanController extends Controller
         $validator = Validator::make($request->all(), [
             'nama' => 'required',
             'alamat' => 'required',
-            'telp' => 'required',
+            'no_telp' => 'required',
             'email' => 'required|email',
             'kode_pos' => 'required',
             'no_domisili' => 'required',

@@ -8,6 +8,7 @@
             @method('PUT')
             <input type="hidden" id="documentId" value="{{ $document->id }}">
     <input type="hidden" id="existingAttachment" value='@json($existingAttachment)'>
+    <input type="hidden" name="deleted_files" id="deleted_files">
     
     <div class="card-body">
         <div class="container">
@@ -67,8 +68,6 @@
                 </div>
             </div>
             
-            <!-- Hidden input untuk menyimpan file yang dihapus -->
-            <input type="hidden" name="deleted_files" id="deleted_files">
             
     
             <div class="form-group">
