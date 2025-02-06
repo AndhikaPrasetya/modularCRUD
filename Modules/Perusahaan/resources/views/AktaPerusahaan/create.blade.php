@@ -68,12 +68,6 @@
                                 <input type="text" class="form-control" name="sk_kemenkum_ham" id="sk_kemenkum_ham" required>
                             </div>
                         </div>
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label>Upload Files</label>
-                                <div id="dropzoneArea" class="dropzone"></div>
-                            </div>
-                        </div>
                         <div class="col-12 col-md-4">
                             <div class="form-group">
                                 <label for="nama_notaris">Nama Notaris</label>
@@ -92,6 +86,13 @@
                                 <input type="tel" class="form-control" name="no_doc" id="no_doc">
                             </div>
                         </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label>Upload Files</label>
+                                <div id="dropzoneArea" class="dropzone"></div>
+                            </div>
+                        </div>
+                        
                     </div>
         
                     {{-- <div class="row mb-4">
@@ -134,9 +135,9 @@
                             </div>
                             <div class="col-12 col-md-4">
                                 <div class="form-group">
-                                    <label for="jabatan_direktur">Jabatan</label>
-                                    <input type="text" class="form-control" name="jabatan_direktur[]"
-                                        id="jabatan_direktur" required>
+                                    <label for="jabatan">Jabatan</label>
+                                    <input type="text" class="form-control" name="jabatan[]"
+                                        id="jabatan" required>
                                 </div>
                             </div>
                             <div class="col-12 col-md-4">
@@ -290,8 +291,8 @@
                 </div>
                 <div class="col-12 col-md-4">
                     <div class="form-group">
-                        <label for="jabatan_direktur">Jabatan</label>
-                        <input type="text" class="form-control" name="jabatan_direktur[]" required>
+                        <label for="jabatan">Jabatan</label>
+                        <input type="text" class="form-control" name="jabatan[]" required>
                     </div>
                 </div>
                 <div class="col-12 col-md-4">

@@ -18,7 +18,7 @@ return new class extends Migration
             ->references('id')->on('akta_perusahaans')
             ->onDelete('cascade');
             $table->string('nama_direktur');
-            $table->string('jabatan_direktur');
+            $table->string('jabatan');
             $table->integer('durasi_jabatan');
             $table->timestamps();
         });

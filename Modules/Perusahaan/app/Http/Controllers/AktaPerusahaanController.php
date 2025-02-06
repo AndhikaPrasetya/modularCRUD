@@ -145,14 +145,14 @@ class AktaPerusahaanController extends Controller
 
             //input direktur
             $nama_direktur = $request->nama_direktur;
-            $jabatan = $request->jabatan_direktur;
+            $jabatan = $request->jabatan;
             $durasi_jabatan = $request->durasi_jabatan;
 
             foreach ($nama_direktur as $key => $nama) {
                 $direktur = new Directors();
                 $direktur->akta_perusahaan_id = $akta->id;
                 $direktur->nama_direktur = $nama;
-                $direktur->jabatan_direktur = $jabatan[$key];
+                $direktur->jabatan = $jabatan[$key];
                 $direktur->durasi_jabatan = $durasi_jabatan[$key];
                 $direktur->save();
             }
