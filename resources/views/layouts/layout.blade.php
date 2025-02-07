@@ -154,7 +154,7 @@
                 </li>
             </ul>
         </li>
-        <li class="nav-item">
+        {{-- <li class="nav-item">
             <a href="{{ route('document.index') }}" class="nav-link {{ Route::is('document.*') ? 'active' : '' }}">
                 <i class="nav-icon fas fa-file"></i>
                 <p>Document</p>
@@ -165,7 +165,7 @@
                 <i class="nav-icon fas fa-tag"></i>
                 <p>Category</p>
             </a>
-        </li>
+        </li> --}}
           @endif
       </ul>
       

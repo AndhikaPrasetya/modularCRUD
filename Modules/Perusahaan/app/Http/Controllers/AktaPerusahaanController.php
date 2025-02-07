@@ -163,14 +163,14 @@ class AktaPerusahaanController extends Controller
 
             //input saham 
             $nama_pemegang_saham = $request->pemegang_saham;
-            $nominal_saham = $request->nominal_saham;
+            $jumlah_saham = $request->jumlah_saham;
             $saham_persen = $request->saham_persen;
 
             foreach ($nama_pemegang_saham as $key => $nama) {
                 $saham = new ShareHolders();
                 $saham->akta_perusahaan_id = $akta->id;
                 $saham->pemegang_saham = $nama;
-                $saham->nominal_saham = $nominal_saham[$key];
+                $saham->jumlah_saham = $jumlah_saham[$key];
                 $saham->saham_persen = $saham_persen[$key];
                 $saham->save();
             }

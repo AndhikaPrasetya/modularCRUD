@@ -141,8 +141,8 @@
                             </div>
                             <div class="col-12 col-md-4">
                                 <div class="form-group">
-                                    <label for="nominal_saham">Nominal saham</label>
-                                    <input type="text" class="form-control" name="nominal_saham[]" id="nominal_saham"
+                                    <label for="jumlah_saham">Nominal saham</label>
+                                    <input type="text" class="form-control" name="jumlah_saham[]" id="jumlah_saham"
                                         required>
                                 </div>
                             </div>
@@ -333,8 +333,8 @@
                         </div>
                         <div class="col-12 col-md-4">
                             <div class="form-group">
-                                <label for="nominal_saham">Nominal saham</label>
-                                <input type="text" class="form-control" name="nominal_saham[]" id="nominal_saham"
+                                <label for="jumlah_saham">Nominal saham</label>
+                                <input type="text" class="form-control" name="jumlah_saham[]" id="jumlah_saham"
                                     required>
                             </div>
                         </div>
