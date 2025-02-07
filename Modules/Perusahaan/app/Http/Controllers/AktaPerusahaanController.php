@@ -13,6 +13,7 @@ use Modules\Perusahaan\Models\AktaPerusahaan;
 use Modules\Perusahaan\Models\profilePerusahaan;
 use Modules\Perusahaan\Models\AttachmentAktaPerusahaan;
 use Modules\Perusahaan\Models\Directors;
+use Modules\Perusahaan\Models\ShareHolders;
 
 class AktaPerusahaanController extends Controller
 {
@@ -95,9 +96,12 @@ class AktaPerusahaanController extends Controller
         $validator = Validator::make($request->all(), [
             'uid_profile_perusahaan' => 'required',
             'file_path.*' => 'mimes:pdf,xlx,csv|max:2048',
-            'nama_direktur.*' => 'required|string',
+            'nama_direktur.*' => 'required',
             'jabatan.*' => 'required',
             'durasi_jabatan.*' => 'required',
+            'pemegang_saham.*' => 'required',
+            'nominal_saham.*' => 'required',
+            'saham_persen.*' => 'required',
             'nama_akta' => 'required',
             'kode_akta' => 'required',
             'no_doc' => 'required',
@@ -155,6 +159,20 @@ class AktaPerusahaanController extends Controller
                 $direktur->jabatan = $jabatan[$key];
                 $direktur->durasi_jabatan = $durasi_jabatan[$key];
                 $direktur->save();
+            }
+
+            //input saham 
+            $nama_pemegang_saham = $request->pemegang_saham;
+            $nominal_saham = $request->nominal_saham;
+            $saham_persen = $request->saham_persen;
+
+            foreach ($nama_pemegang_saham as $key => $nama) {
+                $saham = new ShareHolders();
+                $saham->akta_perusahaan_id = $akta->id;
+                $saham->pemegang_saham = $nama;
+                $saham->nominal_saham = $nominal_saham[$key];
+                $saham->saham_persen = $saham_persen[$key];
+                $saham->save();
             }
 
 

@@ -18,7 +18,7 @@ return new class extends Migration
             ->references('id')->on('akta_perusahaans')
             ->onDelete('cascade');
             $table->string('pemegang_saham'); 
-            $table->decimal('nominal_saham', 15, 2); 
+            $table->decimal('jumlah_saham', 15, 2); 
             $table->decimal('saham_persen', 5, 2);
             $table->timestamps();
         });
