@@ -176,13 +176,13 @@ class DocumentController extends Controller
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'file_name' => 'nullable',
+            'file_name' => 'sometimes|required',
             'file_path.*' => 'mimes:pdf,xlsx,csv|max:2048',
-            'description' => 'nullable',
-            'status' => 'nullable',
-            'valid_from' => 'nullable',
-            'valid_until' => 'nullable',
-            'category_id' => 'nullable',
+            'description' => 'sometimes|required',
+            'status' => 'sometimes|required',
+            'valid_from' => 'sometimes|required',
+            'valid_until' => 'sometimes|required',
+            'category_id' => 'sometimes|required',
         ]);
 
         if ($validator->fails()) {

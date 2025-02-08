@@ -20,7 +20,7 @@
     <section class="content">
 
         <div class="card card-primary">
-            <form id="editFormAkta" enctype="multipart/form-data" id="dropzoneArea" class="dropzone">
+            <form id="editFormAkta" class="dropzone" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <input type="hidden" id="aktaId" value="{{ $akta->id }}">
@@ -321,10 +321,10 @@
                                     _token: $('meta[name="csrf-token"]').attr('content')
                                 },
                                 success: function(response) {
-                                    toastr.success(response.message);
+                                    showToast('success', response.message);
                                 },
                                 error: function(xhr) {
-                                    toastr.error('Gagal menghapus file.');
+                                    showToast('error', 'Gagal Hapus File');
                                 }
                             });
                         }

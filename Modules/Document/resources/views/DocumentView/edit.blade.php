@@ -162,6 +162,7 @@ $(document).ready(function() {
             // Menambahkan _method PUT ke FormData
         dz.on("sending", function(file, xhr, formData) {
             formData.append("_method", "PUT");
+            
         });
         
             // After files are processed

@@ -213,6 +213,7 @@ class AktaPerusahaanController extends Controller
         //mengambil domisili sesuai dengan perusahaan
         $domisili = $akta && $akta->perusahaan ? $akta->perusahaan->alamat : null;
         $existingAttachment = AttachmentAktaPerusahaan::where('akta_perusahaan_id', $id)->get();
+       
         //get data direktur
         $direkturs = Directors::where('akta_perusahaan_id', $id)->get();
         $shareholders = ShareHolders::where('akta_perusahaan_id', $id)->get();
@@ -226,77 +227,99 @@ class AktaPerusahaanController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, $id)
-    {
-        $validator = Validator::make($request->all(), [
-            'uid_profile_perusahaan' => 'required',
-            'file_path.*' => 'mimes:pdf,xlx,csv|max:2048',
-            'nama_direktur.*' => 'required',
-            'jabatan.*' => 'required',
-            'durasi_jabatan.*' => 'required',
-            'pemegang_saham.*' => 'required',
-            'nominal_saham.*' => 'required',
-            'saham_persen.*' => 'required',
-            'nama_akta' => 'required',
-            'kode_akta' => 'required',
-            'no_doc' => 'required',
-            'tgl_terbit' => 'required',
-            'nama_notaris' => 'required',
-            'keterangan' => 'nullable',
-            'sk_kemenkum_ham' => 'required',
-            'status' => 'required',
-        ]);
+{
+    $validator = Validator::make($request->all(), [
+        'uid_profile_perusahaan' => 'sometimes|required',
+        'file_path.*' => 'mimes:pdf,xlsx,csv|max:2048',
+        'nama_direktur.*' => 'sometimes|required',
+        'jabatan.*' => 'sometimes|required',
+        'durasi_jabatan.*' => 'sometimes|required',
+        'pemegang_saham.*' => 'sometimes|required',
+        'nominal_saham.*' => 'sometimes|required',
+        'saham_persen.*' => 'sometimes|required',
+        'nama_akta' => 'sometimes|required',
+        'kode_akta' => 'sometimes|required',
+        'no_doc' => 'sometimes|required',
+        'tgl_terbit' => 'sometimes|required',
+        'nama_notaris' => 'sometimes|required',
+        'keterangan' => 'nullable',
+        'sk_kemenkum_ham' => 'sometimes|required',
+        'status' => 'sometimes|required',
+    ]);
 
-        if($validator->fails()){
-            return response()->json([
-                'status' => false,
-                'message' => 'Data tidak valid',
-                'errors' => $validator->errors()
-            ]);
+    if ($validator->fails()) {
+        return response()->json([
+            'status' => false,
+            'message' => 'Data tidak valid',
+            'errors' => $validator->errors()
+        ], 422);
+    }
+
+    try {
+        DB::beginTransaction();
+
+        $akta = AktaPerusahaan::find($id);
+        if (!$akta) {
+            return response()->json(['status' => false, 'message' => 'Data tidak ditemukan'], 404);
         }
 
-        try {
-            DB::beginTransaction();
-            $akta = AktaPerusahaan::findOrFail($id);
-            
-            $akta->update([
-            'uid_profile_perusahaan'  =>$request->uid_profile_perusahaan,
-            'nama_akta' => $request->nama_akta,
-            'kode_akta' => $request->kode_akta,
-            'no_doc' => $request->no_doc,
-            'tgl_terbit' => $request->tgl_terbit,
-            'nama_notaris' => $request->nama_notaris,
-            'keterangan' => $request->keterangan,
-            'sk_kemenkum_ham' => $request->sk_kemenkum_ham,
-            'status' => $request->status,
-            ]);
+        $updateData = [];
 
-            if ($request->hasFile('file_path')) {
-                foreach ($request->file('file_path') as $file) {
-                    $fileName = time() . '_' . $file->getClientOriginalName();
-                    $file->storeAs('aktaPerusahaan', $fileName, 'public');
-                    $fileData = 'storage/aktaPerusahaan/' . $fileName;
+        if ($request->filled('uid_profile_perusahaan')) {
+            $updateData['uid_profile_perusahaan'] = $request->uid_profile_perusahaan;
+        }
+        if ($request->filled('nama_akta')) {
+            $updateData['nama_akta'] = $request->nama_akta;
+        }
+        if ($request->filled('kode_akta')) {
+            $updateData['kode_akta'] = $request->kode_akta;
+        }
+        if ($request->filled('no_doc')) {
+            $updateData['no_doc'] = $request->no_doc;
+        }
+        if ($request->filled('tgl_terbit')) {
+            $updateData['tgl_terbit'] = $request->tgl_terbit;
+        }
+        if ($request->filled('nama_notaris')) {
+            $updateData['nama_notaris'] = $request->nama_notaris;
+        }
+        if ($request->filled('keterangan')) {
+            $updateData['keterangan'] = $request->keterangan;
+        }
+        if ($request->filled('sk_kemenkum_ham')) {
+            $updateData['sk_kemenkum_ham'] = $request->sk_kemenkum_ham;
+        }
+        if ($request->filled('status')) {
+            $updateData['status'] = $request->status;
+        }
 
-                     // Check if this exact file already exists for this document
-                     $existingAttachment = AttachmentAktaPerusahaan::where('akta_perusahaan_id', $akta->id)
-                     ->where('file_path', $fileData)
-                     ->first();
-         
-                 if (!$existingAttachment) {
+        $akta->update($updateData);
+
+        // Menyimpan file baru jika ada
+        if ($request->hasFile('file_path')) {
+            foreach ($request->file('file_path') as $file) {
+                $fileName = time() . '_' . $file->getClientOriginalName();
+                $file->storeAs('aktaPerusahaan', $fileName, 'public');
+                $fileData = 'storage/aktaPerusahaan/' . $fileName;
+
+                // Cek apakah file dengan path yang sama sudah ada
+                $existingAttachment = AttachmentAktaPerusahaan::where('akta_perusahaan_id', $akta->id)
+                    ->where('file_path', $fileData)
+                    ->first();
+
+                if (!$existingAttachment) {
                     $attachment = new AttachmentAktaPerusahaan();
                     $attachment->akta_perusahaan_id = $akta->id;
                     $attachment->file_path = $fileData;
                     $attachment->save();
-                 }
-                   
                 }
             }
+        }
 
-         
+        if (!empty($request->nama_direktur) && is_array($request->nama_direktur)) {
             foreach ($request->nama_direktur as $key => $nama) {
                 Directors::updateOrCreate(
-                    [
-                        'id' => $request->id_direktur[$key] ?? null, // Jika ID ada, update, jika null maka insert
-                    ],
+                    ['id' => $request->id_direktur[$key] ?? null],
                     [
                         'akta_perusahaan_id' => $akta->id,
                         'nama_direktur' => $nama,
@@ -305,12 +328,12 @@ class AktaPerusahaanController extends Controller
                     ]
                 );
             }
-            
+        }
+        
+        if (!empty($request->pemegang_saham) && is_array($request->pemegang_saham)) {
             foreach ($request->pemegang_saham as $key => $nama) {
                 ShareHolders::updateOrCreate(
-                    [
-                        'id' => $request->id_saham[$key] ?? null, // Jika ID ada, update, jika null maka insert
-                    ],
+                    ['id' => $request->id_saham[$key] ?? null],
                     [
                         'akta_perusahaan_id' => $akta->id,
                         'pemegang_saham' => $nama,
@@ -319,24 +342,25 @@ class AktaPerusahaanController extends Controller
                     ]
                 );
             }
-
-
-            DB::commit();
-            return response()->json([
-                'status' => true,
-                'message' => 'Data Berhasil Ditambahkan',
-                'perusahaanId' => $akta->id
-            ]);
-        } catch (\Exception $e) {
-             \Log::error('Error : ' . $e->getMessage());
-            DB::rollback();
-            return response()->json([
-                'status' => false,
-                'message' => 'Failed to save data',
-                'errors' => $e->getMessage()
-            ], 500);
         }
+        
+
+        DB::commit();
+        return response()->json([
+            'status' => true,
+            'message' => 'Data Berhasil diperbarui',
+            'akta' => $akta
+        ], 200);
+    } catch (\Exception $e) {
+        DB::rollback();
+        \Log::error('Error: ' . $e->getMessage());
+        return response()->json([
+            'status' => false,
+            'message' => 'Terjadi kesalahan saat memperbarui data.',
+            'errors' => $e->getMessage()
+        ], 500);
     }
+}
 
     /**
      * Remove the specified resource from storage.
