@@ -97,10 +97,12 @@
                     </div>
 
                     <div id="dynamic-input-direktur">
-                        <div class="row mb-4">
+                        <div class="row">
                             <div class="col-12">
                                 <h3>Informasi Direktur dan Komisaris</h3>
                             </div>
+                        </div>
+                        <div class="row align-items-center">
                             <div class="col-12 col-md-4">
                                 <div class="form-group">
                                     <label for="nama_direktur">Nama Direktur</label>
@@ -114,7 +116,7 @@
                                     <input type="text" class="form-control" name="jabatan[]" id="jabatan" required>
                                 </div>
                             </div>
-                            <div class="col-12 col-md-4">
+                            <div class="col-12 col-md-3">
                                 <div class="form-group">
                                     <label for="durasi_jabatan">Durasi Jabatan</label>
                                     <input type="text" class="form-control" name="durasi_jabatan[]"
@@ -123,15 +125,17 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 text-right">
-                        <button type="button" class="btn btn-primary add-row-direktur">Tambah</button>
+                    <div class="mb-3 text-left">
+                        <button type="button" class="btn btn-primary add-row-direktur"><i class="fas fa-plus"></i></button>
                     </div>
 
                     <div id="dynamic-input-saham">
-                        <div class="row mb-4">
+                        <div class="row ">
                             <div class="col-12">
                                 <h3>Informasi Saham</h3>
                             </div>
+                        </div>
+                        <div class="row align-items-center">
                             <div class="col-12 col-md-4">
                                 <div class="form-group">
                                     <label for="pemegang_saham">Pemegang saham</label>
@@ -146,7 +150,7 @@
                                         required>
                                 </div>
                             </div>
-                            <div class="col-12 col-md-4">
+                            <div class="col-12 col-md-3">
                                 <div class="form-group">
                                     <label for="saham_persen">Saham %</label>
                                     <input type="text" class="form-control" name="saham_persen[]" id="saham_persen"
@@ -155,8 +159,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 text-right">
-                        <button type="button" class="btn btn-primary add-row-saham">Tambah</button>
+                    <div class="mb-3 text-left">
+                        <button type="button" class="btn btn-primary add-row-saham"><i class="fas fa-plus"></i></button>
                     </div>
                     <div class="form-group">
                         <label for="keterangan">Keterangan</label>
@@ -289,7 +293,7 @@
 
                 if (e.target.classList.contains('add-row-direktur')) {
                     const newRow = document.createElement('div');
-                    newRow.classList.add('row', 'mb-4');
+                    newRow.classList.add('row','align-items-center');
                     newRow.innerHTML = `
                 <div class="col-12 col-md-4">
                     <div class="form-group">
@@ -303,15 +307,15 @@
                         <input type="text" class="form-control" name="jabatan[]" required>
                     </div>
                 </div>
-                <div class="col-12 col-md-4">
+                <div class="col-12 col-md-3">
                     <div class="form-group">
                         <label for="durasi_jabatan">Durasi Jabatan</label>
                         <input type="text" class="form-control" name="durasi_jabatan[]" required>
                     </div>
                 </div>
-                <div class="col-12 text-left">
-                    <button type="button" class="btn btn-danger remove-row">Hapus</button>
-                </div>
+                <div class="col-1">
+                                <button type="button" class="btn btn-danger remove-row"><i class="fas fa-trash"></i></button>
+                            </div>
             `;
                     const container = document.getElementById('dynamic-input-direktur');
                     container.appendChild(newRow);
@@ -322,7 +326,7 @@
 
                 if (e.target.classList.contains('add-row-saham')) {
                     const newRow = document.createElement('div');
-                    newRow.classList.add('row', 'mb-4');
+                    newRow.classList.add('row','align-items-center');
                     newRow.innerHTML = `
                  <div class="col-12 col-md-4">
                             <div class="form-group">
@@ -338,15 +342,15 @@
                                     required>
                             </div>
                         </div>
-                        <div class="col-12 col-md-4">
+                        <div class="col-12 col-md-3">
                             <div class="form-group">
                                 <label for="saham_persen">Saham %</label>
                                 <input type="text" class="form-control" name="saham_persen[]" id="saham_persen"
                                     required>
                             </div>
                         </div>
-                         <div class="col-12 text-left">
-                    <button type="button" class="btn btn-danger remove-row">Hapus</button>
+                         <div class="col-1 text-left">
+                    <button type="button" class="btn btn-danger remove-row"><i class="fas fa-trash"></i></button>
                 </div>
             `;
                     const container = document.getElementById('dynamic-input-saham');
