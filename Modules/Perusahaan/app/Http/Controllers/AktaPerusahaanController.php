@@ -382,6 +382,26 @@ class AktaPerusahaanController extends Controller
 
     public function destroy($id)
     {
-        //
+        $data = AktaPerusahaan::find($id);
+        if(!$data){
+            return response()->json(['message' => 'Data tidak ditemukan'], 404);
+        }
+        //get attachment 
+        $attachmentAkta = AttachmentAktaPerusahaan::where('akta_perusahaan_id', $id)->get();
+        //delete attachment from storage
+        foreach($attachmentAkta as $attachment){
+            if(isset($attachment->file_path) && Storage::exists('public/'. $attachment->file_path)){
+                Storage::delete('public/'. $attachment->file_path);
+            }
+        }
+        //delete attachment
+        AttachmentAktaPerusahaan::where('akta_perusahaan_id', $id)->delete();
+
+        $data->delete();
+        return response()->json([
+            'success' => true,
+            'message' => 'Document deleted successfully',
+        ], 200);
+    
     }
 }
