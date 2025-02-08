@@ -13,7 +13,12 @@ class Directors extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = [];
+    protected $fillable = [
+        'akta_perusahaan_id',
+        'nama_direktur',
+        'jabatan',
+        'durasi_jabatan'
+    ];
 
     // protected static function newFactory(): DirectorsFactory
     // {

@@ -17,8 +17,8 @@ class AktaPerusahaan extends Model
      */
     protected $fillable = [
         'uid_profile_perusahaan',
-        'kode_akte',
-        'nama_akte',
+        'kode_akta',
+        'nama_akta',
         'no_doc',
         'tgl_terbit',
         'nama_notaris',

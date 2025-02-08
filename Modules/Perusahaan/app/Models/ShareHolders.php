@@ -16,6 +16,7 @@ class ShareHolders extends Model
     //table
     protected $table = 'shareholders';
     protected $fillable = [
+        'akta_perusahaan_id',
         'pemegang_saham',
         'jumlah_saham',
         'saham_persen'

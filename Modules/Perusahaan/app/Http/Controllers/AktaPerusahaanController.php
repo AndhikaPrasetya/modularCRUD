@@ -208,17 +208,15 @@ class AktaPerusahaanController extends Controller
         $title = "Edit Akta Perusahaan";
         $breadcrumb = "Akta Perusahaan";
 
-        $akta = AktaPerusahaan::with('perusahaan')->find($id);
+        $akta = AktaPerusahaan::with('perusahaan')->findOrFail($id);
         $perusahaan = ProfilePerusahaan::all();
         //mengambil domisili sesuai dengan perusahaan
         $domisili = $akta && $akta->perusahaan ? $akta->perusahaan->alamat : null;
         $existingAttachment = AttachmentAktaPerusahaan::where('akta_perusahaan_id', $id)->get();
         //get data direktur
-        $direktur = Directors::where('akta_perusahaan_id', $id)->get();
+        $direkturs = Directors::where('akta_perusahaan_id', $id)->get();
+        $shareholders = ShareHolders::where('akta_perusahaan_id', $id)->get();
 
-        $nama_direktur = $direktur->pluck('nama_direktur')->implode(',');
-        $jabatan_direktur = $direktur->pluck('jabatan_direktur')->implode(',');
-        $durasi_jabatan = $direktur->pluck('durasi_jabatan')->implode(',');
 
 
         return view('perusahaan::AktaPerusahaan.edit', get_defined_vars());
@@ -229,12 +227,141 @@ class AktaPerusahaanController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'uid_profile_perusahaan' => 'required',
+            'file_path.*' => 'mimes:pdf,xlx,csv|max:2048',
+            'nama_direktur.*' => 'required',
+            'jabatan.*' => 'required',
+            'durasi_jabatan.*' => 'required',
+            'pemegang_saham.*' => 'required',
+            'nominal_saham.*' => 'required',
+            'saham_persen.*' => 'required',
+            'nama_akta' => 'required',
+            'kode_akta' => 'required',
+            'no_doc' => 'required',
+            'tgl_terbit' => 'required',
+            'nama_notaris' => 'required',
+            'keterangan' => 'nullable',
+            'sk_kemenkum_ham' => 'required',
+            'status' => 'required',
+        ]);
+
+        if($validator->fails()){
+            return response()->json([
+                'status' => false,
+                'message' => 'Data tidak valid',
+                'errors' => $validator->errors()
+            ]);
+        }
+
+        try {
+            DB::beginTransaction();
+            $akta = AktaPerusahaan::findOrFail($id);
+            
+            $akta->update([
+            'uid_profile_perusahaan'  =>$request->uid_profile_perusahaan,
+            'nama_akta' => $request->nama_akta,
+            'kode_akta' => $request->kode_akta,
+            'no_doc' => $request->no_doc,
+            'tgl_terbit' => $request->tgl_terbit,
+            'nama_notaris' => $request->nama_notaris,
+            'keterangan' => $request->keterangan,
+            'sk_kemenkum_ham' => $request->sk_kemenkum_ham,
+            'status' => $request->status,
+            ]);
+
+            if ($request->hasFile('file_path')) {
+                foreach ($request->file('file_path') as $file) {
+                    $fileName = time() . '_' . $file->getClientOriginalName();
+                    $file->storeAs('aktaPerusahaan', $fileName, 'public');
+                    $fileData = 'storage/aktaPerusahaan/' . $fileName;
+
+                     // Check if this exact file already exists for this document
+                     $existingAttachment = AttachmentAktaPerusahaan::where('akta_perusahaan_id', $akta->id)
+                     ->where('file_path', $fileData)
+                     ->first();
+         
+                 if (!$existingAttachment) {
+                    $attachment = new AttachmentAktaPerusahaan();
+                    $attachment->akta_perusahaan_id = $akta->id;
+                    $attachment->file_path = $fileData;
+                    $attachment->save();
+                 }
+                   
+                }
+            }
+
+         
+            foreach ($request->nama_direktur as $key => $nama) {
+                Directors::updateOrCreate(
+                    [
+                        'id' => $request->id_direktur[$key] ?? null, // Jika ID ada, update, jika null maka insert
+                    ],
+                    [
+                        'akta_perusahaan_id' => $akta->id,
+                        'nama_direktur' => $nama,
+                        'jabatan' => $request->jabatan[$key] ?? null,
+                        'durasi_jabatan' => $request->durasi_jabatan[$key] ?? null,
+                    ]
+                );
+            }
+            
+            foreach ($request->pemegang_saham as $key => $nama) {
+                ShareHolders::updateOrCreate(
+                    [
+                        'id' => $request->id_saham[$key] ?? null, // Jika ID ada, update, jika null maka insert
+                    ],
+                    [
+                        'akta_perusahaan_id' => $akta->id,
+                        'pemegang_saham' => $nama,
+                        'jumlah_saham' => $request->jumlah_saham[$key] ?? null,
+                        'saham_persen' => $request->saham_persen[$key] ?? null,
+                    ]
+                );
+            }
+
+
+            DB::commit();
+            return response()->json([
+                'status' => true,
+                'message' => 'Data Berhasil Ditambahkan',
+                'perusahaanId' => $akta->id
+            ]);
+        } catch (\Exception $e) {
+             \Log::error('Error : ' . $e->getMessage());
+            DB::rollback();
+            return response()->json([
+                'status' => false,
+                'message' => 'Failed to save data',
+                'errors' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
+    public function deleteDirektur($id)
+    {
+        $data = Directors::findOrFail($id);
+        if ($data) {
+            $data->delete();
+            return response()->json(['success' => true, 'message' => 'Data berhasil dihapus']);
+        } else {
+            return response()->json(['success' => false, 'message' => 'Data tidak ditemukan']);
+        }
+    }
+    public function deleteSaham($id)
+    {
+        $data = ShareHolders::findOrFail($id);
+        if ($data) {
+            $data->delete();
+            return response()->json(['success' => true, 'message' => 'Data berhasil dihapus']);
+        } else {
+            return response()->json(['success' => false, 'message' => 'Data tidak ditemukan']);
+        }
+    }
+
     public function deleteFile($id)
     {
         try {

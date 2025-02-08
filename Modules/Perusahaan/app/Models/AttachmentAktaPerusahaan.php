@@ -15,7 +15,10 @@ class AttachmentAktaPerusahaan extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = [];
+    protected $fillable = [
+        'akta_perusahaan_id',
+        'file_path',
+    ];
 
     // protected static function newFactory(): AttachmentAktaPerusahaanFactory
     // {

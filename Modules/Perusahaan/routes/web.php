@@ -34,6 +34,11 @@ Route::middleware(['auth','verified','role:admin'])->group( function () {
     Route::put('/aktaPerusahaan/update/{id}', [AktaPerusahaanController::class,'update'])->name('aktaPerusahaan.update');
     Route::delete('/aktaPerusahaan/delete/{id}', [AktaPerusahaanController::class,'destroy'])->name('aktaPerusahaan.destroy');
     Route::delete('/aktaPerusahaan/delete-file/{id}', [AktaPerusahaanController::class,'deleteFile'])->name('aktaPerusahaan.deleteFile');
+    Route::post('/aktaPerusahaan/upload-temp', [AktaPerusahaanController::class, 'uploadTemp']);
+
+    //delete shareholders/directors
+    Route::delete('/delete-direktur/{id}', [AktaPerusahaanController::class,'deleteDirektur'])->name('aktaPerusahaan.deleteDirektur');
+    Route::delete('/delete-saham/{id}', [AktaPerusahaanController::class,'deleteSaham'])->name('aktaPerusahaan.deleteSaham');
     
     
 });
