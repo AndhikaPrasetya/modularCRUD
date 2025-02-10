@@ -1,0 +1,11 @@
+{
+    "name": "SewaMenyewa",
+    "alias": "sewamenyewa",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\SewaMenyewa\\Providers\\SewaMenyewaServiceProvider"
+    ],
+    "files": []
+}

@@ -2,9 +2,10 @@
 
 namespace Modules\Perusahaan\Models;
 
+use Illuminate\Support\Str;
+use Modules\SewaMenyewa\Models\Lokasi;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Support\Str;
 // use Modules\Perusahaan\Database\Factories\ProfilePerusahaanFactory;
 
 class profilePerusahaan extends Model
@@ -45,6 +46,10 @@ class profilePerusahaan extends Model
     public function aktaPerusahaan()
     {
         return $this->hasMany(AktaPerusahaan::class);
+    }
+
+    public function lokasi(){
+        return $this->hasMany(Lokasi::class);
     }
     
     // protected static function newFactory(): ProfilePerusahaanFactory

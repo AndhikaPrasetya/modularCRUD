@@ -52,10 +52,10 @@ class AktaPerusahaanController extends Controller
                 ->addColumn('action', function ($data) {
                     $buttons = '<div class="text-center">';
                     //Check permission 
-                    if (Auth::user()->can('update-category')) {
+                    if (Auth::user()->can('update-aktaPerusahaan')) {
                         $buttons .= '<a href="' . route('aktaPerusahaan.edit', $data->id) . '" class="btn btn-outline-info btn-sm mr-1"><span>Edit</span></a>';
                     }
-                    if (Auth::user()->can('delete-category')) {
+                    if (Auth::user()->can('delete-aktaPerusahaan')) {
                         $buttons .= '<button type="button" class="btn btn-outline-danger btn-sm delete-button" data-id="' . $data->id . '" data-section="aktaPerusahaan">' .
                             ' Delete</button>';
                     }
