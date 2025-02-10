@@ -127,7 +127,7 @@
           </li>
           <li class="nav-item {{ Route::is('perusahaan.*', 'aktaPerusahaan.*', 'permission.*') ? 'menu-open' : '' }}">
             <a href="#" class="nav-link {{ Route::is('perusahaan.*', 'aktaPerusahaan.*', 'permission.*') ? 'active' : '' }}">
-              <i class="nav-icon fas fa-file"></i>
+              <i class="nav-icon fas fa-folder"></i>
                 <p>
                     Document
                     <i class="right fas fa-angle-left"></i>
@@ -136,14 +136,20 @@
             <ul class="nav nav-treeview">
                 <li class="nav-item">
                     <a href="{{ route('perusahaan.index') }}" class="nav-link {{ Route::is('perusahaan.*') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-user"></i>
+                        <i class="nav-icon fas fa-building"></i>
                         <p>Profile Perusahaan</p>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="{{ route('aktaPerusahaan.index') }}" class="nav-link {{ Route::is('aktaPerusahaan.*') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-shield-alt"></i>
+                        <i class="nav-icon fas fa-file"></i>
                         <p>Akta Perusahaan</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('lokasi.index') }}" class="nav-link {{ Route::is('lokasi.*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-map"></i>
+                        <p>Lokasi</p>
                     </a>
                 </li>
                 <li class="nav-item">

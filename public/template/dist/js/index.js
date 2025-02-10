@@ -269,6 +269,45 @@ $(document).ready(function() {
             },
         ]
     });
+    $('#table_lokasi').DataTable({
+        processing: true,
+        serverSide: true,
+        searching: true,
+        stateSave: true,
+        ajax: {
+            url: "/lokasi",
+            type: "GET"
+        },
+        columns: [
+            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+            {
+                data: 'uid_profile_perusahaan',
+                name: 'uid_profile_perusahaan'
+            },
+            {
+                data: 'nama',
+                name: 'nama'
+            },
+            {
+                data: 'category',
+                name: 'category'
+            },
+            {
+                data: 'type',
+                name: 'type'
+            },
+            {
+                data: 'status',
+                name: 'status'
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
+            },
+        ]
+    });
 
 
 

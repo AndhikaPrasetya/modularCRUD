@@ -166,7 +166,6 @@
                                 </div>
                             </div>
                         @endforeach
-
                     </div>
                     <div class="text-left mb-3">
                         <button type="button" class="btn btn-primary add-row-direktur"><i class="fas fa-plus"></i></button>

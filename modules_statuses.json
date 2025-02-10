@@ -4,5 +4,6 @@
     "Roles": true,
     "Permission": true,
     "Document": true,
-    "Perusahaan": true
+    "Perusahaan": true,
+    "SewaMenyewa": true
 }
