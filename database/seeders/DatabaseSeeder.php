@@ -28,6 +28,9 @@ class DatabaseSeeder extends Seeder
             'create-category', 'read-category', 'update-category', 'delete-category',
             'create-profilePerusahaan', 'read-profilePerusahaan', 'update-profilePerusahaan', 'delete-profilePerusahaan',
             'create-aktaPerusahaan', 'read-aktaPerusahaan', 'update-aktaPerusahaan', 'delete-aktaPerusahaan',
+            'create-lokasi', 'read-lokasi', 'update-lokasi', 'delete-lokasi',
+            'create-jenisDokumen', 'read-jenisDokumen', 'update-jenisDokumen', 'delete-jenisDokumen',
+            'create-sewaMenyewa', 'read-sewaMenyewa', 'update-sewaMenyewa', 'delete-sewaMenyewa',
         ];
 
         foreach ($permissions as $permission) {
