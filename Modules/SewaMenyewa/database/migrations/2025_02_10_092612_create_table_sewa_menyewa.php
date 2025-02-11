@@ -29,7 +29,7 @@ return new class extends Migration
             $table->string('sewa_grace_period')->nullable();
             $table->date('sewa_handover');
             $table->string('no_sertifikat');
-            $table->enum('jenis_sertifikat',['HGB','HM']);
+            $table->enum('jenis_sertifikat',['HGB','SHM']);
             $table->string('tgl_sertifikat');
             $table->date('tgl_akhir_sertifikat');  
             $table->timestamps();

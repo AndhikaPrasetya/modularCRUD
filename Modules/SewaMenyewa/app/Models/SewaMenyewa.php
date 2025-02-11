@@ -16,6 +16,7 @@ class SewaMenyewa extends Model
     protected $table = 'sewa_menyewa';
     protected $fillable = [
         'lokasi_id',
+        'jenis_dokumen_id',
         'tentang',
         'no_dokumen',
         'nama_notaris',
