@@ -9,7 +9,7 @@
                     <div class="card">
                         @can('create-role')
                         <div class="p-3">
-                            <a href="{{ route('jenisDokumen.create') }}" class="btn btn-primary">Create</a>
+                            <a href="{{ route('jenisDokumen.create') }}" class="btn btn-primary"><i class="fas fa-plus"></i> Create Jenis Dokumen</a>
                         </div>
                         @endcan
                         <div class="card-body">

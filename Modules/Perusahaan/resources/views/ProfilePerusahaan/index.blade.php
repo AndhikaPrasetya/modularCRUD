@@ -21,7 +21,7 @@
                 <div class="col-12">
                     <div class="card">
                             <div class="p-3">
-                                <a href="{{ route('perusahaan.create') }}" class="btn btn-primary">Create</a>
+                                <a href="{{ route('perusahaan.create') }}" class="btn btn-primary"><i class="fas fa-plus"></i> Create Profile</a>
 
                             </div>
                         

@@ -23,7 +23,7 @@
                         @can('create-sewaMenyewa')
                             
                         <div class="p-3">
-                            <a href="{{ route('sewaMenyewa.create') }}" class="btn btn-primary">Create</a>
+                            <a href="{{ route('sewaMenyewa.create') }}" class="btn btn-primary"><i class="fas fa-plus"></i> Create Dokumen</a>
                         </div>
                     
                         @endcan
