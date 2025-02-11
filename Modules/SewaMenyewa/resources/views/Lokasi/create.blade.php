@@ -176,7 +176,7 @@
                 <div class="col-12 col-md-4">
                     <div class="form-group">
                         <label for="nopd">Nopd</label>
-                        <input type="text" class="form-control" name="nopd[]" id="nopd" placeholder="NOPD"
+                        <input type="text" class="form-control" name="nopd[]" id="nopd" placeholder="nopd"
                             required>
                     </div>
                 </div>
@@ -305,20 +305,20 @@
                 <div class="col-12 col-md-4">
                     <div class="form-group">
                         <label for="nopd">Nopd</label>
-                        <input type="text" class="form-control" name="nopd[]" id="nopd"
+                        <input type="text" class="form-control" name="nopd[]" id="nopd" placeholder="nopd"
                             required>
                     </div>
                 </div>
                 <div class="col-12 col-md-4">
                     <div class="form-group">
                         <label for="bentuk">Bentuk</label>
-                        <input type="text" class="form-control" name="bentuk[]" id="bentuk" required>
+                        <input type="text" class="form-control" name="bentuk[]" id="bentuk" placeholder="bentuk" required>
                     </div>
                 </div>
                 <div class="col-12 col-md-3">
                     <div class="form-group">
                         <label for="ukuran">Ukuran</label>
-                        <input type="text" class="form-control" name="ukuran[]"
+                        <input type="text" class="form-control" name="ukuran[]" placeholder="ukuran"
                             id="ukuran" required>
                     </div>
                 </div>
@@ -340,20 +340,20 @@
                 <div class="col-12 col-md-4">
                     <div class="form-group">
                         <label for="id_internet">ID internet</label>
-                        <input type="text" class="form-control" name="id_internet[]" id="id_internet"
+                        <input type="text" class="form-control" name="id_internet[]" id="id_internet" placeholder="ID internet"
                             required>
                     </div>
                 </div>
                 <div class="col-12 col-md-4">
                     <div class="form-group">
                         <label for="speed_internet">Speed Internet</label>
-                        <input type="text" class="form-control" name="speed_internet[]" id="speed_internet" required>
+                        <input type="text" class="form-control" name="speed_internet[]" id="speed_internet" placeholder="Speed Internet" required>
                     </div>
                 </div>
                 <div class="col-12 col-md-3">
                     <div class="form-group">
                         <label for="harga_internet">Harga Internet</label>
-                        <input type="text" class="form-control" name="harga_internet[]"
+                        <input type="text" class="form-control" name="harga_internet[]" placeholder="Harga Internet"
                             id="harga_internet" required>
                     </div>
                 </div>

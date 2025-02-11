@@ -10,20 +10,20 @@
                         <div class="col-12 col-md-6">
                             <div class="form-group">
                                 <label for="name">Name</label>
-                                <input type="text" class="form-control" name="name" id="name" required>
+                                <input type="text" class="form-control" name="name" id="name" placeholder="nama" required>
                             </div>
                         </div>
                         <div class="col-12 col-md-6">
                             <div class="form-group">
                                 <label for="email">Email</label>
-                                <input type="text" class="form-control" name="email" id="email" required>
+                                <input type="text" class="form-control" name="email" id="email" placeholder="E-mail" required>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12 col-md-6">
                             <div class="form-group">
-                                <label for="">Roles</label>
+                                <label for="roles">Roles</label>
                                 <select class="allRole" name="roles[]" multiple="multiple" style="width: 100%;">
                                 </select>
                             </div>
@@ -31,7 +31,7 @@
                         <div class="col-12 col-md-6">
                             <div class="form-group">
                                 <label for="password">Password</label>
-                                <input type="text" class="form-control" name="password" id="password" required>
+                                <input type="text" class="form-control" name="password" id="password" placeholder="Password" required>
                             </div>
                         </div>
                         <div class="form-group">
@@ -42,8 +42,7 @@
                 </div>
 
                 <div class="card-footer">
-                    <div class="d-flex justify-content-end">
-
+                    <div class="d-flex justify-content-start">
                         <button type="submit" class="btn btn-primary mr-2">Submit</button>
                         <button type="button"onclick="window.location.href='{{ route('users.index') }}'"
                             class="btn btn-warning"><span>Back</span></button>

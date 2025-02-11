@@ -18,27 +18,27 @@
                 <div class="col-12 col-md-4">
                     <div class="form-group">
                         <label for="jenis_dokumen_id">Jenis Dokumen</label>
-                        @if ($jenisDokumen->isNotEmpty())
+                       
                             <select class="form-control" name="jenis_dokumen_id" id="jenis_dokumen_id">
                                 <option value="" disabled selected>Pilih jenis Dokumen</option>
                                 @foreach ($jenisDokumen as $item)
                                     <option value="{{ $item->id }}">{{ $item->nama_jenis_dokumen }}</option>
                                 @endforeach
                             </select>
-                        @endif
+                        
                     </div>
                 </div>
                 <div class="col-12 col-md-4">
                     <div class="form-group">
                         <label for="lokasi_id">Lokasi</label>
-                        @if ($lokasi->isNotEmpty())
+                
                             <select class="form-control" name="lokasi_id" id="lokasi_id">
                                 <option value="" disabled selected>Pilih Lokasi</option>
                                 @foreach ($lokasi as $item)
                                     <option value="{{ $item->id }}">{{ $item->nama }}</option>
                                 @endforeach
                             </select>
-                        @endif
+                        
                     </div>
                 </div>
               

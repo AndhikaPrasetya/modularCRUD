@@ -59,14 +59,17 @@ $(document).ready(function() {
             {
                 data: 'name',
                 name: 'name',
+                orderable: false,
             },
             {
                 data: 'email',
-                name: 'email'
+                name: 'email',
+                orderable: false,
             },
             {
                 data: 'role',
                 name: 'role',
+                orderable: false,
             },
             {
                 data: 'action',
@@ -91,15 +94,18 @@ $(document).ready(function() {
             { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
             {
                 data: 'name',
-                name: 'Name'
+                name: 'Name',
+                orderable: false,
             },
             {
                 data: 'guard_name',
-                name: 'Guard Name'
+                name: 'Guard Name',
+                orderable: false,
             },
             {
                 data: 'permission',
-                name: 'Permission'
+                name: 'Permission',
+                orderable: false,
             },
             {
                 data: 'action',
@@ -123,11 +129,13 @@ $(document).ready(function() {
             { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
             {
                 data: 'name',
-                name: 'Name'
+                name: 'Name',
+                orderable: false,
             },
             {
                 data: 'guard_name',
-                name: 'Guard Name'
+                name: 'Guard Name',
+                orderable: false,
             },
             {
                 data: 'action',
@@ -212,15 +220,18 @@ $(document).ready(function() {
             { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
             {
                 data: 'nama',
-                name: 'nama'
+                name: 'nama',
+                orderable: false,
             },
             {
                 data: 'alamat',
-                name: 'alamat'
+                name: 'alamat',
+                orderable: false,
             },
             {
                 data: 'email',
-                name: 'email'
+                name: 'email',
+                orderable: false,
             },
             {
                 data: 'action',
@@ -243,23 +254,28 @@ $(document).ready(function() {
             { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
             {
                 data: 'kode_akta',
-                name: 'kode_akta'
+                name: 'kode_akta',
+                orderable: false,
             },
             {
                 data: 'nama_akta',
-                name: 'nama_akta'
+                name: 'nama_akta',
+                orderable: false,
             },
             {
                 data: 'uid_profile_perusahaan',
-                name: 'uid_profile_perusahaan'
+                name: 'uid_profile_perusahaan',
+                orderable: false,
             },
             {
                 data: 'tgl_terbit',
-                name: 'tgl_terbit'
+                name: 'tgl_terbit',
+                orderable: false,
             },
             {
                 data: 'status',
-                name: 'status'
+                name: 'status',
+                orderable: false,
             },
             {
                 data: 'action',
@@ -282,23 +298,28 @@ $(document).ready(function() {
             { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
             {
                 data: 'uid_profile_perusahaan',
-                name: 'uid_profile_perusahaan'
+                name: 'uid_profile_perusahaan',
+                orderable: false,
             },
             {
                 data: 'nama',
-                name: 'nama'
+                name: 'nama',
+                orderable: false,
             },
             {
                 data: 'category',
-                name: 'category'
+                name: 'category',
+                orderable: false,
             },
             {
                 data: 'type',
-                name: 'type'
+                name: 'type',
+                orderable: false,
             },
             {
                 data: 'status',
-                name: 'status'
+                name: 'status',
+                orderable: false,
             },
             {
                 data: 'action',
@@ -321,7 +342,8 @@ $(document).ready(function() {
             { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
             {
                 data: 'nama_jenis_dokumen',
-                name: 'nama_jenis_dokumen'
+                name: 'nama_jenis_dokumen',
+                orderable: false,
             },
             {
                 data: 'action',

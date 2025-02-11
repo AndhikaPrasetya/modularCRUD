@@ -63,7 +63,7 @@
                     </div>
                 </div>
                 <div class="card-footer">
-                    <div class="d-flex justify-content-end">
+                    <div class="d-flex justify-content-start">
                         <button type="submit" class="btn btn-primary mr-2">Submit</button>
                         <button type="button"onclick="window.location.href='{{ route('users.index') }}'"
                             class="btn btn-warning"><span>Back</span></button>

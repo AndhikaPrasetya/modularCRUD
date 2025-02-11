@@ -12,7 +12,7 @@
                         <div class="col-12 col-md-6">
                             <div class="form-group">
                                 <label for="nama_jenis_dokumen">Nama Jenis Dokumen</label>
-                                <input type="text" class="form-control " name="nama_jenis_dokumen" id="nama_jenis_dokumen" required>
+                                <input type="text" class="form-control " name="nama_jenis_dokumen" id="nama_jenis_dokumen" placeholder="jenis dokumen" required>
                             </div>
                         </div>
                     </div>
