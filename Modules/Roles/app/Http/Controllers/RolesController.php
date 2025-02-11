@@ -84,6 +84,8 @@ class RolesController extends Controller
             'Document' => Permission::whereIn('name', ['create-document', 'read-document', 'update-document', 'delete-document'])->get(),
             'Category' => Permission::whereIn('name', ['create-category', 'read-category', 'update-category', 'delete-category'])->get(),
             'Lokasi' => Permission::whereIn('name', ['create-lokasi', 'read-lokasi', 'update-lokasi', 'delete-lokasi'])->get(),
+            'ProfilePerusahaan' => Permission::whereIn('name', ['create-profilePerusahaan', 'read-profilePerusahaan', 'update-profilePerusahaan', 'delete-profilePerusahaan'])->get(),
+            'AktaPerusahaan' => Permission::whereIn('name', [ 'create-aktaPerusahaan', 'read-aktaPerusahaan', 'update-aktaPerusahaan', 'delete-aktaPerusahaan',])->get(),
             'jenisDokumen' => Permission::whereIn('name', ['create-jenisDokumen', 'read-jenisDokumen', 'update-jenisDokumen', 'delete-jenisDokumen'])->get(),
             'sewaMenyewa' => Permission::whereIn('name', ['create-sewaMenyewa', 'read-sewaMenyewa', 'update-sewaMenyewa', 'delete-sewaMenyewa'])->get(),
         ];
@@ -142,6 +144,8 @@ class RolesController extends Controller
             'Document' => Permission::whereIn('name', ['create-document', 'read-document', 'update-document', 'delete-document'])->get(),
             'Category' => Permission::whereIn('name', ['create-category', 'read-category', 'update-category', 'delete-category'])->get(),
             'Lokasi' => Permission::whereIn('name', ['create-lokasi', 'read-lokasi', 'update-lokasi', 'delete-lokasi'])->get(),
+            'ProfilePerusahaan' => Permission::whereIn('name', ['create-profilePerusahaan', 'read-profilePerusahaan', 'update-profilePerusahaan', 'delete-profilePerusahaan'])->get(),
+            'AktaPerusahaan' => Permission::whereIn('name', [ 'create-aktaPerusahaan', 'read-aktaPerusahaan', 'update-aktaPerusahaan', 'delete-aktaPerusahaan',])->get(),
             'jenisDokumen' => Permission::whereIn('name', ['create-jenisDokumen', 'read-jenisDokumen', 'update-jenisDokumen', 'delete-jenisDokumen'])->get(),
             'sewaMenyewa' => Permission::whereIn('name', ['create-sewaMenyewa', 'read-sewaMenyewa', 'update-sewaMenyewa', 'delete-sewaMenyewa'])->get(),
         ];
