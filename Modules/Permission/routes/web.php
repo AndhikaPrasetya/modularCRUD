@@ -13,7 +13,7 @@ use Modules\Permission\Http\Controllers\PermissionController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::middleware(['auth','verified','role:admin|super admin'])->group( function () {
+Route::middleware(['auth','verified','role:admin'])->group( function () {
     Route::get('/permission', [PermissionController::class,'index'])->name('permission.index');
     Route::get('/permission/create', [PermissionController::class,'create'])->name('permission.create');
     Route::post('/permission/store',[PermissionController::class, 'store'])->name('permission.store');

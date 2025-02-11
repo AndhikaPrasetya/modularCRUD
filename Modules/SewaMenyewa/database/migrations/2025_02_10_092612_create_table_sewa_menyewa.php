@@ -26,7 +26,7 @@ return new class extends Migration
             $table->string('nama_pemilik_awal');
             $table->date('sewa_awal');
             $table->date('sewa_akhir');
-            $table->string('sewa_grace_period');
+            $table->string('sewa_grace_period')->nullable();
             $table->date('sewa_handover');
             $table->string('no_sertifikat');
             $table->enum('jenis_sertifikat',['HGB','HM']);

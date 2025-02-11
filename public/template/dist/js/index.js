@@ -308,6 +308,73 @@ $(document).ready(function() {
             },
         ]
     });
+    $('#table_jenisDokumen').DataTable({
+        processing: true,
+        serverSide: true,
+        searching: true,
+        stateSave: true,
+        ajax: {
+            url: "/jenisDokumen",
+            type: "GET"
+        },
+        columns: [
+            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+            {
+                data: 'nama_jenis_dokumen',
+                name: 'nama_jenis_dokumen'
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
+            },
+        ]
+    });
+    $('#table_sewaMenyewa').DataTable({
+        processing: true,
+        serverSide: true,
+        searching: true,
+        stateSave: true,
+        ajax: {
+            url: "/sewaMenyewa",
+            type: "GET"
+        },
+        columns: [
+            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+            {
+                data: 'no_dokumen',
+                name: 'no_dokumen',
+                orderable: false,
+            },
+            {
+                data: 'lokasi_id',
+                name: 'lokasi_id',
+                orderable: false,
+            },
+            {
+                data: 'jenis_dokumen_id',
+                name: 'jenis_dokumen_id',
+                orderable: false,
+            },
+            {
+                data: 'tanggal_dokumen',
+                name: 'tanggal_dokumen',
+                orderable: false,
+            },
+            {
+                data: 'sign_by',
+                name: 'sign_by',
+                orderable: false,
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
+            },
+        ]
+    });
 
 
 

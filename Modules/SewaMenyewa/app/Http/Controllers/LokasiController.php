@@ -54,10 +54,10 @@ class LokasiController extends Controller
                 ->addColumn('action', function ($data) {
                     $buttons = '<div class="text-center">';
                     //Check permission 
-                    if (Auth::user()->can('update-aktaPerusahaan')) {
+                    if (Auth::user()->can('update-lokasi')) {
                         $buttons .= '<a href="' . route('lokasi.edit', $data->id) . '" class="btn btn-outline-info btn-sm mr-1"><span>Edit</span></a>';
                     }
-                    if (Auth::user()->can('delete-aktaPerusahaan')) {
+                    if (Auth::user()->can('delete-lokasi')) {
                         $buttons .= '<button type="button" class="btn btn-outline-danger btn-sm delete-button" data-id="' . $data->id . '" data-section="lokasi">' .
                             ' Delete</button>';
                     }
@@ -149,7 +149,7 @@ class LokasiController extends Controller
             $ukuran = $request->ukuran;
 
             foreach ($nopd as $key => $item) {
-                $lokasi_nopd = new nopd();
+                $lokasi_nopd =new nopd();
                 $lokasi_nopd->lokasi_id = $lokasi->id;
                 $lokasi_nopd->nopd = $item;
                 $lokasi_nopd->bentuk = $bentuk[$key];
@@ -345,6 +345,12 @@ class LokasiController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $data = Lokasi::findOrFail($id);
+        if ($data) {
+            $data->delete();
+            return response()->json(['success' => true, 'message' => 'Data berhasil dihapus']);
+        } else {
+            return response()->json(['success' => false, 'message' => 'Data tidak ditemukan']);
+        }
     }
 }

@@ -83,6 +83,9 @@ class RolesController extends Controller
             'User' => Permission::whereIn('name', ['create-user', 'read-user', 'update-user', 'delete-user'])->get(),
             'Document' => Permission::whereIn('name', ['create-document', 'read-document', 'update-document', 'delete-document'])->get(),
             'Category' => Permission::whereIn('name', ['create-category', 'read-category', 'update-category', 'delete-category'])->get(),
+            'Lokasi' => Permission::whereIn('name', ['create-lokasi', 'read-lokasi', 'update-lokasi', 'delete-lokasi'])->get(),
+            'jenisDokumen' => Permission::whereIn('name', ['create-jenisDokumen', 'read-jenisDokumen', 'update-jenisDokumen', 'delete-jenisDokumen'])->get(),
+            'sewaMenyewa' => Permission::whereIn('name', ['create-sewaMenyewa', 'read-sewaMenyewa', 'update-sewaMenyewa', 'delete-sewaMenyewa'])->get(),
         ];
         $permissions = Permission::get();
         return view('roles::create', compact('title', 'breadcrumb', 'permissions','permissionGroups'));
@@ -138,6 +141,9 @@ class RolesController extends Controller
             'User' => Permission::whereIn('name', ['create-user', 'read-user', 'update-user', 'delete-user'])->get(),
             'Document' => Permission::whereIn('name', ['create-document', 'read-document', 'update-document', 'delete-document'])->get(),
             'Category' => Permission::whereIn('name', ['create-category', 'read-category', 'update-category', 'delete-category'])->get(),
+            'Lokasi' => Permission::whereIn('name', ['create-lokasi', 'read-lokasi', 'update-lokasi', 'delete-lokasi'])->get(),
+            'jenisDokumen' => Permission::whereIn('name', ['create-jenisDokumen', 'read-jenisDokumen', 'update-jenisDokumen', 'delete-jenisDokumen'])->get(),
+            'sewaMenyewa' => Permission::whereIn('name', ['create-sewaMenyewa', 'read-sewaMenyewa', 'update-sewaMenyewa', 'delete-sewaMenyewa'])->get(),
         ];
         $permissions = Permission::get();
         $rolePermissions = DB::table('role_has_permissions')
