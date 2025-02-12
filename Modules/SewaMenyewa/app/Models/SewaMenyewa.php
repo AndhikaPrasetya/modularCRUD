@@ -2,6 +2,7 @@
 
 namespace Modules\SewaMenyewa\Models;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 // use Modules\SewaMenyewa\Database\Factories\SewaMenyewaFactory;
@@ -40,6 +41,10 @@ class SewaMenyewa extends Model
     public function jenisDokumen()
     {
         return $this->belongsTo(JenisDokumen::class, 'jenis_dokumen_id');
+    }
+
+    public function users(){
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     // protected static function newFactory(): SewaMenyewaFactory

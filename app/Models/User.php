@@ -3,12 +3,13 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Spatie\Permission\Models\Role;
+use Modules\Document\Models\Document;
+use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Notifications\Notifiable;
+use Modules\SewaMenyewa\Models\SewaMenyewa;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Modules\Document\Models\Document;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
@@ -45,6 +46,10 @@ class User extends Authenticatable
     public function documents()
 {
     return $this->hasMany(Document::class);
+}
+
+public function sewaMenyewa(){
+    return $this->hasMany(SewaMenyewa::class);
 }
 
     /**
