@@ -20,10 +20,11 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card">
-                            <div class="p-3">
-                                <a href="{{ route('aktaPerusahaan.create') }}" class="btn btn-primary"><i class="fas fa-plus"></i> Create Akta</a>
-
-                            </div>
+                        @can('create-aktaPerusahaan')
+                        <div class="p-3">
+                            <a href="{{ route('aktaPerusahaan.create') }}" class="btn btn-primary"><i class="fas fa-plus"></i> Create Akta</a>
+                        </div>
+                        @endcan
                         
                         <div class="card-body">
                             <table class="table table-bordered table-hover" id="table_aktaPerusahaan">

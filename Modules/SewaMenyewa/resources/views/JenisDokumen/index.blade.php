@@ -7,7 +7,7 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card">
-                        @can('create-role')
+                        @can('create-jenisDokumen')
                         <div class="p-3">
                             <a href="{{ route('jenisDokumen.create') }}" class="btn btn-primary"><i class="fas fa-plus"></i> Create Jenis Dokumen</a>
                         </div>

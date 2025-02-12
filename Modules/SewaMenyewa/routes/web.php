@@ -27,7 +27,7 @@ Route::middleware(['auth','verified','role:admin'])->group( function () {
     Route::get('/jenisDokumen', [JenisDokumenController::class,'index'])->name('jenisDokumen.index');
     Route::get('/jenisDokumen/create', [JenisDokumenController::class,'create'])->name('jenisDokumen.create')->middleware(['permission:create-jenisDokumen']);
     Route::post('/jenisDokumen/store',[JenisDokumenController::class, 'store'])->name('jenisDokumen.store');
-    Route::get('/jenisDokumen/edit/{id}', [JenisDokumenController::class,'edit'])->name('jenisDokumen.edit')->middleware(['permission:edit-jenisDokumen']);
+    Route::get('/jenisDokumen/edit/{id}', [JenisDokumenController::class,'edit'])->name('jenisDokumen.edit')->middleware(['permission:update-jenisDokumen']);
     Route::put('/jenisDokumen/update/{id}', [JenisDokumenController::class,'update'])->name('jenisDokumen.update');
     Route::delete('/jenisDokumen/delete/{id}', [JenisDokumenController::class,'destroy'])->name('jenisDokumen.destroy')->middleware(['permission:delete-jenisDokumen']);
 
