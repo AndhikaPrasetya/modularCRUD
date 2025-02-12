@@ -3,11 +3,13 @@
 namespace Modules\SewaMenyewa\Http\Controllers;
 
 use Exception;
-use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\SewaMenyewaReminderMail;
 use Modules\SewaMenyewa\Models\Lokasi;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
@@ -23,6 +25,7 @@ class SewaMenyewaController extends Controller
     {
         $title = "Data Sewa Menyewa";
         $breadcrumb = "Sewa Menyewa";
+        // (new SewaMenyewaController)->cekSertifikatSewa();
         if ($request->ajax()) {
             $data = SewaMenyewa::with(['lokasi','jenisDokumen']);
             if ($search = $request->input('search.value')) {
@@ -159,6 +162,25 @@ class SewaMenyewaController extends Controller
     /**
      * Show the specified resource.
      */
+//     public function cekSertifikatSewa()
+// {
+//     $today = Carbon::now()->format('Y-m-d');
+//     $tgl_expired = Carbon::now()->addDays(7)->format('Y-m-d');
+//     $user = Auth::user();
+
+//     // Ambil semua sertifikat yang akan kedaluwarsa
+//     $listSertifikat = SewaMenyewa::select('id', 'no_sertifikat', 'tgl_akhir_sertifikat')
+//         ->whereBetween('tgl_akhir_sertifikat', [$today,$tgl_expired])
+//         ->get();
+
+//     // Jika ada sertifikat yang ditemukan, kirim satu email saja
+//     if ($listSertifikat->isNotEmpty()) {
+//         Mail::to($user->email)->send(new SewaMenyewaReminderMail($listSertifikat, $user));
+//     }
+
+//     return response()->json(['message' => 'Notifikasi sertifikat telah dikirim.']);
+// }
+
     public function show($id)
     {
         return view('sewamenyewa::show');
