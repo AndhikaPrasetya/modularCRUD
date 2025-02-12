@@ -92,6 +92,7 @@ class SewaMenyewaController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'lokasi_id' => 'required|exists:lokasi,id',
+           
             'jenis_dokumen_id' => 'required|exists:jenis_dokumen,id',
             'tentang' => 'nullable|string',
             'no_dokumen' => 'required|string',
@@ -123,6 +124,7 @@ class SewaMenyewaController extends Controller
 
             $data = new SewaMenyewa();
             $data->lokasi_id = $request->lokasi_id;
+            $data->user_id = Auth::id();
             $data->jenis_dokumen_id = $request->jenis_dokumen_id;
             $data->tentang = $request->tentang;
             $data->no_dokumen = $request->no_dokumen;
@@ -139,7 +141,7 @@ class SewaMenyewaController extends Controller
             $data->tgl_sertifikat = $request->tgl_sertifikat;
             $data->tgl_akhir_sertifikat = $request->tgl_akhir_sertifikat;
             $data->save();
-          
+
             DB::commit();
             return response()->json([
                 'status' => 'success',
@@ -185,6 +187,7 @@ class SewaMenyewaController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'lokasi_id' => 'required|exists:lokasi,id',
+           
             'jenis_dokumen_id' => 'required|exists:jenis_dokumen,id',
             'tentang' => 'nullable|string',
             'no_dokumen' => 'required|string',
@@ -237,6 +240,7 @@ class SewaMenyewaController extends Controller
         $data = SewaMenyewa::findOrFail($id);
         $data->update([
             'lokasi_id' => $request->lokasi_id,
+            'user_id' => Auth::id(),
             'jenis_dokumen_id' => $request->jenis_dokumen_id,
             'tentang' => $request->tentang,
             'no_dokumen' => $request->no_dokumen,
