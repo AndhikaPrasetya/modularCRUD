@@ -7,25 +7,21 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SewaMenyewaReminderMail;
+use Yajra\DataTables\Facades\DataTables;
 use Modules\SewaMenyewa\Models\SewaMenyewa;
 
 class DashboardController extends Controller
 {
-    public function cekSertifikatSewaMenyewa()
-    {
+    public function ReminderDokumen(){
         $today = Carbon::now()->format('Y-m-d');
         $tgl_expired = Carbon::now()->addDays(7)->format('Y-m-d');
-        $user = Auth::user();
     
-        $listSertifikat = SewaMenyewa::select('id', 'no_sertifikat', 'tgl_akhir_sertifikat')
-            ->whereBetween('tgl_akhir_sertifikat', [$today,$tgl_expired])
+        // Ambil semua sertifikat yang akan kedaluwarsa
+        $listSertifikatSewa = SewaMenyewa::
+            select('id', 'no_sertifikat','no_dokumen', 'tgl_akhir_sertifikat')
+            ->whereBetween('tgl_akhir_sertifikat', [$today, $tgl_expired])
             ->get();
-    
-        if ($listSertifikat->isNotEmpty()) {
-            Mail::to($user->email)->send(new SewaMenyewaReminderMail($listSertifikat, $user));
-        }
-    
-        return response()->json(['message' => 'Notifikasi sertifikat telah dikirim.']);
+            return view('dashboard',get_defined_vars());
     }
     
 }

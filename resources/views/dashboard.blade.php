@@ -11,10 +11,10 @@
                 <div class="inner">
                   <h3>150</h3>
     
-                  <p>New Orders</p>
+                  <p>Akta Perusahaan</p>
                 </div>
                 <div class="icon">
-                  <i class="ion ion-bag"></i>
+                  <i class="ion ion-folder"></i>
                 </div>
                 <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
               </div>
@@ -24,12 +24,11 @@
               <!-- small box -->
               <div class="small-box bg-success">
                 <div class="inner">
-                  <h3>53<sup style="font-size: 20px">%</sup></h3>
-    
-                  <p>Bounce Rate</p>
+                  <h3>53</h3>
+                  <p>Sewa menyewa</p>
                 </div>
                 <div class="icon">
-                  <i class="ion ion-stats-bars"></i>
+                  <i class="ion ion-folder"></i>
                 </div>
                 <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
               </div>
@@ -66,7 +65,63 @@
             </div>
             <!-- ./col -->
           </div>
-          <!-- /.row (main row) -->
+          <div class="row">
+            <div class="col-12 col-md-6">
+
+              <div class="card">
+                <div class="card-header border-transparent">
+                  <h3 class="card-title">Reminder Dokumen Sewa Menyewa</h3>
+  
+                  <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                      <i class="fas fa-minus"></i>
+                    </button>
+                  </div>
+                </div>
+                <!-- /.card-header -->
+                @if (isset($listSertifikatSewa) && $listSertifikatSewa->isNotEmpty())
+                <div class="card-body p-0">
+                  <div class="table-responsive">
+                    <table class="table m-0">
+                      <thead class="text-center align-items-center">
+                      <tr>
+                        <th>No Dokumen</th>
+                        <th>No Sertifikat</th>
+                        <th>Tanggal Akhir Sertifikat</th>
+                        <th>Action</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                        @foreach($listSertifikatSewa as $sertifikat)
+                        <tr class="text-center items-center">
+                            <td>{{ $sertifikat->no_dokumen }}</td>
+                            <td>{{ $sertifikat->no_sertifikat }}</td>
+                            <td>{{ \Carbon\Carbon::parse($sertifikat->tgl_akhir_sertifikat)->format('d-m-Y') }}</td>
+                            <td><a href="{{route('sewaMenyewa.edit',$sertifikat->id )}}" class="btn-sm btn-primary">Update</a></td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                    
+                    </table>
+                  </div>
+                </div>
+                @endif
+              </div>
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="card">
+                <div class="card-header border-transparent">
+                  <h3 class="card-title">Reminder Dokumen Akta Perusahaan</h3>
+  
+                  <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                      <i class="fas fa-minus"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div><!-- /.container-fluid -->
     </section>
 </div>

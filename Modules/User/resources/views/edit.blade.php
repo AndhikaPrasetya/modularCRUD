@@ -41,7 +41,7 @@
                     <div class="row">
                         <div class="col-12 col-md-6">
                             <div class="form-group">
-                                <label for="">Roles</label>
+                                <label for="roles">Roles</label>
                                 <select class="allRole" name="roles[]" multiple="multiple" style="width: 100%;">
                                     @foreach ($roles as $role)
                                         <option value="{{ $role }}"
@@ -61,7 +61,12 @@
                             <div class="form-group">
                                 <label for="image">Foto Profile</label>
                                 <div class="img-wrapper mb-3">
+                                    @if (!empty($data->image))
                                     <img src="{{ asset($data->image) }}" alt="image" width="100px">
+                                        
+                                    @else
+                                       <p><i>Anda belum mengupload foto</i></p>
+                                    @endif
                                 </div>
                                 <input type="file" class="form-control" name="image" id="image">
                             </div>

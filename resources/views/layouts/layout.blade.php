@@ -60,50 +60,33 @@
     <ul class="navbar-nav ml-auto">
       <li class="nav-item dropdown user-menu">
         <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
-          <img src="../../dist/img/user2-160x160.jpg" class="user-image img-circle elevation-2" alt="User Image">
-          <span class="d-none d-md-inline">Alexander Pierce</span>
+          <img src="{{asset(Auth::user()->image)}}" class="user-image img-circle elevation-2" alt="User Image">
+          <span class="d-none d-md-inline">{{Auth::user()->name}}</span>
         </a>
         <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
           <!-- User image -->
           <li class="user-header bg-primary">
-            <img src="../../dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+            <img src="{{asset(Auth::user()->image)}}" class="img-circle elevation-2" alt="User Image">
 
             <p>
-              Alexander Pierce - Web Developer
-              <small>Member since Nov. 2012</small>
+              {{Auth::user()->name}}
             </p>
           </li>
-          <!-- Menu Body -->
-          <li class="user-body">
-            <div class="row">
-              <div class="col-4 text-center">
-                <a href="#">Followers</a>
-              </div>
-              <div class="col-4 text-center">
-                <a href="#">Sales</a>
-              </div>
-              <div class="col-4 text-center">
-                <a href="#">Friends</a>
-              </div>
-            </div>
-            <!-- /.row -->
-          </li>
           <!-- Menu Footer-->
-          <li class="user-footer">
-            <a href="#" class="btn btn-default btn-flat">Profile</a>
-            <a href="#" class="btn btn-default btn-flat float-right">Sign out</a>
+          <li class="user-footer border-black d-flex justify-content-between w-100">
+           
+              <a href="{{route('users.edit', Auth::user()->id)}}" class="btn btn-default btn-flat w-50">Profile</a>
+            
+            <form method="POST" action="{{ route('logout') }}" id="logout-form" class="w-100 d-flex justify-content-end">
+              @csrf
+              <a href="#" class="btn btn-danger w-50" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                  Logout
+              </a>
+          </form>
           </li>
         </ul>
       </li>
-      <li class="nav-item">
-        <form method="POST" action="{{ route('logout') }}" id="logout-form">
-            @csrf
-            <a href="#" class="btn btn-sm btn-danger" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                Logout
-            </a>
-        </form>
-        
-      </li>
+      
     </ul>
   </nav>
   <!-- /.navbar -->
@@ -121,7 +104,7 @@
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
-          <img src="/template/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+          <img src="{{asset(Auth::user()->image)}}" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
           <a href="#" class="d-block">{{ Auth::user()->name }}</a>
@@ -132,6 +115,14 @@
         
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           @if (auth()->user()->hasRole('admin'))
+          <li class="nav-item">
+            <a href="{{route('dashboard')}}" class="nav-link {{ Route::is('dashboard') ? 'active' : '' }}">
+              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <p>
+                Dashboard
+              </p>
+            </a>
+          </li>
           <li class="nav-item {{ Route::is('users.*', 'roles.*', 'permission.*') ? 'menu-open' : '' }}">
               <a href="#" class="nav-link {{ Route::is('users.*', 'roles.*', 'permission.*') ? 'active' : '' }}">
                   <i class="fas fa-users mr-2"></i>
