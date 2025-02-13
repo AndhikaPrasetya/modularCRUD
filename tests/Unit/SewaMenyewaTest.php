@@ -13,6 +13,7 @@ use Spatie\Permission\Models\Role;
 use Illuminate\Foundation\Testing\WithFaker;
 use Modules\Perusahaan\Models\profilePerusahaan;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Auth;
 use Modules\SewaMenyewa\Models\Lokasi as ModelsLokasi;
 use Modules\SewaMenyewa\Models\SewaMenyewa as ModelsSewaMenyewa;
 use Modules\SewaMenyewa\Models\JenisDokumen as ModelsJenisDokumen;
@@ -102,6 +103,7 @@ class SewaMenyewaTest extends TestCase
 
         $validData = [
             'lokasi_id' => $lokasi->id,
+            'user_id' => Auth::id(),
             'jenis_dokumen_id' => $jenisDokumen->id,
             'tentang' => $this->faker->sentence,
             'no_dokumen' => 'DOC123',
@@ -201,6 +203,7 @@ class SewaMenyewaTest extends TestCase
         ]);
         $validData =[
             'lokasi_id' => $lokasi->id,
+            'user_id' => Auth::id(),
             'jenis_dokumen_id' => $jenisDokumen->id,
             'tentang' => 'Perjanjian Sewa Lama',
             'no_dokumen' => 'DOC123',
@@ -224,6 +227,7 @@ class SewaMenyewaTest extends TestCase
         // Data baru untuk update
         $updateData = [
             'lokasi_id' => $lokasi->id,
+              'user_id' => Auth::id(),
             'jenis_dokumen_id' => $jenisDokumen->id,
             'tentang' => 'Perjanjian Sewa Baru',
             'no_dokumen' => 'DOC456',
