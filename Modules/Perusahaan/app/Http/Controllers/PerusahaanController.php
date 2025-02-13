@@ -5,6 +5,7 @@ namespace Modules\Perusahaan\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
 use Modules\Perusahaan\Models\profilePerusahaan;
@@ -40,16 +41,14 @@ class PerusahaanController extends Controller
                 ->addColumn('action', function ($data) {
                     $buttons = '<div class="text-center">';
                     //Check permission 
-                    if (Auth::user()->can('update-profilePerusahaan')) {
+                    if (Gate::allows('update-profilePerusahaan')) {
                         $buttons .= '<a href="' . route('perusahaan.edit', $data->id) . '" class="btn btn-outline-info btn-sm mr-1"><span>Edit</span></a>';
                     }
-                    if (Auth::user()->can('delete-profilePerusahaan')) {
+                    if (Gate::allows('delete-profilePerusahaan')) {
                         $buttons .= '<button type="button" class="btn btn-outline-danger btn-sm delete-button" data-id="' . $data->id . '" data-section="perusahaan">' .
                             ' Delete</button>';
                     }
-
                     $buttons .= '</div>';
-
                     return $buttons;
                 })
                 ->rawColumns(['action'])
@@ -69,20 +68,16 @@ class PerusahaanController extends Controller
     }
 
     public function getPerusahaanDomisili(Request $request)
-{
-    $perusahaan = profilePerusahaan::find($request->id);
-
-    if ($perusahaan) {
-        return response()->json([
-            'success' => true,
-            'domisili' => $perusahaan->alamat_domisili,
-        ]);
+    {
+        $perusahaan = profilePerusahaan::find($request->id);
+        if ($perusahaan) {
+            return response()->json([
+                'success' => true,
+                'domisili' => $perusahaan->alamat_domisili,
+            ]);
+        }
+        return response()->json(['success' => false], 404);
     }
-
-    return response()->json(['success' => false], 404);
-}
-
-
     /**
      * Store a newly created resource in storage.
      */
@@ -92,7 +87,7 @@ class PerusahaanController extends Controller
             'nama' => 'required',
             'alamat' => 'required',
             'no_telp' => 'required',
-            'email' => 'required|email',
+            'email' => 'required|email|unique:profile_perusahaans,email',
             'kode_pos' => 'required',
             'no_domisili' => 'required',
             'nama_domisili' => 'required',
@@ -139,7 +134,7 @@ class PerusahaanController extends Controller
      */
     public function show($id)
     {
-        
+
         return view('perusahaan::show');
     }
 
@@ -150,7 +145,7 @@ class PerusahaanController extends Controller
     {
         $title = "Edit Data Perusahaan";
         $breadcrumb = "Perusahaan";
-        $data=profilePerusahaan::findOrFail($id);
+        $data = profilePerusahaan::findOrFail($id);
         return view('perusahaan::ProfilePerusahaan.edit', get_defined_vars());
     }
 
@@ -163,7 +158,7 @@ class PerusahaanController extends Controller
             'nama' => 'required',
             'alamat' => 'required',
             'no_telp' => 'required',
-            'email' => 'required|email',
+            'email' => 'required|email|unique:profile_perusahaans,email',
             'kode_pos' => 'required',
             'no_domisili' => 'required',
             'nama_domisili' => 'required',
@@ -188,8 +183,7 @@ class PerusahaanController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'Data Perusahaan Berhasil Diupdate',
-            ], 200);
-
+        ], 200);
     }
 
     /**
@@ -202,7 +196,6 @@ class PerusahaanController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'Data Perusahaan Berhasil Dihapus',
-            ], 200);
-            
+        ], 200);
     }
 }

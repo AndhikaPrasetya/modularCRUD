@@ -34,10 +34,18 @@
                                 <input type="text" class="form-control" name="password" id="password" placeholder="Password" required>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="inputAttachment">Foto</label>
-                                <input id="input-fcount-2" name="image" type="file">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="image">Foto</label>
+                                <input type="file" class="form-control" name="image" accept=".jpg, .png, .jpeg">
+                            </div>
+                            {{-- <label for="image"> Foto Profile</label>
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" name="image">
+                                <label class="custom-file-label" for="exampleInputFile">Choose file</label>
+                            </div> --}}
                         </div>
+
                     </div>
                 </div>
 
@@ -76,36 +84,10 @@
         }
     };
 
-    // File upload initialization
-    $("#input-fcount-2").fileinput({
-        showUpload: false,
-        showRemove: true,
-        uploadAsync: false,
-        showUploadedThumbs: false,
-        validateInitialCount: true,
-        overwriteInitial: false,
-        showZoom: false,
-        allowedFileExtensions: ["jpg", "jpeg", "png"],
-        fileActionSettings: {
-            showRotate: false,
-            showDrag: false,
-            showZoom: true,
-            showUpload: false,
-            showRemove: true,
-        }
-    });
-
-    // Form submission
     $('#createFormUser').on('submit', function(e) {
         e.preventDefault();
         
         const formData = new FormData(this);
-        
-        // Ambil file dari input file
-        const fileInput = $('#input-fcount-2')[0];
-        if (fileInput.files.length > 0) {
-            formData.append('image', fileInput.files[0]);
-        }
 
         $.ajax({
             url: '/users/store',
@@ -116,7 +98,7 @@
             success: function(response) {
                 showToast('success', response.message);
                 setTimeout(() => {
-                window.location.href = '/users/edit/' + response.data;
+                window.location.href = '/users';
                 }, 2000);
             },
             error: (xhr) => {

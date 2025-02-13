@@ -44,7 +44,8 @@
                                 <label for="">Roles</label>
                                 <select class="allRole" name="roles[]" multiple="multiple" style="width: 100%;">
                                     @foreach ($roles as $role)
-                                        <option value="{{ $role }}" {{ in_array($role, $userRole) ? 'selected' : '' }}>
+                                        <option value="{{ $role }}"
+                                            {{ in_array($role, $userRole) ? 'selected' : '' }}>
                                             {{ $role }}</option>
                                     @endforeach
                                 </select>
@@ -56,9 +57,14 @@
                                 <input type="text" class="form-control" name="password" id="password">
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="image">Foto</label>
-                            <input id="input-fcount-2" name="image" type="file" value="{{ asset($data->image) }}">
+                        <div class="col-12 col-md-4">
+                            <div class="form-group">
+                                <label for="image">Foto Profile</label>
+                                <div class="img-wrapper mb-3">
+                                    <img src="{{ asset($data->image) }}" alt="image" width="100px">
+                                </div>
+                                <input type="file" class="form-control" name="image" id="image">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -76,33 +82,33 @@
 @section('script')
     <script>
         $(document).ready(() => {
-            $("#input-fcount-2").fileinput({
-                showUpload: false,
-                showRemove: true,
-                uploadAsync: false,
-                showUploadedThumbs: false,
-                validateInitialCount: true,
-                showZoom: false,
-                initialPreview: [
-                    "{{ asset($data->image) }}" // Tampilkan gambar yang sudah ada
-                ],
-                initialPreviewConfig: [{
-                    caption: "{{ basename($data->image) }}", // Nama file
-                    size: 0,
-                    width: "120px",
-                    key: 1,
-                }],
-                initialPreviewAsData: true, // Gunakan true untuk menampilkan sebagai gambar
-                initialPreviewFileType: 'image',
-                allowedFileExtensions: ["jpg", "jpeg", "png"],
-                fileActionSettings: {
-                    showRotate: false,
-                    showDrag: false,
-                    showZoom: true,
-                    showUpload: false,
-                    showRemove: true,
-                }
-            });
+            // $("#input-fcount-2").fileinput({
+            //     showUpload: false,
+            //     showRemove: true,
+            //     uploadAsync: false,
+            //     showUploadedThumbs: false,
+            //     validateInitialCount: true,
+            //     showZoom: false,
+            //     initialPreview: [
+            //         "{{ asset($data->image) }}" // Tampilkan gambar yang sudah ada
+            //     ],
+            //     initialPreviewConfig: [{
+            //         caption: "{{ basename($data->image) }}", // Nama file
+            //         size: 0,
+            //         width: "120px",
+            //         key: 1,
+            //     }],
+            //     initialPreviewAsData: true, // Gunakan true untuk menampilkan sebagai gambar
+            //     initialPreviewFileType: 'image',
+            //     allowedFileExtensions: ["jpg", "jpeg", "png"],
+            //     fileActionSettings: {
+            //         showRotate: false,
+            //         showDrag: false,
+            //         showZoom: true,
+            //         showUpload: false,
+            //         showRemove: true,
+            //     }
+            // });
 
             toastr.options = {
                 "closeButton": true,
@@ -128,14 +134,14 @@
             const handleFormSubmit = (formId) => {
                 const form = $(`#${formId}`);
                 const id = form.data('id');
-                // Buat FormData object
+                // // Buat FormData object
                 const formData = new FormData(form[0]);
 
-                // Tambahkan file jika ada
-                const fileInput = $('#input-fcount-2')[0];
-                if (fileInput.files.length > 0) {
-                    formData.append('image', fileInput.files[0]);
-                }
+                // // Tambahkan file jika ada
+                // const fileInput = $('#input-fcount-2')[0];
+                // if (fileInput.files.length > 0) {
+                //     formData.append('image', fileInput.files[0]);
+                // }
 
                 // Tambahkan method PUT karena route menggunakan PUT
                 formData.append('_method', 'PUT');

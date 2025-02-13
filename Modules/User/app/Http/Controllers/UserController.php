@@ -6,6 +6,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
@@ -48,17 +50,26 @@ class UserController extends Controller
                     return $rolesList;
                 })
                 ->addColumn('action', function ($data) {
-                    return
-                        '<div class="text-center">' .
-                        '<a href="' . route('users.edit', $data->id) . '" class="btn btn-outline-info btn-sm mr-1" > <i class="icon-pencil"></i> <span>Edit</span></a>' .
-                        '<button type="button" class="btn btn-outline-danger btn-sm delete-button" data-id="' . $data->id . '" data-section="users">' .
-                        '<i class="fa fa-trash-o"></i> Delete</button>' .
-                        '</div>';
+                    $buttons = '<div class="text-center">';
+                    //Check permission for adding/editing permissions
+                    if (Gate::allows('update-user')) {
+                        $buttons .= '<a href="' . route('users.edit', $data->id) . '" class="btn btn-outline-info btn-sm mr-1"><span>Edit</span></a>';
+                    }
+
+                    // Check permission for deleting roles
+                    if (Gate::allows('delete-user')) {
+                        $buttons .= '<button type="button" class="btn btn-outline-danger btn-sm delete-button" data-id="' . $data->id . '" data-section="users">' .
+                            ' Delete</button>';
+                    }
+
+                    $buttons .= '</div>';
+
+                    return $buttons;
                 })
                 ->rawColumns(['action', 'role'])
                 ->make(true);
         }
-        return view('user::index', compact('title', 'breadcrumb'));
+        return view('user::index', get_defined_vars());
     }
     /**
      * Show the form for creating a new resource.
@@ -68,7 +79,7 @@ class UserController extends Controller
         $title = "Create Data Users";
         $breadcrumb = "Create Users";
         $roles = Role::pluck('name', 'name')->all();
-        return view('user::create', compact('title', 'breadcrumb', 'roles'));
+        return view('user::create', get_defined_vars());
     }
 
     /**
@@ -77,7 +88,7 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required',
+            'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email',
             'password' => 'required|min:8',
             'roles' => 'required',
@@ -94,7 +105,7 @@ class UserController extends Controller
         }
         $image = $request->file('image');
         $fileName = time() . '.' . $image->getClientOriginalExtension();
-        $image->storeAs('foto-profile', $fileName, 'public'); // Simpan file di storage
+        $image->storeAs('foto-profile', $fileName, 'public');
 
         $data =  User::create([
             'name' => $request->name,
@@ -106,11 +117,11 @@ class UserController extends Controller
         if (!empty($request->roles)) {
             $data->syncRoles($request->roles);
         }
-    
+
         return response()->json([
             'success' => true,
             'message' => 'User created successfully',
-            'data' => $data->id,
+            'data' => $data,
 
         ], 200);
     }
@@ -134,8 +145,7 @@ class UserController extends Controller
         $data = User::find($id);
         $roles = Role::pluck('name', 'name')->all();
         $userRole = $data->roles->pluck('name', 'name')->all();
-
-        return view('user::edit', compact('data', 'title', 'breadcrumb', 'roles', 'userRole'));
+        return view('user::edit', get_defined_vars());
     }
 
     /**
@@ -156,7 +166,7 @@ class UserController extends Controller
             if ($user->image && Storage::exists('public/' . $user->image)) {
                 Storage::delete('public/' . $user->image);
             }
-    
+
             // Upload file baru
             $fileName = time() . '.' . $request->image->extension();
             $request->image->storeAs('foto-profile', $fileName, 'public');
@@ -170,7 +180,6 @@ class UserController extends Controller
             $user->password = bcrypt($request->password);
         }
 
-        // Update email jika diisi
         if ($request->filled('email')) {
             $user->email = $request->email;
         }

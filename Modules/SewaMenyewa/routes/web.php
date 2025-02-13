@@ -40,6 +40,7 @@ Route::middleware(['auth','verified','role:admin'])->group( function () {
 
     Route::delete('/delete-nopd/{id}', [LokasiController::class,'deleteNopd'])->name('lokasi.deleteNopd');
     Route::delete('/delete-internet/{id}', [LokasiController::class,'deleteInternet'])->name('lokasi.deleteInternet');
-    
+    Route::get('/cek-sertifikat', [SewaMenyewaController::class, 'cekSertifikatSewa']);
+
     
 });
