@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Mail\NotifikasiDokumenSewa;
 use Illuminate\Support\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Auth;
@@ -29,23 +30,23 @@ class CekDokumen extends Command
      * Execute the console command.
      */
     public function handle()
-    {
-       $today = Carbon::now()->format('Y-m-d');
-        $tgl_expired = Carbon::now()->addDays(7)->format('Y-m-d');
+{
+    $today = Carbon::now()->format('Y-m-d');
+    $tgl_expired = Carbon::now()->addDays(7)->format('Y-m-d');
 
-        $listSertifikat = SewaMenyewa::select('id', 'no_sertifikat', 'tgl_akhir_sertifikat')
-            ->whereBetween('tgl_akhir_sertifikat', [$today, $tgl_expired])
-            ->get();
+    // Ambil semua sertifikat yang akan kedaluwarsa
+    $listSertifikat = SewaMenyewa::with('user')
+        ->select('id', 'no_sertifikat', 'tgl_akhir_sertifikat')
+        ->whereBetween('tgl_akhir_sertifikat', [$today, $tgl_expired])
+        ->get();
 
-        if ($listSertifikat->isNotEmpty()) {
-            foreach ($listSertifikat as $sertifikat) {
-                if (!empty($sertifikat->tgl_akhir_sertifikat)) {
-                    Mail::to('andhika@example.com')->send(new SewaMenyewaReminderMail($sertifikat));
-                }
-            }
-            $this->info("Notifikasi sertifikat telah dikirim.");
-        } else {
-            $this->info("Tidak ada sertifikat yang kedaluwarsa dalam 7 hari.");
-        }
+    if ($listSertifikat->isNotEmpty()) {
+        Mail::to('zap@gmail.com')->send(new NotifikasiDokumenSewa($listSertifikat));
+
+        $this->info("Notifikasi sertifikat telah dikirim.");
+    } else {
+        $this->info("Tidak ada sertifikat yang kedaluwarsa dalam 7 hari.");
     }
+}
+
 }

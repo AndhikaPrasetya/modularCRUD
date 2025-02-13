@@ -9,18 +9,16 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class SewaMenyewaReminderMail extends Mailable
+class NotifikasiDokumenSewa extends Mailable
 {
     use Queueable, SerializesModels;
-public $listSertifikat;
-
+    public $listSertifikat;
     /**
      * Create a new message instance.
      */
     public function __construct($listSertifikat)
     {
         $this->listSertifikat=$listSertifikat;
-
     }
 
     /**
@@ -29,7 +27,7 @@ public $listSertifikat;
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Sewa Menyewa Document Reminder Mail',
+            subject: 'Notifikasi Dokumen Sewa',
         );
     }
 
@@ -39,10 +37,10 @@ public $listSertifikat;
     public function content(): Content
     {
         return new Content(
-            view: 'email.reminder-sewa',
+            markdown: 'email.notif-dokumen-sewa',
             with: [
                 'listSertifikat' => $this->listSertifikat,
-
+                // 'user' =>$this->user
                 ],
         );
     }
