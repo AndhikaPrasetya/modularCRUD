@@ -19,7 +19,7 @@ return new class extends Migration
             ->on('lokasi')
             ->onDelete('cascade');
             $table->string('id_internet');
-            $table->integer('speed_internet');
+            $table->string('speed_internet');
             $table->integer('harga_internet');
             $table->timestamps();
         });

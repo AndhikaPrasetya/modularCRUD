@@ -20,7 +20,7 @@ return new class extends Migration
             ->onDelete('cascade');
             $table->string('nopd');
             $table->string('bentuk');
-            $table->integer('ukuran');
+            $table->string('ukuran');
             $table->timestamps();
         });
     }
