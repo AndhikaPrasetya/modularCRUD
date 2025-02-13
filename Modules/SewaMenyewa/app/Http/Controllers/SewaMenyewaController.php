@@ -184,7 +184,6 @@ class SewaMenyewaController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'lokasi_id' => 'required|exists:lokasi,id',
-           
             'jenis_dokumen_id' => 'required|exists:jenis_dokumen,id',
             'tentang' => 'nullable|string',
             'no_dokumen' => 'required|string',
@@ -210,11 +209,11 @@ class SewaMenyewaController extends Controller
             ], 422);
         }
     
- 
-        $tglAkhirSertifikat = $request->tgl_akhir_sertifikat;
+        $data = SewaMenyewa::findOrFail($id);
+        $tglAkhirSertifikat = $data->tgl_akhir_sertifikat;
     
         // Proses grace period sebelum update
-        if ($request->filled('sewa_grace_period')) {
+        if ($request->filled('sewa_grace_period') && $request->sewa_grace_period !== $data->sewa_grace_period) {
             // Ekstrak nilai grace period
             preg_match('/(\d+)\s*(bulan|hari)/i', $request->sewa_grace_period, $matches);
     
@@ -234,7 +233,7 @@ class SewaMenyewaController extends Controller
             }
         }
     
-        $data = SewaMenyewa::findOrFail($id);
+
         $data->update([
             'lokasi_id' => $request->lokasi_id,
             'user_id' => Auth::id(),
