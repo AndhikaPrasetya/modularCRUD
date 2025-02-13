@@ -5,6 +5,7 @@ namespace Modules\Permission\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Permission;
 use Yajra\DataTables\Facades\DataTables;
@@ -35,17 +36,23 @@ class PermissionController extends Controller
             return $data->guard_name;
         })
         ->addColumn('action', function ($data) {
-            return
-                '<div class="text-center">' .
-                '<a href="' . route('permission.edit', $data->id) . '" class="btn btn-outline-info btn-sm mr-1"> <i class="icon-pencil"></i> <span>Edit</span></a>' .
-                '<button type="button" class="btn btn-outline-danger btn-sm delete-button" data-id="' . $data->id . '" data-section="permission">' .
-                '<i class="fa fa-trash-o"></i> Delete</button>' .
-                '</div>';
+            $buttons = '<div class="text-center">';
+                    //Check permission for adding/editing permissions
+                    if (Gate::allows('update-permission')) {
+                        $buttons .= '<a href="' . route('permission.edit', $data->id) . '" class="btn btn-outline-info btn-sm mr-1"><span>Edit</span></a>';
+                    }
+                    // Check permission for deleting roles
+                    if (Gate::allows('delete-permission')) {
+                        $buttons .= '<button type="button" class="btn btn-outline-danger btn-sm delete-button" data-id="' . $data->id . '" data-section="permission">' .
+                            ' Delete</button>';
+                    }
+                    $buttons .= '</div>';
+                    return $buttons;
         })
         ->rawColumns([ 'action'])
         ->make(true);
         }
-        return view('permission::index', compact('title','breadcrumb'));
+        return view('permission::index',get_defined_vars());
     }
     /**
      * Show the form for creating a new resource.
@@ -54,7 +61,7 @@ class PermissionController extends Controller
     {
         $title = "Create Permission";
         $breadcrumb = "Create Permission";
-        return view('permission::create', compact('title','breadcrumb'));
+        return view('permission::create', get_defined_vars());
     }
 
     /**
@@ -63,13 +70,13 @@ class PermissionController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(),  [
-            'name' => 'required',
+            'name' => 'required|unique:permissions,name',
         ]);
         if ($validator->fails()) {
             return response()->json([
             'status'=>true,
             'message'=>'validation failed',
-            'error'=>$validator->errors()->first('name')], 422);
+            'errors'=>$validator->errors()], 422);
         }
 
         $data = Permission::create([
@@ -77,7 +84,7 @@ class PermissionController extends Controller
             Auth::guard('web')
         ]);
         return response()->json([
-            'success' => true,
+            'status' => true,
             'message' => 'Permission created successfully',
             'permission_id' => $data->id
         ], 200);
@@ -99,7 +106,7 @@ class PermissionController extends Controller
         $title = "Edit Permission";
         $breadcrumb = "Edit Permission";
         $data = Permission::find($id);
-        return view('permission::edit', compact('title','breadcrumb','data'));
+        return view('permission::edit', get_defined_vars());
     }
 
     /**
@@ -108,13 +115,13 @@ class PermissionController extends Controller
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(),  [
-            'name' => 'required',
+            'name' => 'required|unique:permissions,name',
         ]);
         if ($validator->fails()) {
             return response()->json([
             'status'=>true,
             'message'=>'validation failed',
-            'error'=>$validator->errors()->first('name')], 422);
+            'errors'=>$validator->errors()], 422);
         }
 
 
@@ -123,7 +130,7 @@ class PermissionController extends Controller
         $data->save();
         
         return response()->json([
-            'success' => true,
+            'status' => true,
             'message' => 'Permission updated successfully',
             'data' => $data
         ], 200);

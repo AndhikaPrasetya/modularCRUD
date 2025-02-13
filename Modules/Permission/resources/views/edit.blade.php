@@ -16,12 +16,10 @@
                 </ol>
             </div>
         </div>
-    </div><!-- /.container-fluid -->
+    </div>
   </section>
   <section class="content">
-    
       <div class="card card-primary">
-          <!-- Form Start -->
           <form id="updateFormPermission" data-id="{{ $data->id }}">
               @csrf
               @method('PUT')
@@ -31,7 +29,6 @@
                       <input type="text" class="form-control" name="name" id="name" value="{{ $data->name }}" required>
                   </div>
               </div>
-  
               <div class="card-footer">
                   <button type="submit" class="btn btn-primary">Submit</button>
                   <button type="button" onclick="window.location.href='{{ route('permission.index') }}'" class="btn btn-warning">
@@ -49,20 +46,20 @@
         toastr.options = {
             "closeButton": true,
             "progressBar": true,
-            "positionClass": "toast-top-right", // Posisi toast
+            "positionClass": "toast-top-right",
             "timeOut": "2000",
           
         };
 
         const showToast = (icon, message) => {
             if (icon === 'error') {
-                toastr.error(message); // Toast untuk error
+                toastr.error(message);
             } else if (icon === 'success') {
-                toastr.success(message); // Toast untuk sukses
+                toastr.success(message); 
             } else if (icon === 'info') {
-                toastr.info(message); // Toast untuk info
+                toastr.info(message); 
             } else {
-                toastr.warning(message); // Toast untuk warning
+                toastr.warning(message); 
             }
         };
 
@@ -77,22 +74,26 @@
                 type: 'PUT',
                 data: form.serialize(),
                 success: (response) => {
-                    if (response.success) {
+                    if (response.status) {
                       showToast('success', response.message);
                       setTimeout(() => {
-                                window.location.reload();
+                        window.location.href = '/permission';
                             }, 2000);
                     } else {
                         showToast('error', response.message);
                     }
                 },
-                error:function(xhr){
-                // console.log(xhr.responseJSON.error);
+                error: (xhr) => {
                 if (xhr.status === 422) {
-                showToast('error', xhr.responseJSON.error);
-            } else {
-                showToast('error', 'Permission Already Exist');
-            }
+                    const errors = xhr.responseJSON.errors;
+                    for (const [field, messages] of Object.entries(errors)) {
+                        messages.forEach(message => {
+                            showToast('error', message);
+                        });
+                    }
+                } else {
+                    showToast('error', xhr.responseJSON.error);
+                }
             }
             });
         };

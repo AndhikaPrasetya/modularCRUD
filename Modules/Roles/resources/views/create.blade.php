@@ -89,7 +89,7 @@
                     type: 'POST',
                     data: form.serialize(),
                     success: function(response) {
-                        if (response.success) {
+                        if (response.status) {
                             showToast('success', response.message)
                             //move page after 1000
                             setTimeout(() => {
@@ -99,14 +99,18 @@
                             showToast('error', response.message)
                         }
                     },
-                    error: function(xhr) {
-                        // console.log(xhr.responseJSON.error);
-                        if (xhr.status === 422) {
-                            showToast('error', xhr.responseJSON.errors);
-                        } else {
-                            showToast('error', xhr.responseJSON.message);
-                        }
+                    error: (xhr) => {
+                if (xhr.status === 422) {
+                    const errors = xhr.responseJSON.errors;
+                    for (const [field, messages] of Object.entries(errors)) {
+                        messages.forEach(message => {
+                            showToast('error', message);
+                        });
                     }
+                } else {
+                    showToast('error', xhr.responseJSON.error);
+                }
+            }
                 });
             }
             $('#createFormRole').on('submit', function(e) {
