@@ -35,8 +35,8 @@ class CekDokumen extends Command
     $tgl_expired = Carbon::now()->addDays(7)->format('Y-m-d');
 
     // Ambil semua sertifikat yang akan kedaluwarsa
-    $listSertifikat = SewaMenyewa::with('user')
-        ->select('id', 'no_sertifikat', 'tgl_akhir_sertifikat')
+    $listSertifikat = SewaMenyewa::
+        select('id', 'no_sertifikat', 'tgl_akhir_sertifikat')
         ->whereBetween('tgl_akhir_sertifikat', [$today, $tgl_expired])
         ->get();
 

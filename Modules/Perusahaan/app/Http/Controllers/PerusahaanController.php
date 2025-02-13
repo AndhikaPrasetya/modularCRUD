@@ -23,7 +23,9 @@ class PerusahaanController extends Controller
             $data = profilePerusahaan::query();
             if ($search = $request->input('search.value')) {
                 $data->where(function ($data) use ($search) {
-                    $data->where('nama', 'like', "%{$search}%");
+                    $data->where('nama', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('alamat', 'like', "%{$search}%");
                 });
             }
 

@@ -31,7 +31,11 @@ class LokasiController extends Controller
             $data = Lokasi::with('Perusahaan');
             if ($search = $request->input('search.value')) {
                 $data->where(function ($data) use ($search) {
-                    $data->where('nama', 'like', "%{$search}%");
+                    $data->where('nama', 'like', "%{$search}%")
+                    ->orWhere('uid_profile_perusahaan', 'like', "%{$search}%")
+                    ->orWhere('category', 'like', "%{$search}%")
+                    ->orWhere('type', 'like', "%{$search}%")
+                    ->orWhere('status', 'like', "%{$search}%");
                 });
             }
 

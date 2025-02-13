@@ -210,7 +210,7 @@ class SewaMenyewaController extends Controller
         }
     
         $data = SewaMenyewa::findOrFail($id);
-        $tglAkhirSertifikat = $data->tgl_akhir_sertifikat;
+        $tglAkhirSertifikat = $request->tgl_akhir_sertifikat;
     
         // Proses grace period sebelum update
         if ($request->filled('sewa_grace_period') && $request->sewa_grace_period !== $data->sewa_grace_period) {

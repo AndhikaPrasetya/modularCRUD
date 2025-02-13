@@ -29,7 +29,11 @@ class AktaPerusahaanController extends Controller
             $data = AktaPerusahaan::with('Perusahaan');
             if ($search = $request->input('search.value')) {
                 $data->where(function ($data) use ($search) {
-                    $data->where('nama_akta', 'like', "%{$search}%");
+                    $data->where('nama_akta', 'like', "%{$search}%")
+                    ->orWhere('uid_profile_perusahaan', 'like', "%{$search}%")
+                    ->orWhere('kode_akta', 'like', "%{$search}%")
+                    ->orWhere('status', 'like', "%{$search}%")
+                    ->orWhere('tgl_terbit', 'like', "%{$search}%");
                 });
             }
 
