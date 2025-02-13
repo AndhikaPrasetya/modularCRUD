@@ -5,6 +5,7 @@ namespace Modules\SewaMenyewa\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Yajra\DataTables\Facades\DataTables;
 use Modules\SewaMenyewa\Models\JenisDokumen;
 
@@ -33,10 +34,10 @@ class JenisDokumenController extends Controller
                 ->addColumn('action', function ($data) {
                     $buttons = '<div class="text-center">';
                     //Check permission 
-                    if (Auth::user()->can('update-jenisDokumen')) {
+                    if (Gate::allows('update-jenisDokumen')) {
                         $buttons .= '<a href="' . route('jenisDokumen.edit', $data->id) . '" class="btn btn-outline-info btn-sm mr-1"><span>Edit</span></a>';
                     }
-                    if (Auth::user()->can('delete-jenisDokumen')) {
+                    if (Gate::allows('delete-jenisDokumen')) {
                         $buttons .= '<button type="button" class="btn btn-outline-danger btn-sm delete-button" data-id="' . $data->id . '" data-section="jenisDokumen">' .
                             ' Delete</button>';
                     }
@@ -68,7 +69,7 @@ class JenisDokumenController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama_jenis_dokumen' => 'required',
+            'nama_jenis_dokumen' => 'required|string',
             ]);
         $jenisDokumen = new JenisDokumen();
         $jenisDokumen->nama_jenis_dokumen = $request->nama_jenis_dokumen;
@@ -105,7 +106,7 @@ class JenisDokumenController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'nama_jenis_dokumen' => 'required',
+            'nama_jenis_dokumen' => 'required|string',
             ]);
             $jenisDokumen = JenisDokumen::find($id);
             $jenisDokumen->update([

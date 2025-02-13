@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
@@ -52,17 +53,14 @@ class AktaPerusahaanController extends Controller
                 ->addColumn('action', function ($data) {
                     $buttons = '<div class="text-center">';
                     //Check permission 
-                    if (Auth::user()->can('update-aktaPerusahaan')) {
+                    if (Gate::allows('update-aktaPerusahaan')) {
                         $buttons .= '<a href="' . route('aktaPerusahaan.edit', $data->id) . '" class="btn btn-outline-info btn-sm mr-1"><span>Edit</span></a>';
                     }
-                    if (Auth::user()->can('delete-aktaPerusahaan')) {
+                    if (Gate::allows('delete-aktaPerusahaan')) {
                         $buttons .= '<button type="button" class="btn btn-outline-danger btn-sm delete-button" data-id="' . $data->id . '" data-section="aktaPerusahaan">' .
                             ' Delete</button>';
                     }
-
-
                     $buttons .= '</div>';
-
                     return $buttons;
                 })
                 ->rawColumns(['action', 'status'])
@@ -80,11 +78,9 @@ class AktaPerusahaanController extends Controller
         $breadcrumb = "Akta Perusahaan";
         $perusahaan = profilePerusahaan::all();
         $selectedPerusahaan = null;
-
         if ($request->has('uid_profile_perusahaan')) {
             $selectedPerusahaan = profilePerusahaan::find($request->input('uid_profile_perusahaan'));
         }
-
         return view('perusahaan::AktaPerusahaan.create', get_defined_vars());
     }
 
@@ -94,8 +90,8 @@ class AktaPerusahaanController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'uid_profile_perusahaan' => 'required',
-            'file_path.*' => 'mimes:pdf,xlx,csv|max:2048',
+            'uid_profile_perusahaan' => 'required|exists:profile_perusahaans,id',
+            'file_path.*' => 'mimes:jpg,jpeg,png,pdf,doc,docx,xls,xlsx,csv,ppt,pptx|max:2048',
             'nama_direktur.*' => 'required',
             'jabatan.*' => 'required',
             'durasi_jabatan.*' => 'required',
@@ -229,8 +225,8 @@ class AktaPerusahaanController extends Controller
     public function update(Request $request, $id)
 {
     $validator = Validator::make($request->all(), [
-        'uid_profile_perusahaan' => 'sometimes|required',
-        'file_path.*' => 'mimes:pdf,xlsx,csv|max:2048',
+        'uid_profile_perusahaan' => 'sometimes|required|exists:profile_perusahaans,id',
+        'file_path.*' => 'mimes:jpg,jpeg,png,pdf,doc,docx,xls,xlsx,csv,ppt,pptx|max:2048',
         'nama_direktur.*' => 'sometimes|required',
         'jabatan.*' => 'sometimes|required',
         'durasi_jabatan.*' => 'sometimes|required',
@@ -343,8 +339,6 @@ class AktaPerusahaanController extends Controller
                 );
             }
         }
-        
-
         DB::commit();
         return response()->json([
             'status' => true,
@@ -353,7 +347,6 @@ class AktaPerusahaanController extends Controller
         ], 200);
     } catch (\Exception $e) {
         DB::rollback();
-        \Log::error('Error: ' . $e->getMessage());
         return response()->json([
             'status' => false,
             'message' => 'Terjadi kesalahan saat memperbarui data.',

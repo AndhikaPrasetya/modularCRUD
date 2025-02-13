@@ -6,7 +6,6 @@
   <div class="card card-primary">
       <form id="createFormLokasi">
           @csrf
-          
           <div class="card-body">
             <div class="row mb-4">
                 <div class="col-12 col-md-6">
@@ -279,14 +278,17 @@
                   showToast('error',response.message)
               }
             },
-            error:function(xhr){
-                console.log(xhr.responseJSON.error);
+            error: (xhr) => {
                 if (xhr.status === 422) {
-                showToast('error', xhr.responseJSON.name);
-            } else {
-                showToast('error', xhr.responseJSON.message);
-                console.log(xhr.responseJSON.message)
-            }
+                    const errors = xhr.responseJSON.errors;
+                    for (const [field, messages] of Object.entries(errors)) {
+                        messages.forEach(message => {
+                            showToast('error', message);
+                        });
+                    }
+                } else {
+                    showToast('error', xhr.responseJSON.error);
+                }
             }
           });
         }
@@ -329,7 +331,7 @@
                     const container = document.getElementById('dynamic-input-nopd');
                     container.appendChild(newRow);
                 }
-    });
+            });
         $('.add-row-internet').on('click', function(e) {
                 e.preventDefault();
 
@@ -364,7 +366,7 @@
                     const container = document.getElementById('dynamic-input-internet');
                     container.appendChild(newRow);
                 }
-    });
+        });
 
             $(document).on('click', '.remove-row', function(e) {
                 e.preventDefault();

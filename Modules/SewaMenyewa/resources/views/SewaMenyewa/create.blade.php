@@ -6,7 +6,6 @@
   <div class="card card-primary">
       <form id="createFormSewa">
           @csrf
-          
           <div class="card-body">
             <div class="row mb-4">
                 <div class="col-12 col-md-4">
@@ -18,31 +17,27 @@
                 <div class="col-12 col-md-4">
                     <div class="form-group">
                         <label for="jenis_dokumen_id">Jenis Dokumen</label>
-                       
                             <select class="form-control" name="jenis_dokumen_id" id="jenis_dokumen_id">
                                 <option value="" disabled selected>Pilih jenis Dokumen</option>
                                 @foreach ($jenisDokumen as $item)
                                     <option value="{{ $item->id }}">{{ $item->nama_jenis_dokumen }}</option>
                                 @endforeach
                             </select>
-                        
                     </div>
                 </div>
                 <div class="col-12 col-md-4">
                     <div class="form-group">
                         <label for="lokasi_id">Lokasi</label>
-                
                             <select class="form-control" name="lokasi_id" id="lokasi_id">
                                 <option value="" disabled selected>Pilih Lokasi</option>
                                 @foreach ($lokasi as $item)
                                     <option value="{{ $item->id }}">{{ $item->nama }}</option>
                                 @endforeach
                             </select>
-                        
                     </div>
                 </div>
-              
             </div>
+
             <div class="row mb-4">
                 <div class="col-12 col-md-4">
                     <div class="form-group">
@@ -63,6 +58,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="row mb-4">
                 <div class="col-12 col-md-6">
                     <div class="form-group">
@@ -91,8 +87,7 @@
                         <select name="jenis_sertifikat" id="jenis_sertifikat" class="form-control">
                             <option value="" selected disabled>Pilih Jenis Sertifikat</option>
                             <option value="HGB">HGB</option>
-                            <option value="HM">HM</option>
-    
+                            <option value="SHM">SHM</option>
                         </select>
                     </div>
                 </div>
@@ -136,18 +131,15 @@
                 </div>
             </div>
           </div>
-         
-
-       
-         
         </div>
-  
+
           <div class="card-footer">
               <button type="submit" class="btn btn-primary">Submit</button>
               <button
               type="button"onclick="window.location.href='{{ route('sewaMenyewa.index') }}'"
               class="btn btn-warning"><span>Back</span></button>
           </div>
+
       </form>
   </div>
 </section>
@@ -192,14 +184,17 @@
                   showToast('error',response.message)
               }
             },
-            error:function(xhr){
-                console.log(xhr.responseJSON.error);
+            error: (xhr) => {
                 if (xhr.status === 422) {
-                showToast('error', xhr.responseJSON.name);
-            } else {
-                showToast('error', xhr.responseJSON.message);
-                console.log(xhr.responseJSON.message)
-            }
+                    const errors = xhr.responseJSON.errors;
+                    for (const [field, messages] of Object.entries(errors)) {
+                        messages.forEach(message => {
+                            showToast('error', message);
+                        });
+                    }
+                } else {
+                    showToast('error', xhr.responseJSON.error);
+                }
             }
           });
         }

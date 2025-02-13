@@ -132,7 +132,7 @@
                     </div>
 
                     <div id="dynamic-input-direktur">
-                        <div class="row mb-4">
+                        <div class="row mb-2">
                             <div class="col-12">
                                 <h3>Informasi Direktur dan Komisaris</h3>
                             </div>
@@ -162,7 +162,11 @@
                                     </div>
                                 </div>
                                 <div class="col-1">
-                                    <button type="button" class="btn btn-danger remove-row-direktur"><i class="fas fa-trash"></i></button>
+                                    @if (!$loop->first)
+                                        <button type="button" class="btn btn-danger remove-row-direktur">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    @endif
                                 </div>
                             </div>
                         @endforeach
@@ -171,8 +175,8 @@
                         <button type="button" class="btn btn-primary add-row-direktur"><i class="fas fa-plus"></i></button>
                     </div>
 
-                    <div id="dynamic-input-saham">
-                        <div class="row mb-4">
+                    <div id="dynamic-input-saham" class="mt-4">
+                        <div class="row mb-2">
                             <div class="col-12">
                                 <h3>Informasi Saham</h3>
                             </div>
@@ -202,7 +206,9 @@
                                     </div>
                                 </div>
                                 <div class="col-1">
+                                    @if (!$loop->first)
                                     <button type="button" class="btn btn-danger remove-row-saham"><i class="fas fa-trash"></i></button>
+                                    @endif
                                 </div>
                             </div>
                             @endforeach
@@ -211,7 +217,7 @@
                         <button type="button" class="btn btn-primary add-row-saham"><i class="fas fa-plus"></i></button>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group mt-3">
                         <label for="keterangan">Keterangan</label>
                         <textarea name="keterangan" class="form-control" id="keterangan" rows="3">{{ $akta->keterangan }}</textarea>
                     </div>

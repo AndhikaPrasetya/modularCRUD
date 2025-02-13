@@ -212,7 +212,9 @@
                         </div>
                     </div>
                     <div class="col-1">
+                        @if (!$loop->first)
                         <button type="button" class="btn btn-danger remove-row-nopd"><i class="fas fa-trash"></i></button>
+                        @endif
                     </div>
                 </div>
                 @endforeach
@@ -247,7 +249,9 @@
                     </div>
                 </div>
                 <div class="col-1">
-                    <button type="button" class="btn btn-danger remove-row-internet"><i class="fas fa-trash"></i></button>
+                    @if (!$loop->first)
+                        <button type="button" class="btn btn-danger remove-row-internet"><i class="fas fa-trash"></i></button>
+                    @endif
                 </div>
             </div>
             @endforeach
@@ -312,15 +316,18 @@
                             showToast('error', response.message);
                         }
                     },
-                    error: function(xhr) {
-                        // console.log(xhr.responseJSON.error);
-                        if (xhr.status === 422) {
-                            showToast('error', xhr.responseJSON.errors);
-                            // console.log(xhr.responseJSON.errors)
-                        } else {
-                            showToast('error', xhr.responseJSON.message);
-                        }
+                    error: (xhr) => {
+                if (xhr.status === 422) {
+                    const errors = xhr.responseJSON.errors;
+                    for (const [field, messages] of Object.entries(errors)) {
+                        messages.forEach(message => {
+                            showToast('error', message);
+                        });
                     }
+                } else {
+                    showToast('error', xhr.responseJSON.error);
+                }
+            }
                 });
             };
         $('#editFormLokasi').on('submit', function(e){
@@ -418,7 +425,7 @@
                         _token: $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response) {
-                        if (response.success) {
+                        if (response.status) {
                             row
                         .remove(); // Hapus baris dari tampilan jika berhasil dihapus dari database
                             toastr.success("Data berhasil dihapus!");
@@ -450,7 +457,7 @@
                 }
 
                 $.ajax({
-                    url: "/delete-internet/" + id, // Ganti dengan URL endpoint yang sesuai
+                    url: "/delete-internet/" + id, 
                     type: "DELETE",
                     data: {
                         _token: $('meta[name="csrf-token"]').attr('content')

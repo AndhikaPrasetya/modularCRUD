@@ -107,7 +107,7 @@
                           <select name="jenis_sertifikat" id="jenis_sertifikat" class="form-control">
                               <option value="" selected disabled>Pilih Jenis Sertifikat</option>
                               <option value="HGB" {{$data->jenis_sertifikat == 'HGB' ? 'selected' :''}}>HGB</option>
-                              <option value="HM" {{$data->jenis_sertifikat == 'HM' ? 'selected' :''}}>HM</option>
+                              <option value="SHM" {{$data->jenis_sertifikat == 'SHM' ? 'selected' :''}}>SHM</option>
       
                           </select>
                       </div>

@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SewaMenyewaReminderMail;
+use Illuminate\Support\Facades\Gate;
 use Modules\SewaMenyewa\Models\Lokasi;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
@@ -57,17 +58,14 @@ class SewaMenyewaController extends Controller
                 ->addColumn('action', function ($data) {
                     $buttons = '<div class="text-center">';
                     //Check permission 
-                    if (Auth::user()->can('update-sewaMenyewa')) {
+                    if (Gate::allows('update-sewaMenyewa')) {
                         $buttons .= '<a href="' . route('sewaMenyewa.edit', $data->id) . '" class="btn btn-outline-info btn-sm mr-1"><span>Edit</span></a>';
                     }
-                    if (Auth::user()->can('delete-sewaMenyewa')) {
+                    if (Gate::allows('delete-sewaMenyewa')) {
                         $buttons .= '<button type="button" class="btn btn-outline-danger btn-sm delete-button" data-id="' . $data->id . '" data-section="sewaMenyewa">' .
                             ' Delete</button>';
                     }
-
-
                     $buttons .= '</div>';
-
                     return $buttons;
                 })
                 ->rawColumns(['action'])
@@ -95,7 +93,6 @@ class SewaMenyewaController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'lokasi_id' => 'required|exists:lokasi,id',
-           
             'jenis_dokumen_id' => 'required|exists:jenis_dokumen,id',
             'tentang' => 'nullable|string',
             'no_dokumen' => 'required|string',
@@ -108,7 +105,7 @@ class SewaMenyewaController extends Controller
             'sewa_grace_period' => 'nullable|string',
             'sewa_handover' => 'required|date',
             'no_sertifikat' => 'required|string',
-            'jenis_sertifikat' => 'required|in:HGB,HM',
+            'jenis_sertifikat' => 'required|in:HGB,SHM',
             'tgl_sertifikat' => 'required|date',
             'tgl_akhir_sertifikat' => 'required|date'
         ]);
@@ -161,28 +158,6 @@ class SewaMenyewaController extends Controller
         }
     }
 
-    /**
-     * Show the specified resource.
-     */
-//     public function cekSertifikatSewa()
-// {
-//     $today = Carbon::now()->format('Y-m-d');
-//     $tgl_expired = Carbon::now()->addDays(7)->format('Y-m-d');
-//     $user = Auth::user();
-
-//     // Ambil semua sertifikat yang akan kedaluwarsa
-//     $listSertifikat = SewaMenyewa::select('id', 'no_sertifikat', 'tgl_akhir_sertifikat')
-//         ->whereBetween('tgl_akhir_sertifikat', [$today,$tgl_expired])
-//         ->get();
-
-//     // Jika ada sertifikat yang ditemukan, kirim satu email saja
-//     if ($listSertifikat->isNotEmpty()) {
-//         Mail::to($user->email)->send(new SewaMenyewaReminderMail($listSertifikat, $user));
-//     }
-
-//     return response()->json(['message' => 'Notifikasi sertifikat telah dikirim.']);
-// }
-
     public function show($id)
     {
         return view('sewamenyewa::show');
@@ -222,7 +197,7 @@ class SewaMenyewaController extends Controller
             'sewa_grace_period' => 'nullable|string',
             'sewa_handover' => 'required|date',
             'no_sertifikat' => 'required|string',
-            'jenis_sertifikat' => 'required|in:HGB,HM',
+            'jenis_sertifikat' => 'required|in:HGB,SHM',
             'tgl_sertifikat' => 'required|date',
             'tgl_akhir_sertifikat' => 'required|date'
         ]);

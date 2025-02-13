@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Modules\Perusahaan\Models\profilePerusahaan;
@@ -54,17 +55,14 @@ class LokasiController extends Controller
                 ->addColumn('action', function ($data) {
                     $buttons = '<div class="text-center">';
                     //Check permission 
-                    if (Auth::user()->can('update-lokasi')) {
+                    if (Gate::allows('update-lokasi')) {
                         $buttons .= '<a href="' . route('lokasi.edit', $data->id) . '" class="btn btn-outline-info btn-sm mr-1"><span>Edit</span></a>';
                     }
-                    if (Auth::user()->can('delete-lokasi')) {
+                    if (Gate::allows('delete-lokasi')) {
                         $buttons .= '<button type="button" class="btn btn-outline-danger btn-sm delete-button" data-id="' . $data->id . '" data-section="lokasi">' .
                             ' Delete</button>';
                     }
-
-
                     $buttons .= '</div>';
-
                     return $buttons;
                 })
                 ->rawColumns(['action', 'status'])
@@ -88,7 +86,7 @@ class LokasiController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'uid_profile_perusahaan' => 'required',
+            'uid_profile_perusahaan' => 'required|uuid|exists:profile_perusahaans,id',
             'nama' => 'required',
             'alamat' => 'required',
             'phone' => 'required',
@@ -100,7 +98,7 @@ class LokasiController extends Controller
             'pph' => 'required',
             'ppn' => 'required',
             'deposit' => 'required',
-            'pembayar_pbb' => 'required|string',
+            'pembayar_pbb' => 'required',
             'no_pbb' => 'required',
             'id_pln' => 'required',
             'daya' => 'required',
@@ -149,7 +147,7 @@ class LokasiController extends Controller
             $ukuran = $request->ukuran;
 
             foreach ($nopd as $key => $item) {
-                $lokasi_nopd =new nopd();
+                $lokasi_nopd = new nopd();
                 $lokasi_nopd->lokasi_id = $lokasi->id;
                 $lokasi_nopd->nopd = $item;
                 $lokasi_nopd->bentuk = $bentuk[$key];
@@ -170,8 +168,8 @@ class LokasiController extends Controller
                 $lokasi_internet->save();
             }
 
-
             DB::commit();
+
             return response()->json([
                 'status' => true,
                 'message' => 'Data Berhasil Ditambahkan',
@@ -212,7 +210,7 @@ class LokasiController extends Controller
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'uid_profile_perusahaan' => 'required',
+            'uid_profile_perusahaan' => 'required|uuid|exists:profile_perusahaans,id',
             'nama' => 'required',
             'alamat' => 'required',
             'phone' => 'required',
@@ -239,12 +237,14 @@ class LokasiController extends Controller
             'speed_internet.*' => 'required',
             'harga_internet.*' => 'required',
         ]);
+
         if ($validator->fails()) {
             return response()->json(['status' => 'error', 'message' => $validator->errors()], 422);
         }
 
         try {
             DB::beginTransaction();
+
             $lokasi = Lokasi::findOrFail($id);
 
             $lokasi->update([
@@ -269,8 +269,8 @@ class LokasiController extends Controller
                 'denda_pembatalan' => $request->denda_pembatalan,
                 'denda_pengosongan' => $request->denda_pengosongan,
             ]);
-            
-            foreach($request->nopd as $key => $nopd){
+
+            foreach ($request->nopd as $key => $nopd) {
                 nopd::updateOrCreate(
                     [
                         'id' => $request->id_nopd[$key] ?? null,
@@ -283,7 +283,7 @@ class LokasiController extends Controller
                     ]
                 );
             }
-            foreach($request->id_internet as $key => $internet){
+            foreach ($request->id_internet as $key => $internet) {
                 internet::updateOrCreate(
                     [
                         'id' => $request->internet_id[$key] ?? null,
@@ -308,14 +308,7 @@ class LokasiController extends Controller
                 'status' => false,
                 'message' => 'Data Gagal Diupdate',
                 'error' => $e->getMessage()
-                ]);
-                //log 
-        Log::error(
-            'Error update data lokasi',
-            [
-                'error' => $e->getMessage(),
-            ]
-            );
+            ]);
         }
     }
 
@@ -324,19 +317,20 @@ class LokasiController extends Controller
         $data = Nopd::findOrFail($id);
         if ($data) {
             $data->delete();
-            return response()->json(['success' => true, 'message' => 'Data berhasil dihapus']);
+            return response()->json(['status' => true, 'message' => 'Data berhasil dihapus']);
         } else {
-            return response()->json(['success' => false, 'message' => 'Data tidak ditemukan']);
+            return response()->json(['status' => false, 'message' => 'Data tidak ditemukan']);
         }
     }
+
     public function deleteInternet($id)
     {
         $data = internet::findOrFail($id);
         if ($data) {
             $data->delete();
-            return response()->json(['success' => true, 'message' => 'Data berhasil dihapus']);
+            return response()->json(['status' => true, 'message' => 'Data berhasil dihapus']);
         } else {
-            return response()->json(['success' => false, 'message' => 'Data tidak ditemukan']);
+            return response()->json(['status' => false, 'message' => 'Data tidak ditemukan']);
         }
     }
 

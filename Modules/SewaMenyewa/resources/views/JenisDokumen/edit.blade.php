@@ -1,5 +1,4 @@
 @extends('layouts.layout')
-
 @section('content')
     <section class="content-header">
         <div class="container-fluid">
@@ -16,12 +15,10 @@
                     </ol>
                 </div>
             </div>
-        </div><!-- /.container-fluid -->
+        </div>
     </section>
     <section class="content">
-
         <div class="card card-primary">
-    
             <form id="updateFormJenisDokumen" data-id="{{ $jenisDokumen->id }}">
                 @csrf
                 @method('PUT')
@@ -35,14 +32,9 @@
                             </div>
                         </div>
                     </div>
-
-
                 </div>
-
-
                 <div class="card-footer">
                     <div class="d-flex justify-content-start">
-
                         <button type="submit" class="btn btn-primary mr-2">Submit</button>
                         <button type="button" onclick="window.location.href='{{ route('roles.index') }}'"
                             class="btn btn-warning">
@@ -54,27 +46,26 @@
         </div>
     </section>
 @endsection
-
 @section('script')
     <script>
         $(document).ready(() => {
             toastr.options = {
                 "closeButton": true,
                 "progressBar": true,
-                "positionClass": "toast-top-right", // Posisi toast
+                "positionClass": "toast-top-right", 
                 "timeOut": "2000",
 
             };
 
             const showToast = (icon, message) => {
                 if (icon === 'error') {
-                    toastr.error(message); // Toast untuk error
+                    toastr.error(message); 
                 } else if (icon === 'success') {
-                    toastr.success(message); // Toast untuk sukses
+                    toastr.success(message); 
                 } else if (icon === 'info') {
-                    toastr.info(message); // Toast untuk info
+                    toastr.info(message); 
                 } else {
-                    toastr.warning(message); // Toast untuk warning
+                    toastr.warning(message); 
                 }
             };
 
@@ -109,7 +100,6 @@
                     }
                 });
             };
-
             $('#updateFormJenisDokumen').on('submit', function(e) {
                 e.preventDefault();
                 handleFormSubmit('updateFormJenisDokumen');

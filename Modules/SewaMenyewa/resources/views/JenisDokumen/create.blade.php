@@ -2,9 +2,7 @@
 @section('content')
     @include('layouts.breadcrumb')
     <section class="content">
-
         <div class="card card-primary">
-
             <form id="createFormJenisDokumen">
                 @csrf
                 <div class="card-body">
@@ -16,11 +14,9 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
                 <div class="card-footer">
                     <div class="d-flex justify-content-start">
-
                         <button type="submit" class="btn btn-primary mr-2">Submit</button>
                         <button type="button"onclick="window.location.href='{{ route('jenisDokumen.index') }}'"
                             class="btn btn-warning"><span>Back</span></button>
@@ -29,14 +25,13 @@
             </form>
         </div>
     </section>
-
     </div>
 @endsection
 @section('script')
     <script>
         $(document).ready(() => {
             toastr.options = {
-                "positionClass": "toast-top-right", // Posisi toast
+                "positionClass": "toast-top-right",
                 "timeOut": "1000",
                 "closeButton": true,
                 "progressBar": true,
@@ -44,13 +39,13 @@
 
             const showToast = (icon, message) => {
                 if (icon === 'error') {
-                    toastr.error(message); // Toast untuk error
+                    toastr.error(message);
                 } else if (icon === 'success') {
-                    toastr.success(message); // Toast untuk sukses
+                    toastr.success(message); 
                 } else if (icon === 'info') {
-                    toastr.info(message); // Toast untuk info
+                    toastr.info(message); 
                 } else {
-                    toastr.warning(message); // Toast untuk warning
+                    toastr.warning(message); 
                 }
             };
 
@@ -85,8 +80,6 @@
                 e.preventDefault();
                 handleCreateForm('createFormJenisDokumen');
             });
-
-
-        })
+        });
     </script>
 @endsection
