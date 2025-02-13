@@ -77,7 +77,7 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required',
+            'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email',
             'password' => 'required|min:8',
             'roles' => 'required',
@@ -94,7 +94,7 @@ class UserController extends Controller
         }
         $image = $request->file('image');
         $fileName = time() . '.' . $image->getClientOriginalExtension();
-        $image->storeAs('foto-profile', $fileName, 'public'); // Simpan file di storage
+        $image->storeAs('foto-profile', $fileName, 'public'); 
 
         $data =  User::create([
             'name' => $request->name,
@@ -110,7 +110,7 @@ class UserController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'User created successfully',
-            'data' => $data->id,
+            'data' => $data,
 
         ], 200);
     }
