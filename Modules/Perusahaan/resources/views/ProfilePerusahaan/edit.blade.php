@@ -185,7 +185,7 @@
                                 });
                             }
                         } else {
-                            showToast('error', xhr.responseJSON.error);
+                            showToast('error', xhr.responseJSON.errors);
                         }
                     }
                 });

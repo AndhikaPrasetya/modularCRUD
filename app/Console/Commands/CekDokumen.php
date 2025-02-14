@@ -41,7 +41,7 @@ class CekDokumen extends Command
         ->get();
 
     if ($listSertifikat->isNotEmpty()) {
-        Mail::to('zap@gmail.com')->send(new NotifikasiDokumenSewa($listSertifikat));
+        Mail::to('andika.prasetya@zap.co.id')->send(new NotifikasiDokumenSewa($listSertifikat));
 
         $this->info("Notifikasi sertifikat telah dikirim.");
     } else {
