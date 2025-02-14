@@ -86,6 +86,7 @@ class RolesController extends Controller
             'AktaPerusahaan' => Permission::whereIn('name', [ 'create-aktaPerusahaan', 'read-aktaPerusahaan', 'update-aktaPerusahaan', 'delete-aktaPerusahaan',])->get(),
             'jenisDokumen' => Permission::whereIn('name', ['create-jenisDokumen', 'read-jenisDokumen', 'update-jenisDokumen', 'delete-jenisDokumen'])->get(),
             'sewaMenyewa' => Permission::whereIn('name', ['create-sewaMenyewa', 'read-sewaMenyewa', 'update-sewaMenyewa', 'delete-sewaMenyewa'])->get(),
+            'Activity Log' => Permission::whereIn('name', ['view-log'])->get(),
         ];
         $permissions = Permission::get();
         return view('roles::create',get_defined_vars());
@@ -146,6 +147,7 @@ class RolesController extends Controller
             'AktaPerusahaan' => Permission::whereIn('name', [ 'create-aktaPerusahaan', 'read-aktaPerusahaan', 'update-aktaPerusahaan', 'delete-aktaPerusahaan',])->get(),
             'jenisDokumen' => Permission::whereIn('name', ['create-jenisDokumen', 'read-jenisDokumen', 'update-jenisDokumen', 'delete-jenisDokumen'])->get(),
             'sewaMenyewa' => Permission::whereIn('name', ['create-sewaMenyewa', 'read-sewaMenyewa', 'update-sewaMenyewa', 'delete-sewaMenyewa'])->get(),
+            'Activity Log' => Permission::whereIn('name', ['view-log'])->get(),
         ];
         $permissions = Permission::get();
         $rolePermissions = DB::table('role_has_permissions')

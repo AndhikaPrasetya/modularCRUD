@@ -397,6 +397,36 @@ $(document).ready(function() {
             },
         ]
     });
+
+    $('#table_log').DataTable({
+        processing: true,
+        serverSide: true,
+        searching: true,
+        stateSave: true,
+        ajax: {
+            url: "/activityLog",
+            type: "GET"
+        },
+        columns: [
+            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+            {
+                data: 'log_name',
+                name: 'log_name',
+                orderable: false,
+            },
+            {
+                data: 'description',
+                name: 'description',
+                orderable: false,
+            },
+            {
+                data: 'created_at',
+                name: 'created_at',
+                orderable: false,
+            },
+          
+        ]
+    });
    
 
 

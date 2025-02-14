@@ -123,8 +123,8 @@
               </p>
             </a>
           </li>
-          <li class="nav-item {{ Route::is('users.*', 'roles.*', 'permission.*') ? 'menu-open' : '' }}">
-              <a href="#" class="nav-link {{ Route::is('users.*', 'roles.*', 'permission.*') ? 'active' : '' }}">
+          <li class="nav-item {{ Route::is('users.*', 'roles.*', 'permission.*','activityLog') ? 'menu-open' : '' }}">
+              <a href="#" class="nav-link {{ Route::is('users.*', 'roles.*', 'permission.*','activityLog') ? 'active' : '' }}">
                   <i class="fas fa-users mr-2"></i>
                   <p>
                       Users Management
@@ -150,6 +150,14 @@
                           <p>Permission</p>
                       </a>
                   </li>
+                  @can('view-log')
+                  <li class="nav-item">
+                      <a href="{{ route('activityLog') }}" class="nav-link {{ Route::is('activityLog') ? 'active' : '' }}">
+                          <i class="nav-icon fas fa-cogs"></i>
+                          <p>Activity Log User</p>
+                      </a>
+                  </li>
+                  @endcan
               </ul>
           </li>
           <li class="nav-item {{ Route::is('perusahaan.*', 'aktaPerusahaan.*','lokasi.*','sewaMenyewa.*','jenisDokumen.*') ? 'menu-open' : '' }}">

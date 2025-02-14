@@ -4,6 +4,7 @@ namespace Modules\Perusahaan\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Yajra\DataTables\Facades\DataTables;
@@ -160,7 +161,7 @@ class PerusahaanController extends Controller
             'nama' => 'required',
             'alamat' => 'required',
             'no_telp' => 'required',
-            'email' => 'required|email|unique:profile_perusahaans,email',
+            'email' => 'required|email',
             'kode_pos' => 'required',
             'no_domisili' => 'required',
             'nama_domisili' => 'required',
@@ -179,13 +180,37 @@ class PerusahaanController extends Controller
                 'errors' => $validator->errors()
             ], 422);
         }
+        try{
+            $data = profilePerusahaan::findOrFail($id);
+            $data->update([
+                'nama' => $request->nama,
+                'alamat' => $request->alamat,
+                'no_telp' => $request->no_telp,
+                'email' => $request->email,
+                'kode_pos' => $request->kode_pos,
+                'no_domisili' => $request->no_domisili,
+                'nama_domisili' => $request->nama_domisili,
+                'alamat_domisili' => $request->alamat_domisili,
+                'province_domisili' => $request->province_domisili,
+                'kota_domisili' => $request->kota_domisili,
+                'no_npwp' => $request->no_npwp,
+                'nama_npwp' => $request->nama_npwp,
+                'alamat_npwp' => $request->alamat_npwp,
+            ]);
+         
+            return response()->json([
+                'status' => true,
+                'message' => 'Data Perusahaan Berhasil Diupdate',
+            ], 200);
+        }catch(Exception $e){
+            return response()->json([
+                'status' => false,
+                'message' => 'Error',
+                'errors' => $e->getMessage()
+                ], 500);
+        }
+       
 
-        $data = profilePerusahaan::findOrFail($id);
-        $data->update($request->all());
-        return response()->json([
-            'status' => true,
-            'message' => 'Data Perusahaan Berhasil Diupdate',
-        ], 200);
     }
 
     /**

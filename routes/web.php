@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
@@ -21,6 +22,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('/dashboard',[DashboardController::class,'ReminderDokumen'])->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/activityLog',[ActivityLogController::class,'index'])->middleware(['auth', 'verified','permission:view-log'])->name('activityLog');
 
 
 

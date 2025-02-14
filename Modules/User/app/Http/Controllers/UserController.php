@@ -140,8 +140,8 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        $title = "Edit Data Users";
-        $breadcrumb = "Edit Users";
+        $title = "Edit Profile";
+        $breadcrumb = "Edit Profile";
         $data = User::find($id);
         $roles = Role::pluck('name', 'name')->all();
         $userRole = $data->roles->pluck('name', 'name')->all();
